@@ -4,10 +4,16 @@
       <img class="logo" src="@/assets/logo.png" alt width="30px" />
       <span class="company">后台管理系统</span>
     </a>
-    <el-link type="primary" icon="el-icon-s-home" style="padding-left: 200px;color: #cccccc"
+
+    <a href="http://localhost:8080/#/sus">
+      <span class="firstClass" type="primary" icon="el-icon-s-home" >首页</span>
+    </a>
+
+<!--    <el-link type="primary" icon="el-icon-s-home" style="padding-left: 200px;color: #cccccc"
              target='_blank'
-            href="http://localhost:8080/#/success"
-    >首页</el-link>
+            href="http://localhost:8080/#/sus"
+    >首页</el-link>-->
+
 
     <!-- 出发时间   -->
     <el-dropdown  @command="handleCommand">
@@ -45,13 +51,14 @@ export default {
         this.$router.replace({path: '/'})
       }else if("modiPass"===command){
         this.isActive_modify = true
-      }else if("firstpage"===command){
-        this.$router.replace({path: '/success'})
       }
     },
     changeActive_modify () {
       this.isActive_modify = false
     },
+    handle(){
+
+    }
   }
 };
 </script>
@@ -76,5 +83,12 @@ export default {
   color: white;
   /* 定义放上去手的形状 */
   cursor: pointer;
+}
+
+.firstClass{
+  padding-left: 200px;
+  color: #cccccc;
+  background-color:transparent;
+  border-style:none;
 }
 </style>

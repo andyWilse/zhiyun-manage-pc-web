@@ -1,8 +1,4 @@
-<!-- vue + element 树形选择框（多选框）实现 -->
-<!-- 思路：隐藏el-select的下拉框，改用el-popover弹出框和el-tree控件组合-->
 <template>
-
-
 <div>
       <div class="roleclass">
       <span style="font-size: 16px">角色选择:</span>
@@ -19,13 +15,6 @@
       </div>
 
   <div class="main-container">
-<!--    <span style="font-size: 16px" >选择菜单:</span>-->
-<!--    <el-popover
-        v-model="popoverVisible"
-        placement="bottom"
-        width="200"
-        trigger="click"> &lt;!&ndash; click:点击select时弹出框显示 &ndash;&gt;-->
-      <!-- popover+tree用于选择，树形控件放在弹出框中 -->
       <el-tree
           :data="treeOptions"
           :props="defaultProps"
@@ -35,24 +24,6 @@
           :default-expanded-keys="[1]"
           ref="tree"
           node-key="id"/>
-      <!-- select展示选择结果，储存选择值typeValue -->
-<!--      <el-select
-          slot="reference"
-          multiple
-          collapse-tags
-          v-model="typeValue"
-          placeholder="请选择"
-          popper-class="hiddenSel"
-          clearable
-          @clear="clearTag"
-          @remove-tag="removeTag">
-        <el-option
-            v-for="item in typeOption"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"/>
-      </el-select>
-    </el-popover>-->
   </div>
   <div style="text-align:center">
     <el-button class="saveClass" @click="saveClick" type="primary">保存</el-button>
@@ -129,19 +100,6 @@ export default {
 
 
   methods: {
-    // tree选择值修改时
-    checkChange () {
-      /*this.typeValue = []
-      // 将tree选择的id赋值给select
-      this.$refs['tree'].getCheckedNodes().forEach(value => {
-        // 父级在select中不展示
-        if (value.id.indexOf('-') > 0) {
-          /!*alert(value)
-          alert("ssss:"+value.id)*!/
-          this.typeValue.push(value.id)
-        }
-      })*/
-    },
     // 上下架树加载
     upper_lowerChange(node, checkStatus, childStatus) {
       if (checkStatus) {
@@ -203,7 +161,7 @@ export default {
             }
     ).then(successResponse => {
         if (successResponse.status === 200) {
-          this.$message.info('新增用户信息成功');
+          this.$message.info({message: '用户权限保存成功！', type: 'success'});
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
@@ -233,21 +191,15 @@ export default {
 .hiddenSel{
   display: none;
 }
-.saveClass{
-  /*color: black;
-  background-color: cadetblue;*/
-}
 
 .roleclass{
   color: black;
   border: 1px solid black;
-  /*margin-left: 350px;*/
   top:0px;
   padding: 10px;
   margin-left:0px;
   margin-right: 900px;
   margin-bottom: 10px;
-
 
 }
 .main-container {
@@ -256,22 +208,6 @@ export default {
   margin-left:0px;
   margin-right: 900px;
   padding: 10px;
-  /*padding-top: 1px;
-  padding-left: 10px;*/
-  /*margin-bottom: 100px;*/
-  /*height:  100px;*/
-  /*margin-left: 200px;*/
- /* position: absolute;
-  line-height: 50px;
-  left: 200px;
-  !*!* 内部框框距离 *!*!
-  top:50px;
-  padding: 200px;
-  right: 0px;
-!*滚动条*!
- !* overflow-y: auto;*!
-  bottom: 0px;*/
- /* !* background-color: rebeccapurple; *!*/
 }
 </style>
 

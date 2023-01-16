@@ -2,7 +2,7 @@
 
   <div>
     <el-dialog title="职员信息新增" :visible="dialogVisibleStaffAdd" :before-close="handleClose" width="50%">
-      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+      <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
         <el-row>
           <el-col :span="12">
             <el-form-item label="中文名:" prop="staffName">
@@ -16,7 +16,7 @@
                     v-for="item in religiousSects"
                     :key="item.dictCd"
                     :label="item.dictCnDesc"
-                    :value="item.dictCnDesc"
+                    :value="item.dictCd"
                 />
               </el-select>
             </el-form-item>
@@ -51,7 +51,7 @@
                   v-for="item in certTypeCdArr"
                   :key="item.dictCd"
                   :label="item.dictCnDesc"
-                  :value="item.dictCnDesc"
+                  :value="item.dictCd"
               />
             </el-select>
           </el-form-item>
@@ -134,7 +134,7 @@ export default {
         certNbr:'',
         relVenuesId:''
       },
-      rules: {
+      formRules: {
         staffName:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
         certNbr: [{ required: true, message: '请输入有效证件名称', trigger: 'blur' }],
         religiousSect: [{ required: true, message: '请选择宗教类别', trigger: 'change' }],
@@ -193,14 +193,16 @@ export default {
       this.$emit('cActive') // $emit应是用来子组件向父组件传参的,但是,这里我只是想改变父组件中isActive为false,
       // 对应事件cActive
     },
-    handleSubmit (formData) {
-
-      /*this.$refs[formData].validate((valid) => {
-        if (!valid) {
-          console.log(this.form)
+    handleSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.handleSubmitPost();
+        }else{
+          this.$alert('填写信息有误，请重新填写后提交！');
         }
-      });*/
-
+      });
+    },
+    handleSubmitPost(){
       this.$axios.post('/staff/add', {
         staffName: this.form.staffName,
         religiousSect: this.form.religiousSect,
@@ -212,16 +214,18 @@ export default {
         staffPicture: this.form.picturesPath,
 
       }).then(successResponse => {
-            if (successResponse.data.code === 200) {
-              this.$message.info('新增职员信息成功');
-              // 对应事件cAdd
-              // &emit向父组件提交form表单
-              this.$emit('cAdd', this.form)
-            }else{
-              this.$router.replace({path: '/error'})
-            }
-          })
+        if (successResponse.data.code === 200) {
+          this.$message.info({message: '新增职员信息成功！', type: 'success'});
+          // 对应事件cAdd
+          // &emit向父组件提交form表单
+          this.$emit('cAdd', this.form)
+        }else{
+          this.$alert('新增职员失败,请联系管理员！');
+        }
+      })
     },
+
+
     childaddClick () {
       this.form.staffName = ''
       this.form.religiousSect = ''
@@ -260,11 +264,14 @@ export default {
           fd,
           config
       ).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.form.picturesPath=successResponse.data
-          alert("图片上传成功！")
+        if (successResponse.data.code === 200) {
+          this.form.picturesPath=successResponse.data.result
+          this.$message({
+            message: '图片上传成功，请继续操作！',
+            type: 'success'
+          });
         }else{
-          this.$router.replace({path: '/error'})
+          this.$message.error('图片保存失败，请重新选择！');
         }
       })
     },

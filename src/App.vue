@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <!-- 路由的出入口，路由的内容将被显示在这里 -->
-<!--    <router-view />-->
-    <router-view></router-view>
-<!--    <bottom v-show="this.$route.meta.show"></bottom>-->
-    <router v-show="$route.meta.showFooter"></router>
+    <router-view />
+
+<!--    <router-view></router-view>
+    <bottom v-show="this.$route.meta.show"></bottom>
+    <router v-show="$route.meta.showFooter"></router>-->
   </div>
 </template>
 

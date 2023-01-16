@@ -19,7 +19,7 @@
                   v-for="item in religiousSects"
                   :key="item.dictCd"
                   :label="item.dictCnDesc"
-                  :value="item.dictCnDesc"
+                  :value="item.dictCd"
               />
             </el-select>
           </el-form-item>
@@ -40,10 +40,6 @@
         stripe
         style="width: 100%"
     >
-      <!--      <el-table-column
-                type="selection"
-                width="55">
-            </el-table-column>-->
       <el-table-column
           prop="venuesName"
           label="场所名称"
@@ -175,6 +171,8 @@ export default {
       }).then(successResponse => {
         if (successResponse.status === 200) {
           this.religiousSects=successResponse.data;
+          this.religiousSects[this.religiousSects.length]=this.religiousSects[0]
+          this.religiousSects[0]={"dictCnDesc":"----------- 请选择 -----------"}
         }else{
           this.$router.replace({path: '/error'})
         }
@@ -200,6 +198,7 @@ export default {
       this.$refs.mymodifychild.form.venuesId = this.tableData[this.index_modify].venuesId
 
       this.$refs.mymodifychild.form.picturesPath = this.tableData[this.index_modify].picturesPath
+      this.getPictures(this.tableData[this.index_modify].picturesPath);
 
 
     },
@@ -290,24 +289,12 @@ export default {
         }
       }).then(successResponse => {
         if (successResponse.status === 200) {
-          /*let settingObj=successResponse.data;
-          let settingArr = Object.keys(settingObj).map(key => {
-            //console.log(key); //为每个键名
-            console.log(settingObj);
-            return settingObj[key];  //把每个对象返回出去生成一个新的数组中相当于0:{id:1}
-          });*/
           this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
           this.$router.replace({path: '/error'})
         }
       })
-      /* this.getRequest("/venues/find/?page="+this.page+"&size="+this.size).then(resp=>{
-         if(resp){
-           this.tableData=resp.data;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
-           this.total=resp.total;
-         }
-       })*/
     },
     deleteData(index, rows){
       let fd = new FormData()
@@ -334,6 +321,20 @@ export default {
       this.search.startTime = val
     },
     searchData() {},
+    //获取图片
+    getPictures(userPhotoUrls){
+      this.$axios.get('/file/show', {
+        params: {
+          picture: userPhotoUrls,
+        }}
+      ).then(successResponse => {
+        if (successResponse.data.code === 200) {
+          this.$refs.mymodifychild.imagesrcList=successResponse.data.datas;
+        }else{
+          this.$router.replace({path: '/error'})
+        }
+      })
+    },
 
 
   }
@@ -341,11 +342,6 @@ export default {
 </script>
 
 <style>
-.addClass {
-  background-color: #2d3a6b;
-  color: wheat;
-  border: 1px solid #ccc;
-}
 
 
 </style>

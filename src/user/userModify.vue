@@ -4,8 +4,9 @@
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
 
         <el-form-item label="id" prop="userId" v-show="false">
-          <el-input v-model="form.userId" class="venuesName-input"></el-input>j
+          <el-input v-model="form.userId" class="userIdClass"></el-input>j
         </el-form-item>
+
         <el-form-item label="照片:" prop="userPhotoUrl" v-show="false">
         </el-form-item>
 

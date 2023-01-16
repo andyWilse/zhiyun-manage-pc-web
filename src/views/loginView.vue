@@ -88,7 +88,7 @@ export default {
               localStorage.setItem("token",successResponse.data.token)
               localStorage.setItem("userNbr",successResponse.data.userNbr)
 
-              this.$router.replace({path: '/lay'})
+              this.$router.replace({path: '/layOut'})
             }else{
               this.$fire({
                 //title: "Title",

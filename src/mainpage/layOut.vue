@@ -4,9 +4,7 @@
     <!-- 注意：AppHeader可以改写成 app-header,但是Appheader不能改写成 app-header-->
     <app-header></app-header>
     <app-navber></app-navber>
-    <app-main>
-
-    </app-main>
+    <app-main></app-main>
 
   </div>
 </template>

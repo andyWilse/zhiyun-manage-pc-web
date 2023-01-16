@@ -5,6 +5,10 @@ import router from './router' //引入路由配置
 import store from './store' //引入 Vuex 状态管理
 import VueSimpleAlert from "vue-simple-alert";
 
+import { Message } from 'element-ui'
+Vue.prototype.$message = Message
+
+
 Vue.use(VueSimpleAlert);
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
@@ -13,12 +17,6 @@ axios.defaults.baseURL = 'http://localhost:8092/religion/zhiyun'
 Vue.prototype.$axios = axios
 
 Vue.config.productionTip = false
-
-new Vue({
-    render: h => h(App),
-    router, //使用路由配置
-    store //使用 Vuex 进行状态管理
-}).$mount('#app')
 
 axios.interceptors.request.use(
     function (config) {
@@ -29,31 +27,26 @@ axios.interceptors.request.use(
                 }
                 return config;
             }
-
-    )
+    );
 
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
-   /* location.hash
-    location.history
-    document.location.url='aaaa'
-    //location.pathname='aaaa'
-
-    if (to.meta.title) {
-        /!*document.title = to.meta.title*!/
-        document.location.url='aaaa'
-    }
-    next()*/
-
     let token = localStorage.getItem('token')
     if (to.meta.needLogin) { // 判断该路由是否需要登录权限
-        if (token) { // 判断是否已经登录
-            next()
-        }
-        else {
-            next({path: '/'}) //跳转到登录页
+        // 判断是否已经登录
+        if (token) {
+            next();
+        }else {
+            next({path: '/'}) ; //跳转到登录页
         }
     } else {
         next()
     }
-})
+});
+
+
+new Vue({
+    render: h => h(App),
+    router, //使用路由配置
+    store //使用 Vuex 进行状态管理
+}).$mount('#app');

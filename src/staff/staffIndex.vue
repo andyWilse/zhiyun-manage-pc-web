@@ -19,7 +19,7 @@
                   v-for="item in religiousSects"
                   :key="item.dictCd"
                   :label="item.dictCnDesc"
-                  :value="item.dictCnDesc"
+                  :value="item.dictCd"
               />
             </el-select>
           </el-form-item>
@@ -159,6 +159,8 @@ export default {
       }).then(successResponse => {
         if (successResponse.status === 200) {
           this.religiousSects=successResponse.data;
+          this.religiousSects[this.religiousSects.length]=this.religiousSects[0]
+          this.religiousSects[0]={"dictCnDesc":"----------- 请选择 -----------"}
         }else{
           this.$router.replace({path: '/error'})
         }
@@ -284,18 +286,19 @@ export default {
     },
     searchData() {},
 
-    getPictures(staffPictures){
-       this.$axios.get('/file/show', {
-         params: {
-           picture: staffPictures,
-         }
-       }).then(successResponse => {
-         if (successResponse.status === 200) {
-           this.$refs.mymodifychild.imagesrcList=successResponse.data;
-         }else{
-           this.$router.replace({path: '/error'})
-         }
-       })
+    //获取图片
+    getPictures(userPhotoUrls){
+      this.$axios.get('/file/show', {
+        params: {
+          picture: userPhotoUrls,
+        }}
+      ).then(successResponse => {
+        if (successResponse.data.code === 200) {
+          this.$refs.mymodifychild.imagesrcList=successResponse.data.datas;
+        }else{
+          this.$router.replace({path: '/error'})
+        }
+      })
     },
 
   }

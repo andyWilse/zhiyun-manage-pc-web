@@ -2,7 +2,7 @@
 
   <div>
     <el-dialog title="职员信息新增" :visible="dialogVisibleUserAdd" :before-close="handleClose" width="50%">
-      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+      <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
         <el-row>
           <el-col :span="12">
             <el-form-item label="中文名:" prop="userNm">
@@ -81,7 +81,7 @@
 
       <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
-          <el-button @click="handleSubmit('form')">确定</el-button>
+          <el-button @click="handleSubmit()">确定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -106,7 +106,7 @@ export default {
         userNbr:'',
         identity:''
       },
-      rules: {
+      formRules: {
         userNm:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
       },
     }
@@ -131,12 +131,16 @@ export default {
       // 对应事件cActive
       this.$emit('cActive')
     },
-    handleSubmit (formData) {
-      /*this.$refs[formData].validate((valid) => {
-        if (!valid) {
-          console.log(this.form)
+    handleSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.handleSubmitPost();
+        }else{
+          this.$alert('填写信息有误，请重新填写后提交！');
         }
-      });*/
+      });
+    },
+    handleSubmitPost(){
       this.$axios.post('/user/add', {
         userNm: this.form.userNm,
         loginNm: this.form.loginNm,
@@ -149,15 +153,17 @@ export default {
 
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.$message.info('新增用户信息成功');
+          this.$message.info({message: '新增用户信息成功！', type: 'success'});
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
         }else{
-          this.$router.replace({path: '/error'})
+          this.$alert('新增用户失败,请联系管理员！');
         }
       })
     },
+
+
     childaddClick () {
       this.form.userNm = ''
       this.form.loginNm = ''
@@ -182,10 +188,10 @@ export default {
     uploadelupload() {
       this.$refs.elupload.submit()
       let fd = new FormData()
-      this.$refs.elupload.submit();
+      this.$refs.elupload.submit(); // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
+
       this.fileList.forEach(item => {
-        //将每一个文件图片都加进formdata
-        fd.append(item.file.name, item.file,item.file.name)
+        fd.append(item.file.name, item.file,item.file.name)  //将每一个文件图片都加进formdata
       })
       //formdata.append("score", 4)
       let config={
@@ -193,14 +199,20 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
-      this.$axios.post('/file/images/upload', fd, config).then(successResponse => {
-          if (successResponse.data.code === 200) {
-            this.form.userPhotoUrl=successResponse.data.result
-            console.log("图片上传成功！")
-            alert("图片上传成功！")
-          }else{
-            this.$router.replace({path: '/error'})
-          }
+      this.$axios.post(
+          '/file/images/upload',
+          fd,
+          config
+      ).then(successResponse => {
+        if (successResponse.data.code === 200) {
+          this.form.picturesPath=successResponse.data.result
+          this.$message({
+            message: '图片上传成功，请继续操作！',
+            type: 'success'
+          });
+        }else{
+          this.$message.error('图片保存失败，请重新选择！');
+        }
       })
     },
 

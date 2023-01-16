@@ -4,7 +4,10 @@
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
 
         <el-form-item label="id" prop="staffId" v-show="false">
-          <el-input v-model="form.staffId" class="venuesName-input"></el-input>j
+          <el-input v-model="form.staffId" class="staffclass"></el-input>j
+        </el-form-item>
+
+        <el-form-item label="照片:" prop="staffPicture" v-show="false">
         </el-form-item>
 
         <el-row>
@@ -20,7 +23,7 @@
                     v-for="item in religiousSects"
                     :key="item.dictCd"
                     :label="item.dictCnDesc"
-                    :value="item.dictCnDesc"
+                    :value="item.dictCd"
                 />
               </el-select>
             </el-form-item>
@@ -55,7 +58,7 @@
                     v-for="item in certTypeCdArr"
                     :key="item.dictCd"
                     :label="item.dictCnDesc"
-                    :value="item.dictCnDesc"
+                    :value="item.dictCd"
                 />
               </el-select>
             </el-form-item>
@@ -80,17 +83,17 @@
           </el-form-item>
         </el-row>
 
-      <el-form-item label="照片:" prop="staffPicture" v-show="false">
-      </el-form-item>
+        <h1>场所照片：</h1>
+        <el-image
+            style="width: 150px; height: 100px"
+            v-for="item in imagesrcList"
+            :src="'data:image/png;base64,' +item.filePath"
+            :key="item.fileId"
+            :preview-src-list="getImgList(imagesrcList)"
+        >
+        </el-image>
       </el-form>
-      <el-image
-          style="width: 150px; height: 100px"
-          v-for="item in imagesrcList"
-          :src="'data:image/png;base64,' +item.filePath"
-          :key="item.fileId"
-          :preview-src-list="getImgList(imagesrcList)"
-      >
-      </el-image>
+
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
@@ -198,8 +201,10 @@ export default {
             staffPicture: this.form.staffPicture
       })
           .then(successResponse => {
-            if (successResponse.status=== 200) {
-              this.$message.info('修改职员信息成功！');
+            if (successResponse.data.code === 200) {
+              //this.$message.info('修改职员信息成功！');
+              this.$alert('修改场所信息成功！');
+
               // 对应事件cAdd
               // &emit向父组件提交form表单
               this.$emit('cmodify', this.form)
@@ -249,7 +254,6 @@ export default {
         }
       })
     },
-
     //循环展示图片
     getImgList(srcLis) {
       let arr = []

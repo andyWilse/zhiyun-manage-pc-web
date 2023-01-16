@@ -6,6 +6,8 @@
         <el-form-item label="id" prop="venuesId" v-show="false">
           <el-input v-model="form.venuesId" class="venuesName-input"></el-input>
         </el-form-item>
+        <el-form-item label="照片:" prop="picturesPath" v-show="false">
+        </el-form-item>
 
         <el-row>
           <el-col :span="12">
@@ -20,7 +22,7 @@
                     v-for="item in religiousSects"
                     :key="item.dictCd"
                     :label="item.dictCnDesc"
-                    :value="item.dictCnDesc"
+                    :value="item.dictCd"
                 />
               </el-select>
             </el-form-item>
@@ -65,10 +67,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-<!--
-        <el-form-item label="照片1" prop="picturesPath">
-          <el-input v-model="form.picturesPath"></el-input>
-        </el-form-item>-->
 
         <el-row>
           <el-col :span="24">
@@ -80,15 +78,20 @@
               ></el-input>
             </el-form-item>
           </el-col>
-<!--
-          <el-col :span="12">
-            <el-form-item label="状态" prop="venuesStatus">
-              <el-input v-model="form.venuesStatus"></el-input>
-            </el-form-item>
-          </el-col>-->
         </el-row>
 
+        <h1>场所照片：</h1>
+        <el-image
+            style="width: 150px; height: 100px"
+            v-for="item in imagesrcList"
+            :src="'data:image/png;base64,' +item.filePath"
+            :key="item.fileId"
+            :preview-src-list="getImgList(imagesrcList)"
+        >
+        </el-image>
+
       </el-form>
+
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
         <el-button @click="handleSubmit">确定</el-button>
@@ -104,6 +107,7 @@ export default {
     return {
       message: '来自子组件的消息',
       religiousSects:[],
+      imagesrcList:[],
       form: {
         venuesName: '',
         religiousSect: '',
@@ -111,7 +115,7 @@ export default {
         venuesPhone: '',
         organization: '',
         venuesAddres: '',
-        picturesPath:'',
+        /*picturesPath:'',*/
         responsiblePerson:'',
         liaisonMan:'',
         venuesId:'',
@@ -161,7 +165,7 @@ export default {
           })
           .then(successResponse => {
             if (successResponse.data.code === 200) {
-              this.$message.info('修改场所信息成功');
+              this.$alert('修改场所信息成功！');
               // 对应事件cAdd
               // &emit向父组件提交form表单
               this.$emit('cmodify', this.form)
@@ -177,6 +181,15 @@ export default {
             done()
           })
           .catch(_ => {})
+    },
+    //循环展示图片
+    getImgList(srcLis) {
+      let arr = []
+      let i = 0
+      for (i; i < srcLis.length; i++) {
+        arr.push(srcLis[i].filePath)
+      }
+      return arr
     },
   /*  childmodifyClick () {
       /!*this.form.venuesName = ''*!/

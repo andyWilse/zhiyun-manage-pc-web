@@ -77,7 +77,6 @@ export default {
   },
   components: {},
   methods: {
-
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -86,12 +85,6 @@ export default {
     },
     // 访问api获取左侧菜单栏数据，把数据添加到menuList中
     async getMenuList() {
-      /*const { data: res } = await this.$http.get('/menu/find')
-      if (res.meta.status !== 200) {
-        return this.$message.console.error(res.meta.msg)
-      }
-      this.menuList = res.data
-      console.log(res)*/
       this.$axios.get('/menu/find', {
           }).then(successResponse => {
             if (successResponse.status === 200) {

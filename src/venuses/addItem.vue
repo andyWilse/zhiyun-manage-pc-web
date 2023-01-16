@@ -2,7 +2,7 @@
 
     <div>
       <el-dialog title="场所基本信息新增" :visible="dialogVisibleVenuesAdd" :before-close="handleClose" width="50%">
-        <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+        <el-form ref="form" :model="form" label-width="80px" :rules="formRules">
           <el-row>
             <el-col :span="12">
               <el-form-item label="场所名称" prop="venuesName">
@@ -16,7 +16,7 @@
                       v-for="item in religiousSects"
                       :key="item.dictCd"
                       :label="item.dictCnDesc"
-                      :value="item.dictCnDesc"
+                      :value="item.dictCd"
                   />
                 </el-select>
               </el-form-item>
@@ -102,7 +102,7 @@
 
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
-          <el-button @click="handleSubmit('form')">确定</el-button>
+          <el-button @click="handleSubmit()">确定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -113,7 +113,6 @@
 export default {
   props: ['dialogVisibleVenuesAdd'],
   data () {
-
     return {
       message: '来自子组件的消息',
       religiousSects:[],
@@ -128,7 +127,7 @@ export default {
         responsiblePerson:'',
 
       },
-      rules: {
+      formRules: {
         venuesName:[{required: true, message: '请输入场所名称', trigger: 'blur'}],
         organization: [{ required: true, message: '请输入所属机构', trigger: 'blur' }],
         religiousSect: [{ required: true, message: '请选择宗教类别', trigger: 'change' }],
@@ -141,7 +140,6 @@ export default {
 
         }],
 
-      //formRules: {venuesName:''}
     },
     }
 
@@ -168,38 +166,42 @@ methods: {
       this.$emit('cActive') // $emit应是用来子组件向父组件传参的,但是,这里我只是想改变父组件中isActive为false,
       // 对应事件cActive
     },
-    handleSubmit (formData) {
 
-      /*this.$refs[formData].validate((valid) => {
-        if (!valid) {
-          console.log(this.form)
+    handleSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.handleSubmitPost();
+        }else{
+          this.$alert('填写信息有误，请重新填写后提交！');
         }
-      });*/
+      });
 
-      this.$axios.post('/venues/add', {
-            venuesName: this.form.venuesName,
-            religiousSect: this.form.religiousSect,
-            registerNbr: this.form.registerNbr,
-            venuesPhone: this.form.venuesPhone,
-            organization: this.form.organization,
-            venuesAddres: this.form.venuesAddres,
-            picturesPath: this.form.picturesPath,
-            responsiblePerson: this.form.responsiblePerson,
-            liaisonMan: this.form.liaisonMan,
-            briefIntroduction: this.form.briefIntroduction
-          })
-          .then(successResponse => {
-            if (successResponse.data.code === 200) {
-              this.$message.info('新增场所信息成功');
-
-              // 对应事件cAdd
-              // &emit向父组件提交form表单
-              this.$emit('cAdd', this.form)
-            }else{
-              this.$router.replace({path: '/error'})
-            }
-          })
     },
+  handleSubmitPost(){
+    this.$axios.post('/venues/add', {
+      venuesName: this.form.venuesName,
+      religiousSect: this.form.religiousSect,
+      registerNbr: this.form.registerNbr,
+      venuesPhone: this.form.venuesPhone,
+      organization: this.form.organization,
+      venuesAddres: this.form.venuesAddres,
+      picturesPath: this.form.picturesPath,
+      responsiblePerson: this.form.responsiblePerson,
+      liaisonMan: this.form.liaisonMan,
+      briefIntroduction: this.form.briefIntroduction
+    }).then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$message.info({message: '新增场所成功！', type: 'success'});
+            // 对应事件cAdd
+            // &emit向父组件提交form表单
+            this.$emit('cAdd', this.form)
+          }else{
+            this.$alert('新增场所失败,请联系管理员！');
+            /*this.messageWarn("新增场所失败,请联系管理员！","");*/
+          }
+        })
+  },
+
     childaddClick () {
       this.form.venuesName = ''
       this.form.registerNbr = ''
@@ -207,16 +209,11 @@ methods: {
       this.form.venuesAddres = ''
     },
     handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$emit('cActive') // 如果确认,就取消弹窗,
-          done()
-        })
-        .catch(_ => {})
+      this.messageWarn('确认关闭？',done);
     },
-  handleupload(param) {
-    this.fileList.push(param);// 一般情况下是在这里创建FormData对象，但我们需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
-  },
+    handleupload(param) {
+      this.fileList.push(param);// 一般情况下是在这里创建FormData对象，但我们需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
+    },
   uploadelupload() {
     this.$refs.elupload.submit()
     let fd = new FormData()
@@ -236,15 +233,21 @@ methods: {
         fd,
         config
     ).then(successResponse => {
-      if (successResponse.status === 200) {
-        this.form.picturesPath=successResponse.data
-        alert("图片上传成功！")
+      if (successResponse.data.code === 200) {
+        this.form.picturesPath=successResponse.data.result
+        this.$message({
+          message: '图片上传成功，请继续操作！',
+          type: 'success'
+        });
       }else{
-        this.$router.replace({path: '/error'})
+        this.$message.error('图片保存失败，请重新选择！');
       }
     })
   },
-
+    // 如果确认,就取消弹窗
+    messageWarn(message,done){
+      this.$confirm(message).then(_ => {this.$emit('cActive') ,done()}).catch(_ => {});
+    },
   },
 
 }
