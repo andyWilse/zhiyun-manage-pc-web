@@ -2,13 +2,14 @@ import Vue from 'vue' //引入 Vue
 import VueRouter from 'vue-router' //引入 Vue 路由
 
 import layOut from '@/mainpage/layOut';
-import venuesIndex from '@/venuses/venuesIndex';
-import staffIndex from '@/staff/staffIndex';
-import logIndex from '@/syspage/LogIndex';
-import monitorIndex from '@/syspage/MonitorIndex';
-import eventIndex from '@/syspage/EventIndex';
-import userIndex from '@/user/userIndex';
-import userLimit from '@/user/userLimit';
+import venuesIndex from '@/views/venuses/venuesIndex';
+import staffIndex from '@/views/staff/staffIndex';
+import logIndex from '@/views/syspage/LogIndex';
+import monitorIndex from '@/views/syspage/MonitorIndex';
+import eventIndex from '@/views/syspage/EventIndex';
+import userIndex from '@/views/user/userIndex';
+import userLimit from '@/views/user/userLimit';
+import newsIndex from '@/views/news/newsIndex';
 
 import sus from '@/views/successView';
 
@@ -21,6 +22,9 @@ export const constantRouterMap = [
     { path: '/success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转
     { path: '/error', component: () => import('@/views/errorView'), hidden: true },
+
+
+    { path: '/test', component: () => import('@/test/testTs'), hidden: true },
 
     //菜单
     {path:'/layOut',name:'layOut',component:layOut,redirect:'sus',
@@ -39,6 +43,7 @@ export const constantRouterMap = [
                     needLogin: true
                 }
             },
+            {path:'/newsIndex',name:'newsIndex',component:newsIndex},
 
 
         ]

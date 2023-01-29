@@ -4,15 +4,14 @@ import './plugins/element.js'
 import router from './router' //引入路由配置
 import store from './store' //引入 Vuex 状态管理
 import VueSimpleAlert from "vue-simple-alert";
-
 import { Message } from 'element-ui'
-Vue.prototype.$message = Message
 
+Vue.prototype.$message = Message
 
 Vue.use(VueSimpleAlert);
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
-axios.defaults.baseURL = 'http://localhost:8092/religion/zhiyun'
+axios.defaults.baseURL ='/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$axios = axios
 
