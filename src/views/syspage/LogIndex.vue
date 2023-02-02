@@ -7,10 +7,10 @@
             <el-input v-model="searchForm.one" placeholder="用户名称"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+             <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+         </el-col>
       </el-row>
-      <div style="text-align:left">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
     </el-form>
 
     <el-table

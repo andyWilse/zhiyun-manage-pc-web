@@ -20,13 +20,11 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="7">
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+        </el-col>
       </el-row>
-      <div style="text-align:left">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
-      <div style="text-align:right">
-        <el-button class="addClass" @click="addClick" type="primary">添加</el-button>
-      </div>
 
     </el-form>
 
@@ -205,6 +203,7 @@ export default {
       this.tableData[this.index_modify].userMobile = form.userMobile
       this.tableData[this.index_modify].userEmail = form.userEmail
       this.tableData[this.index_modify].userNbr = form.userNbr
+      //this.tableData[this.index_modify].identity = form.identity
 
       this.isActive_modify = false
       this.tempList = this.tableData
@@ -267,12 +266,13 @@ export default {
           .then(successResponse => {
             if (successResponse.status === 200) {
               // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
-              for (var i = 0; i < this.tempList.length; i++) {
+              /*for (var i = 0; i < this.tempList.length; i++) {
                 if (this.tempList[i].name === rows[index].name) {
                   this.tempList.splice(i, 1)
                 }
               }
-              rows.splice(index, 1)
+              rows.splice(index, 1)*/
+              this.initTableData()
             }else{
               this.$router.replace({path: '/error'})
             }

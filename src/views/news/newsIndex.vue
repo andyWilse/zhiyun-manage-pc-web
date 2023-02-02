@@ -2,19 +2,17 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="7">
           <el-form-item label="新闻标题:">
             <el-input v-model="searchForm.one" placeholder="新闻标题"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <div style="text-align:left">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
-      <div style="text-align:right">
-        <el-button class="addClass" @click="addClick">添加</el-button>
-      </div>
 
+        <el-col :span="7">
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+        </el-col>
+      </el-row>
     </el-form>
 
     <el-table
@@ -26,7 +24,7 @@
       <el-table-column
           prop="newsTitle"
           label="新闻标题"
-          width="150"
+          width="179"
           align="center"
           fixed>
       </el-table-column>
@@ -42,14 +40,22 @@
           prop="newsFrom"
           label="来源"
           align="center"
-          width="200">
+          width="230">
       </el-table-column>
 
+<!--
+      <el-table-column
+            prop="newsRef"
+            label="链接"
+            align="center"
+            width="200">
+        </el-table-column>
+-->
       <el-table-column
           prop="newsType"
           label="新闻类别"
           align="center"
-          width="220">
+          width="130">
       </el-table-column>
 
       <el-table-column
@@ -60,19 +66,22 @@
       </el-table-column>
 
       <el-table-column
-          prop="createTime"
+          prop="releaseTime"
           label="发布日期"
           align="center"
-          width="180">
+          width="200">
       </el-table-column>
 
       <el-table-column
-          fixed="right"
           align="center"
-          width="130"
+          width="215"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+            <el-button @click.native.prevent="refClick(scope.$index, tableData)" type="primary" class="refCLass">
+                新闻链接
+            </el-button>
+
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" style="padding:5px;" type="primary">
             修改
           </el-button>
           <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
@@ -153,6 +162,10 @@ export default {
         }
       })
     },
+    refClick (index, rows) {
+        let url=this.tableData[index].newsRef;
+        window.open(url, '_blank');
+    },
     addClick () { // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
       this.isActive = true // 显示弹窗
       this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
@@ -164,10 +177,11 @@ export default {
       this.$refs.mymodifychild.form.newsTitle = this.tableData[this.index_modify].newsTitle
       this.$refs.mymodifychild.form.newsKeyword = this.tableData[this.index_modify].newsKeyword
       this.$refs.mymodifychild.form.newsFrom = this.tableData[this.index_modify].newsFrom
+      this.$refs.mymodifychild.form.newsRef = this.tableData[this.index_modify].newsRef
       this.$refs.mymodifychild.form.newsType = this.tableData[this.index_modify].newsType
       this.$refs.mymodifychild.form.creator = this.tableData[this.index_modify].creator
       this.$refs.mymodifychild.form.newsContent = this.tableData[this.index_modify].newsContent
-      this.$refs.mymodifychild.form.createTime = this.tableData[this.index_modify].createTime
+      this.$refs.mymodifychild.form.releaseTime = this.tableData[this.index_modify].releaseTime
       this.$refs.mymodifychild.form.newsId = this.tableData[this.index_modify].newsId
       this.$refs.mymodifychild.form.newsPicturesPath = this.tableData[this.index_modify].newsPicturesPath
       this.getPictures(this.tableData[this.index_modify].newsPicturesPath);
@@ -191,8 +205,9 @@ export default {
       this.tableData[this.index_modify].newsKeyword = form.newsKeyword
       this.tableData[this.index_modify].newsType = form.newsType
       this.tableData[this.index_modify].creator = form.creator
-      this.tableData[this.index_modify].createTime = form.createTime
+      this.tableData[this.index_modify].releaseTime = form.releaseTime
       this.tableData[this.index_modify].newsFrom = form.newsFrom
+      this.tableData[this.index_modify].newsRef = form.newsRef
 
       this.isActive_modify = false
       this.tempList = this.tableData
@@ -201,7 +216,7 @@ export default {
       const obj = {
         newsTitle: form.newsTitle,
         newsKeyword: form.newsKeyword,
-        createTime:form.createTime
+        releaseTime:form.releaseTime
       } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
       // 增加了同一个form(个数有多个),修改一次form,其他的数据也会改变
       this.tableData.push(obj)
@@ -253,12 +268,13 @@ export default {
           .then(successResponse => {
             if (successResponse.status === 200) {
               // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
-              for (var i = 0; i < this.tempList.length; i++) {
+              /*for (var i = 0; i < this.tempList.length; i++) {
                 if (this.tempList[i].name === rows[index].name) {
                   this.tempList.splice(i, 1)
                 }
               }
-              rows.splice(index, 1)
+              rows.splice(index, 1)*/
+              this.initTableData()
             }else{
               this.$router.replace({path: '/error'})
             }
@@ -290,5 +306,8 @@ export default {
 </script>
 
 <style>
-
+.refCLass{
+    background-color:#156AA8;
+    padding:5px;
+}
 </style>

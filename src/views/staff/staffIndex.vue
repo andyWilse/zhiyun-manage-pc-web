@@ -2,17 +2,17 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6.2">
           <el-form-item label="中文名称:">
             <el-input v-model="searchForm.one" placeholder="中文名称"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6.2">
           <el-form-item label="职位:">
             <el-input v-model="searchForm.three" placeholder="职位"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6.2">
           <el-form-item label="教派类别：">
             <el-select v-model="searchForm.four"  placeholder="请选择">
               <el-option
@@ -24,13 +24,11 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="6.8">
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+        </el-col>
       </el-row>
-      <div style="text-align:center">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
-      <div style="text-align:right">
-        <el-button class="addClass" @click="addClick">添加</el-button>
-      </div>
 
     </el-form>
 
@@ -77,9 +75,8 @@
       </el-table-column>
 
       <el-table-column
-          fixed="right"
           align="center"
-          width="130"
+          width="175"
           label="操作">
         <template slot-scope="scope">
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
@@ -201,7 +198,7 @@ export default {
     handleRewrite (form) {
       this.isActive_modify = false // 显示修改弹窗
       this.tableData[this.index_modify].staffName = form.staffName
-      this.tableData[this.index_modify].religiousSect = form.religiousSect
+      this.tableData[this.index_modify].religiousSect = form.religious
       this.tableData[this.index_modify].staffTelphone = form.staffTelphone
       this.tableData[this.index_modify].certTypeCd = form.certTypeCd
       this.tableData[this.index_modify].certNbr = form.certNbr
@@ -213,7 +210,7 @@ export default {
     handleAdd (form) {
       const obj = {
         staffName: form.staffName,
-        religiousSect: form.religiousSect,
+        religiousSect: form.religious,
         staffTelphone: form.staffTelphone,
         staffPost:form.staffPost
       } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
@@ -268,12 +265,13 @@ export default {
       this.$axios.post('/staff/delete/'+staffId)
           .then(successResponse => {
               if (successResponse.status === 200) {
-                for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
+                 this.initTableData()
+                /*for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
                   if (this.tempList[i].name === rows[index].name) {
                     this.tempList.splice(i, 1)
                   }
                 }
-                rows.splice(index, 1)
+                rows.splice(index, 1)*/
               }else{
                 this.$router.replace({path: '/error'})
               }

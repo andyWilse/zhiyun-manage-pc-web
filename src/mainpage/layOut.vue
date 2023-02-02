@@ -29,18 +29,21 @@ export default {
 </script>
 
 <style >
+
+/*  #2d3a6b */
 .header {
   position: absolute;
-  line-height: 50px;
-  background-color: #2d3a6b;
+  line-height: 42px;
+  background-color:#F8F8FF;
   top: 0px;
   left: 0px;
   right: 0px;
 }
+/* #545c64 */
 .navber {
   position: absolute;
-  background-color: #545c64;
-  top: 50px;
+  background-color: #156AA8;
+  top: 42px;
   left: 0px;
   bottom: 0px;
   width: 200px;

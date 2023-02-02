@@ -72,7 +72,7 @@
               </el-upload>
             </el-col>
             <el-col>
-              <button @click="uploadelupload" type="primary" style="padding:5px;background-color: black;color: white">点击提交</button>
+              <button @click="uploadelupload" type="primary" style="padding:5px;background-color: #156AA8;color: white">点击提交</button>
             </el-col>
           </el-row>
 
@@ -157,6 +157,7 @@ export default {
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
+          this.$refs.elupload.clearFiles()
         }else{
           this.$alert('新增用户失败,请联系管理员！');
         }
@@ -171,6 +172,7 @@ export default {
       this.form.userMobile = ''
       this.form.userEmail = ''
       this.form.userNbr = ''
+      this.form.identity = ''
     },
     handleClose (done) {
       this.$confirm('确认关闭？')

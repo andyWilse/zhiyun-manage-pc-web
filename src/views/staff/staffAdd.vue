@@ -3,6 +3,10 @@
   <div>
     <el-dialog title="职员信息新增" :visible="dialogVisibleStaffAdd" :before-close="handleClose" width="50%">
       <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
+      <el-form-item label="religious" prop="religious" v-show="false">
+        <el-input v-model="form.religious" class="religiousclass"></el-input>j
+      </el-form-item>
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="中文名:" prop="staffName">
@@ -11,7 +15,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="教派类别:" prop="religiousSect">
-              <el-select v-model="form.religiousSect"  placeholder="----------- 请选择 -----------">
+              <el-select v-model="form.religiousSect" @change="selectChanged" placeholder="----------- 请选择 -----------">
                 <el-option
                     v-for="item in religiousSects"
                     :key="item.dictCd"
@@ -94,7 +98,7 @@
               </el-upload>
             </el-col>
             <el-col>
-              <button @click="uploadelupload" type="primary" style="padding:5px;background-color: black;color: white">点击提交</button>
+              <button @click="uploadelupload" type="primary" style="background-color: #156AA8;color: white">点击提交</button>
             </el-col>
           </el-row>
 
@@ -219,6 +223,8 @@ export default {
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
+          this.$refs.elupload.clearFiles()
+
         }else{
           this.$alert('新增职员失败,请联系管理员！');
         }
@@ -275,7 +281,13 @@ export default {
         }
       })
     },
-
+    selectChanged(params) {
+        this.religiousSects.map(item => {
+        	if(item.dictCd == params){
+        		this.form.religious = item.dictCnDesc
+        	}
+        })
+     },
   },
 
 }

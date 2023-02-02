@@ -7,10 +7,10 @@
             <el-input v-model="searchForm.one" placeholder="设备编号"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+             <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+         </el-col>
       </el-row>
-      <div style="text-align:left">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
     </el-form>
 
     <el-table
@@ -26,35 +26,56 @@
           align="center"
           fixed>
       </el-table-column>
+<!--
       <el-table-column
           prop="functionType"
           label="功能类别"
           width="180"
           align="center">
       </el-table-column>
+      -->
       <el-table-column
-          prop="venuesId"
-          label="场所"
+          prop="venuesAddres"
+          label="场所地址"
           align="center"
-          width="180">
+          width="385">
       </el-table-column>
+
       <el-table-column
           prop="state"
           label="状态"
           align="center"
-          width="260">
+          width="130">
       </el-table-column>
+
       <el-table-column
-          prop="creator"
+          prop="lastModifier"
           label="维护人"
           align="center"
-          width="260">
+          width="160">
       </el-table-column>
+
       <el-table-column
           prop="lastModifyTime"
           label="维护时间"
-          align="center">
+          align="center"
+          width="200">
+
       </el-table-column>
+
+        <el-table-column
+            align="center"
+            width="240"
+            label="操作">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="nowClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+              监控查看
+            </el-button>
+            <el-button @click.native.prevent="backClick(scope.$index, tableData)" style="padding:5px;" type="danger">
+              监控回放
+            </el-button>
+          </template>
+        </el-table-column>
     </el-table>
     <div style="display:flex;justify-content:flex-start">
       <el-pagination

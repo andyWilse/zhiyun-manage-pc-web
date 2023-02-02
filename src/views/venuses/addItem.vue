@@ -3,6 +3,9 @@
     <div>
       <el-dialog title="场所基本信息新增" :visible="dialogVisibleVenuesAdd" :before-close="handleClose" width="50%">
         <el-form ref="form" :model="form" label-width="80px" :rules="formRules">
+        <el-form-item label="religious" prop="religious" v-show="false">
+          <el-input v-model="form.religious" class="religiousclass"></el-input>j
+        </el-form-item>
           <el-row>
             <el-col :span="12">
               <el-form-item label="场所名称" prop="venuesName">
@@ -11,7 +14,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="教派类别" prop="religiousSect">
-                <el-select v-model="form.religiousSect"  placeholder="----------- 请选择 -----------">
+                <el-select v-model="form.religiousSect" @change="selectChanged" placeholder="----------- 请选择 -----------">
                   <el-option
                       v-for="item in religiousSects"
                       :key="item.dictCd"
@@ -91,7 +94,7 @@
                 </el-upload>
               </el-col>
               <el-col>
-                <button @click="uploadelupload" type="primary" style="padding:5px;background-color: black;color: white">点击提交</button>
+                <button @click="uploadelupload" type="primary" style="padding:5px;background-color: #156AA8;color: white">点击提交</button>
               </el-col>
             </el-row>
 
@@ -121,11 +124,13 @@ export default {
         venuesName: '',
         religiousSect: '',
         registerNbr: '',
+        venuesPhone : '',
         organization: '',
         venuesAddres: '',
-        picturesPath:'',
         responsiblePerson:'',
-
+        liaisonMan : '',
+        briefIntroduction :'',
+        picturesPath:'',
       },
       formRules: {
         venuesName:[{required: true, message: '请输入场所名称', trigger: 'blur'}],
@@ -195,6 +200,7 @@ methods: {
             // 对应事件cAdd
             // &emit向父组件提交form表单
             this.$emit('cAdd', this.form)
+            this.$refs.elupload.clearFiles()
           }else{
             this.$alert('新增场所失败,请联系管理员！');
             /*this.messageWarn("新增场所失败,请联系管理员！","");*/
@@ -203,10 +209,16 @@ methods: {
   },
 
     childaddClick () {
-      this.form.venuesName = ''
-      this.form.registerNbr = ''
-      this.form.religiousSect = ''
-      this.form.venuesAddres = ''
+      this.form.venuesName = '';
+      this.form.religiousSect = '';
+      this.form.registerNbr = '';
+      this.form.venuesPhone = '';
+      this.form.organization = '';
+      this.form.venuesAddres = '';
+      this.form.responsiblePerson = '';
+      this.form.liaisonMan = '';
+      this.form.briefIntroduction = '';
+      this.form.picturesPath = '';
     },
     handleClose (done) {
       this.messageWarn('确认关闭？',done);
@@ -248,6 +260,13 @@ methods: {
     messageWarn(message,done){
       this.$confirm(message).then(_ => {this.$emit('cActive') ,done()}).catch(_ => {});
     },
+    selectChanged(params) {
+        this.religiousSects.map(item => {
+            if(item.dictCd == params){
+                this.form.religious = item.dictCnDesc
+            }
+        })
+     },
   },
 
 }

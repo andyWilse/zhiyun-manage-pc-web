@@ -27,6 +27,11 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="新闻链接:" prop="newsRef">
+            <el-input v-model="form.newsRef"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item label="新闻关键字:" prop="newsKeyword">
             <el-input v-model="form.newsKeyword" placeholder="多个关键字请用逗号（ ，）隔开"></el-input>
           </el-form-item>
@@ -71,6 +76,7 @@ export default {
         newsKeyword: '',
         newsContent: '',
         newsFrom:'',
+        newsRef:'',
       },
       formRules: {
         newsTitle:[{required: true, message: '请输入新闻标题', trigger: 'blur'}],
@@ -116,12 +122,14 @@ export default {
         newsKeyword: this.form.newsKeyword,
         newsContent: this.form.newsContent,
         newsFrom:this.form.newsFrom,
+        newsRef:this.form.newsRef,
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
           this.$message.info({message: '新增新闻信息成功！', type: 'success'});
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
+          this.$refs.elupload.clearFiles()
         }else{
           this.$alert('新增新闻信息失败,请联系管理员！');
         }
@@ -133,6 +141,7 @@ export default {
       this.form.newsKeyword = ''
       this.form.newsContent = ''
       this.form.newsFrom=''
+      this.form.newsRef=''
     },
     handleClose (done) {
       this.$confirm('确认关闭？')

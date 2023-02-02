@@ -6,6 +6,9 @@
         <el-form-item label="id" prop="venuesId" v-show="false">
           <el-input v-model="form.venuesId" class="venuesName-input"></el-input>
         </el-form-item>
+        <el-form-item label="religious" prop="religious" v-show="false">
+          <el-input v-model="form.religious" class="religiousclass"></el-input>j
+        </el-form-item>
         <el-form-item label="照片:" prop="picturesPath" v-show="false">
         </el-form-item>
 
@@ -17,7 +20,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="教派类别" prop="religiousSect">
-              <el-select v-model="form.religiousSect"  placeholder="----------- 请选择 -----------">
+              <el-select v-model="form.religiousSect" @change="selectChanged" placeholder="----------- 请选择 -----------">
                 <el-option
                     v-for="item in religiousSects"
                     :key="item.dictCd"
@@ -198,6 +201,13 @@ export default {
       this.form.venuesAddres = 'dddd'
       this.form.venuesPhone = ''
     },*/
+    selectChanged(params) {
+        this.religiousSects.map(item => {
+            if(item.dictCd == params){
+                this.form.religious = item.dictCnDesc
+            }
+        })
+     },
   }
 }
 </script>

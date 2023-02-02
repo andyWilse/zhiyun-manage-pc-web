@@ -1,25 +1,20 @@
 <template>
   <div class="header">
     <a href>
-      <img class="logo" src="@/assets/logo.png" alt width="30px" />
+      <img class="logo" src="@/assets/manage.png" alt width="30px" />
       <span class="company">后台管理系统</span>
     </a>
 
-    <a href="http://localhost:8081/#/sus">
-      <span class="firstClass" type="primary" icon="el-icon-s-home" >首页</span>
+    <a href="http://127.0.0.1:8081/#/sus" >
+      <img class="firstlogo" src="@/assets/first.png" alt width="80px" />
     </a>
-
-<!--    <el-link type="primary" icon="el-icon-s-home" style="padding-left: 200px;color: #cccccc"
-             target='_blank'
-            href="http://localhost:8080/#/sus"
-    >首页</el-link>-->
-
 
     <!-- 出发时间   -->
     <el-dropdown  @command="handleCommand">
       <span class="el-dropdown-link">
         系统设置
-        <i class="el-icon-arrow-down el-icon--right"></i>
+       <!-- <i class="el-icon-arrow-down el-icon--right"></i>-->
+           <img class="initlogo" src="@/assets/init.png" alt width="15px" />
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item icon="el-icon-edit"  command="modiPass">修改密码</el-dropdown-item>
@@ -69,9 +64,18 @@ export default {
   vertical-align: middle;
   padding: 0px 10px 0 40px;
 }
+.firstlogo {
+  vertical-align: middle;
+  padding: 0px 10px 0 150px;
+}
+.initlogo{
+  vertical-align: middle;
+  padding: 0px 10px 0 10px;
+}
+/* aliceblue */
 .company {
   position: absolute;
-  color: aliceblue;
+  color: #156AA8;
 }
 /* 下拉菜单展示效果 */
 .el-dropdown {
@@ -80,15 +84,17 @@ export default {
   margin-right: 20px;
 }
 .el-dropdown-link {
-  color: white;
-  /* 定义放上去手的形状 */
+  color: #grey;
+  /* 定义放上去手的形状pointer */
   cursor: pointer;
 }
-
+/* transparent
 .firstClass{
-  padding-left: 200px;
-  color: #cccccc;
+  padding-left: 0px;
+  color: #156AA8;
   background-color:transparent;
   border-style:none;
+
 }
+*/
 </style>

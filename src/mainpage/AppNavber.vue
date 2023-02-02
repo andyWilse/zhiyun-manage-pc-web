@@ -5,15 +5,16 @@
       :router="true"表示开启路由，当开启路由后 index指向路由地址
     -->
     <el-menu
-        default-active="/"
+        :default-active="$route.path"
+        :default-openeds="openeds"
         class="el-menu-vertical-demo"
-
         :router="true"
         @open="handleOpen"
         @close="handleClose"
-        background-color="#545c64"
+        background-color="#156AA8"
         text-color="#fff"
         active-text-color="#ffd04b"
+
     >
       <!-- 一级菜单 -->
       <el-submenu
@@ -23,7 +24,7 @@
       >
         <!-- key是给每一个vnode的唯一id-->
         <template slot="title">
-          <i :class="iconsObj[item.menuId]"></i>
+          <img :src="require('@/assets/'+item.iconNm)">
           <span>{{ item.menuNm }}</span>
         </template>
         <!-- 二级菜单 -->
@@ -39,16 +40,12 @@
         </el-menu-item>
       </el-submenu>
 
-      <el-menu-item
-          v-for="subItem in menuList"
-          :key="subItem.menuId"
-          :index="subItem.href"
-      >
-        <template slot="title">
-<!--          <i class="el-icon-menu"></i>-->
-          <span>{{ subItem.menuNm }}</span>
-        </template>
-      </el-menu-item>
+        <el-menu-item   v-for="subItem in menuList"
+                        :key="subItem.menuId"
+                        :index="subItem.href">
+            <img :src="require('@/assets/'+subItem.iconNm)">
+            <span>{{ subItem.menuNm }}</span>
+        </el-menu-item>
 
     </el-menu>
   </div>
@@ -61,14 +58,7 @@ export default {
       // 左侧菜单数据
       menuList: [],
       menuListc: [],
-      // 左侧菜单图标数组
-      iconsObj: {
-        125: 'iconfont icon-iconfontuser',
-        103: 'iconfont icon-tijikongjian',
-        101: 'iconfont icon-shangpin',
-        102: 'iconfont icon-danju',
-        145: 'iconfont icon-baobiao',
-      },
+      openeds: ['1001','1006'],
     };
   },
   // 在模板渲染成html前调用方法获取左侧菜单栏数据
@@ -78,6 +68,7 @@ export default {
   components: {},
   methods: {
     handleOpen(key, keyPath) {
+      this.activeDefault = keyPath;
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {

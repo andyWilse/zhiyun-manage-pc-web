@@ -7,6 +7,10 @@
           <el-input v-model="form.staffId" class="staffclass"></el-input>j
         </el-form-item>
 
+        <el-form-item label="religious" prop="religious" v-show="false">
+          <el-input v-model="form.religious" class="religiousclass"></el-input>j
+        </el-form-item>
+
         <el-form-item label="照片:" prop="staffPicture" v-show="false">
         </el-form-item>
 
@@ -18,7 +22,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="教派类别:" prop="religiousSect">
-              <el-select v-model="form.religiousSect"  placeholder="----------- 请选择 -----------">
+              <el-select v-model="form.religiousSect"  placeholder="----------- 请选择 -----------"  @change="selectChanged">
                 <el-option
                     v-for="item in religiousSects"
                     :key="item.dictCd"
@@ -263,6 +267,14 @@ export default {
       }
       return arr
     },
+
+    selectChanged(params) {
+        this.religiousSects.map(item => {
+        	if(item.dictCd == params){
+        		this.form.religious = item.dictCnDesc
+        	}
+        })
+     },
   }
 }
 </script>

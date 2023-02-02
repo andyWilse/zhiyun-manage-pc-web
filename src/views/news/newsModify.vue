@@ -30,6 +30,11 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="新闻链接:" prop="newsRef">
+            <el-input v-model="form.newsRef"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item label="新闻关键字:" prop="newsKeyword">
             <el-input v-model="form.newsKeyword"></el-input>
           </el-form-item>
@@ -76,6 +81,7 @@ export default {
         newsKeyword: '',
         newsContent: '',
         newsFrom:'',
+        newsRef:'',
       },
       rules: {
         newsTitle:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
@@ -114,7 +120,8 @@ export default {
         newsType: this.form.newsType,
         newsKeyword: this.form.newsKeyword,
         newsContent: this.form.newsContent,
-        newsFrom:this.form.newsFrom
+        newsFrom:this.form.newsFrom,
+        newsRef:this.form.newsRef,
       }).then(successResponse => {
         if (successResponse.data.code=== 200) {
           this.$message.info('修改新闻信息成功！');
@@ -175,8 +182,6 @@ export default {
       }
       return arr
     },
-
-
   }
 }
 </script>

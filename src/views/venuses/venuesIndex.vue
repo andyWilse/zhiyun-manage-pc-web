@@ -2,17 +2,17 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6.1">
       <el-form-item label="场所名称:">
         <el-input v-model="searchForm.one" placeholder="场所名称"></el-input>
       </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6.1">
           <el-form-item label="负责人:">
             <el-input v-model="searchForm.three" placeholder="负责人"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6.2">
           <el-form-item label="教派类别：">
             <el-select v-model="searchForm.four"  placeholder="----------- 请选择 -----------">
               <el-option
@@ -24,14 +24,13 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <div style="text-align:center">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
-      <div style="text-align:right">
-        <el-button class="addClass" @click="addClick">添加</el-button>
-      </div>
 
+        <el-col :span="6.8">
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+        </el-col>
+
+      </el-row>
     </el-form>
 
     <el-table
@@ -89,7 +88,7 @@
           width="130"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" class="mclass">
               修改
           </el-button>
           <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
@@ -218,7 +217,7 @@ export default {
       this.isActive_modify = false // 显示修改弹窗
       // eslint-disable-next-line no-unused-vars
       this.tableData[this.index_modify].venuesName = form.venuesName
-      this.tableData[this.index_modify].religiousSect = form.religiousSect
+      this.tableData[this.index_modify].religiousSect = form.religious
       this.tableData[this.index_modify].registerNbr = form.registerNbr
       this.tableData[this.index_modify].venuesPhone = form.venuesPhone
       this.tableData[this.index_modify].organization = form.organization
@@ -230,7 +229,7 @@ export default {
     handleAdd (form) {
       const obj = {
         venuesName: form.venuesName,
-        religiousSect: form.religiousSect,
+        religiousSect: form.religious,
         registerNbr: form.registerNbr,
         venuesPhone: form.venuesPhone,
         organization: form.organization,
@@ -304,12 +303,13 @@ export default {
       this.$axios.post('/venues/delete/'+venuesId)
           .then(successResponse => {
                 if (successResponse.status === 200) {
-                  for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
+                  /*for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
                     if (this.tempList[i].name === rows[index].name) {
                       this.tempList.splice(i, 1)
                     }
                   }
-                  rows.splice(index, 1)
+                  rows.splice(index, 1)*/
+                  this.initTableData()
                 }else{
                   this.$router.replace({path: '/error'})
                 }
@@ -342,6 +342,17 @@ export default {
 </script>
 
 <style>
+.qclass{
+  background-color:#156AA8;
+}
 
+.aclass{
+  background-color:#aa7700;
+}
+
+.mclass{
+  background-color:#156AA8;
+  padding:5px;
+}
 
 </style>

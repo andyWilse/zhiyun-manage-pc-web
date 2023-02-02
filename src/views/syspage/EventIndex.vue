@@ -7,10 +7,10 @@
             <el-input v-model="searchForm.one" placeholder="预警设备"></el-input>
           </el-form-item>
         </el-col>
+         <el-col :span="8">
+             <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+         </el-col>
       </el-row>
-      <div style="text-align:left">
-        <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-      </div>
     </el-form>
 
     <el-table
@@ -44,26 +44,32 @@
           align="center"
           width="100">
       </el-table-column>
+
       <el-table-column
           prop="warnTime"
           label="预警时间"
           align="center"
-          width="260">
+          width="160">
       </el-table-column>
+
       <el-table-column
           prop="relVenuesId"
           label="地点"
-          align="center">
+          align="center"
+          width="260">
       </el-table-column>
+
       <el-table-column
           prop="handleTesults"
           label="处理结果"
           align="center">
       </el-table-column>
+
       <el-table-column
           prop="handleTime"
           label="处理时间"
           align="center">
+
       </el-table-column>
     </el-table>
     <div style="display:flex;justify-content:flex-start">
