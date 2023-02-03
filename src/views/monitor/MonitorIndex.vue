@@ -137,8 +137,7 @@ export default {
         }
       }).then(successResponse => {
         if (successResponse.status === 200) {
-
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+          this.tableData=successResponse.data.datas;
           this.total=successResponse.data.total;
         }else{
           this.$router.replace({path: '/error'})
@@ -151,6 +150,12 @@ export default {
       this.search.startTime = val
     },
 
+    nowClick (index, rows) {
+        this.$router.replace({path: '/monitorNow'})
+    },
+    backClick (index, rows) {
+        this.$router.replace({path: '/monitorBack'})
+    }
   }
 }
 </script>

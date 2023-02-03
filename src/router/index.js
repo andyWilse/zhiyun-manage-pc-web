@@ -5,12 +5,13 @@ import layOut from '@/mainpage/layOut';
 import venuesIndex from '@/views/venuses/venuesIndex';
 import staffIndex from '@/views/staff/staffIndex';
 import logIndex from '@/views/syspage/LogIndex';
-import monitorIndex from '@/views/syspage/MonitorIndex';
+import monitorIndex from '@/views/monitor/MonitorIndex';
+import monitorNow from '@/views/monitor/MonitorNow';
+import monitorBack from '@/views/monitor/MonitorBack';
 import eventIndex from '@/views/syspage/EventIndex';
 import userIndex from '@/views/user/userIndex';
 import userLimit from '@/views/user/userLimit';
 import newsIndex from '@/views/news/newsIndex';
-
 import sus from '@/views/successView';
 
 Vue.use(VueRouter); //安装插件
@@ -24,7 +25,7 @@ export const constantRouterMap = [
     { path: '/error', component: () => import('@/views/errorView'), hidden: true },
 
 
-    { path: '/test', component: () => import('@/test/testTs'), hidden: true },
+    { path: '/test', component: () => import('@/test/testTd'), hidden: true },
 
     //菜单
     {path:'/layOut',name:'layOut',component:layOut,redirect:'sus',
@@ -44,7 +45,8 @@ export const constantRouterMap = [
                 }
             },
             {path:'/newsIndex',name:'newsIndex',component:newsIndex},
-
+            {path:'/monitorNow',name:'monitorNow',component:monitorNow},
+            {path:'/monitorBack',name:'monitorBack',component:monitorBack},
 
         ]
     },

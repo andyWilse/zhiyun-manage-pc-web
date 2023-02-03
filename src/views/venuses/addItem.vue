@@ -53,14 +53,22 @@
 
           <el-row>
             <el-col :span="12">
-              <el-form-item label="所属机构" prop="organization">
-                <el-input v-model="form.organization"></el-input>
+              <el-form-item label="场所地址" prop="venuesAddres">
+                    <el-cascader
+                      v-model="selectedOptions"
+                      size="large"
+                      :options="options"
+                      filterable
+                      clearable
+                      style="width: 250px"
+                      @change="handleChange"
+                    />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="场所地址" prop="venuesAddres">
-                <el-input v-model="form.venuesAddres"></el-input>
-              </el-form-item>
+                <el-form-item label="详细地址" prop="organization">
+                  <el-input v-model="form.organization"></el-input>
+                </el-form-item>
             </el-col>
           </el-row>
 
@@ -113,11 +121,15 @@
 </template>
 
 <script>
+import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 export default {
   props: ['dialogVisibleVenuesAdd'],
   data () {
     return {
       message: '来自子组件的消息',
+      options: regionDataPlus,
+      selectedOptions: [],
+      selected: ['110000', '110100', '110101'],
       religiousSects:[],
       fileList:[],
       form: {
@@ -154,6 +166,21 @@ export default {
   },
 
 methods: {
+// 省市区级联选择器选择后更新用户前端
+    handleChange(value) {
+      this.form.province = ''
+      this.form.city = ''
+      this.form.country = ''
+      for (let i = 0; i < this.selectedOptions.length; i++) {
+        if (i === 0) { this.form.province = CodeToText[this.selectedOptions[i]] }
+        if (i === 1) { this.form.city = CodeToText[this.selectedOptions[i]] }
+        if (i === 2) { this.form.country = CodeToText[this.selectedOptions[i]] }
+      }
+    },
+    regionChange (data) {
+          console.log(data) // 打印的是选择的省市区地址
+        },
+
   async getReligiousSect(){
     this.$axios.get('/dict/getSysDicts', {
       params: {
