@@ -12,6 +12,7 @@ import eventIndex from '@/views/syspage/EventIndex';
 import userIndex from '@/views/user/userIndex';
 import userLimit from '@/views/user/userLimit';
 import newsIndex from '@/views/news/newsIndex';
+import firstPage from '@/mainpage/dialog/FirstPage';
 import sus from '@/views/successView';
 
 Vue.use(VueRouter); //安装插件
@@ -28,9 +29,9 @@ export const constantRouterMap = [
     { path: '/test', component: () => import('@/test/testTd'), hidden: true },
 
     //菜单
-    {path:'/layOut',name:'layOut',component:layOut,redirect:'sus',
+    {path:'/layOut',name:'layOut',component:layOut,redirect:'firstPage',
         children:[
-            {path:'/sus',name:'sus',component:sus},
+            {path:'/firstPage',name:'firstPage',component:firstPage},
             {path:'/venuesIndex',name:'venuesIndex',component:venuesIndex},
             {path:'/staffIndex',name:'staffIndex',component:staffIndex},
             {path:'/logIndex',name:'logIndex',component:logIndex},

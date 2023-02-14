@@ -151,10 +151,19 @@ export default {
     },
 
     nowClick (index, rows) {
-        this.$router.replace({path: '/monitorNow'})
+         this.$router.push ({
+             path: '/monitorNow',
+             replace: true,
+             query: { monitorUrl: rows[index].monitorUrl}
+         })
+
     },
     backClick (index, rows) {
-        this.$router.replace({path: '/monitorBack'})
+        this.$router.push ({
+             path: '/monitorBack',
+             replace: true,
+             query: { monitorUrl: rows[index].monitorUrl}
+         })
     }
   }
 }

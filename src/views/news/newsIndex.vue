@@ -128,7 +128,6 @@ export default {
       searchdata: '',
       searchList: [],
       tempList: [],
-      roleslist: [],
       //查询
       tableData:[],
       total:0,
@@ -146,22 +145,7 @@ export default {
   mounted(){
     this.initTableData();
   },
-  created(){
-    this.getRoleslist();
-  },
   methods: {
-    async getRoleslist(){
-      this.$axios.get('/role/getRoles').then(successResponse => {
-        if (successResponse.status === 200) {
-          this.roleslist=successResponse.data;
-          this.roleslist[this.roleslist.length]=this.roleslist[0]
-          this.roleslist[0]={"roleNm":"----------- 请选择 -----------"}
-
-        }else{
-          this.$router.replace({path: '/error'})
-        }
-      })
-    },
     refClick (index, rows) {
         let url=this.tableData[index].newsRef;
         window.open(url, '_blank');

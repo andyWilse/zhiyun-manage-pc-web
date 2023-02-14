@@ -5,7 +5,7 @@
       <span class="company">后台管理系统</span>
     </a>
 
-    <a href="http://zszjadmin.860577.net:8808/#/sus" >
+    <a href="http://zszjadmin.860577.net:8808/#/firstPage" >
       <img class="firstlogo" src="@/assets/first.png" alt width="80px" />
     </a>
 
