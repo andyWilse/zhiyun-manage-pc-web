@@ -13,6 +13,8 @@ import userIndex from '@/views/user/userIndex';
 import userLimit from '@/views/user/userLimit';
 import newsIndex from '@/views/news/newsIndex';
 import firstPage from '@/mainpage/dialog/FirstPage';
+import deployTask from '@/views/task/deployTask';
+
 import sus from '@/views/successView';
 
 Vue.use(VueRouter); //安装插件
@@ -48,7 +50,7 @@ export const constantRouterMap = [
             {path:'/newsIndex',name:'newsIndex',component:newsIndex},
             {path:'/monitorNow',name:'monitorNow',component:monitorNow},
             {path:'/monitorBack',name:'monitorBack',component:monitorBack},
-
+            {path:'/deployTask',name:'deployTask',component:deployTask},
         ]
     },
 

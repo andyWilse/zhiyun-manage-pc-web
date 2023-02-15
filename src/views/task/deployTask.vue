@@ -7,14 +7,10 @@
             <el-input v-model="searchForm.one" placeholder="任务名称"></el-input>
           </el-form-item>
         </el-col>
-         <el-col :span="7">
-          <el-form-item label="任务内容:">
-            <el-input v-model="searchForm.two" placeholder="任务内容"></el-input>
-          </el-form-item>
-        </el-col>
 
         <el-col :span="7">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="handClass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="depClass" icon="el-icon-circle-plus-outline" type="primary" @click="deployClick">流程部署</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -26,42 +22,45 @@
         style="width: 100%"
     >
       <el-table-column
-          prop="taskName"
-          label="任务名称"
+          prop="name"
+          label="流程名称"
           width="190"
           align="center"
           fixed>
       </el-table-column>
 
       <el-table-column
-          prop="taskContent"
-          label="任务内容"
-          width="280"
+          prop="taskKey"
+          label="key值"
+          width="200"
           align="center">
       </el-table-column>
 
       <el-table-column
-          prop="venuesAddres"
-          label="场所地址"
+          prop="version"
+          label="版本"
           align="center"
-          width="450">
+          width="100">
       </el-table-column>
 
       <el-table-column
-          prop="endTime"
-          label="截至时间"
+          prop="resourceName"
+          label="配置文件"
           align="center"
-          width="200">
+          width="300">
       </el-table-column>
 
       <el-table-column
-            prop="emergencyLevel"
-            label="紧急状态"
+            prop="description"
+            label="流程描述"
             align="center"
-            width="150">
+            width="485">
         </el-table-column>
 
     </el-table>
+    
+    <add-item :dialog-visible-task-add="isActive_add" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
+    
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
           background
@@ -75,12 +74,17 @@
 </template>
 
 <script>
+import deployItem from './deployItem'
+
 export default {
   name: "FirstPage",
-
+  components: {
+    'add-item': deployItem
+  },
   data () {
     return {
       message: '',
+      isActive_add: false,
       //查询
       tableData:[],
       total:0,
@@ -112,12 +116,11 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/eventTask/getTasking', {
+      this.$axios.get('/task/getProcdef', {
         params: {
           page: this.page,
           size: this.size,
           taskName:this.searchForm.one,
-          taskContent:this.searchForm.two,
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
@@ -133,6 +136,24 @@ export default {
       this.search.startTime = val
     },
     searchData() {},
+    // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
+    deployClick () { 
+      this.isActive_add = true // 显示弹窗
+      //this.$refs.myDeployChild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
+    },
+    changeActive () { // 用于只改变isActive的值来取消显示弹窗
+      this.isActive_add = false
+    },
+    handleAdd (form) {
+          const obj = {
+
+          } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
+          // 增加了同一个form(个数有多个),修改一次form,其他的数据也会改变
+          this.tableData.push(obj)
+          this.tempList = this.tableData
+          this.isActive_add = false // 关闭显示弹窗
+          this.initTableData()
+        },
   }
 }
 </script>
@@ -141,5 +162,12 @@ export default {
 .refCLass{
     background-color:#156AA8;
     padding:5px;
+}
+.depClass{
+  background-color:#aa7700;
+}
+
+.handClass{
+  background-color:#156AA8;
 }
 </style>
