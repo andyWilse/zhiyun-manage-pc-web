@@ -52,24 +52,19 @@
           </el-row>
 
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="场所地址" prop="venuesAddres">
-                    <el-cascader
-                      v-model="selectedOptions"
-                      size="large"
-                      :options="options"
-                      filterable
-                      clearable
-                      style="width: 250px"
-                      @change="handleChange"
+              <el-form-item label="场所地址" prop="organization">
+                   <region-selects
+                      :town="true"
+                      v-model="form.organization"
+                      @change="regionChange"
                     />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="详细地址" prop="organization">
-                  <el-input v-model="form.organization"></el-input>
-                </el-form-item>
-            </el-col>
+               </el-form-item>
+          </el-row>
+
+          <el-row>
+            <el-form-item label="详细地址" prop="venuesAddres">
+              <el-input v-model="form.venuesAddres"></el-input>
+            </el-form-item>
           </el-row>
 
           <el-row>
@@ -109,8 +104,6 @@
           </el-form-item>
         </el-form>
 
-
-
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
           <el-button @click="handleSubmit()">确定</el-button>
@@ -121,15 +114,17 @@
 </template>
 
 <script>
-import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
+import { RegionSelects } from 'v-region';
+
 export default {
   props: ['dialogVisibleVenuesAdd'],
+  components: {
+      RegionSelects
+  },
   data () {
     return {
       message: '来自子组件的消息',
-      options: regionDataPlus,
       selectedOptions: [],
-      selected: ['110000', '110100', '110101'],
       religiousSects:[],
       fileList:[],
       form: {
@@ -166,34 +161,22 @@ export default {
   },
 
 methods: {
-// 省市区级联选择器选择后更新用户前端
-    handleChange(value) {
-      this.form.province = ''
-      this.form.city = ''
-      this.form.country = ''
-      for (let i = 0; i < this.selectedOptions.length; i++) {
-        if (i === 0) { this.form.province = CodeToText[this.selectedOptions[i]] }
-        if (i === 1) { this.form.city = CodeToText[this.selectedOptions[i]] }
-        if (i === 2) { this.form.country = CodeToText[this.selectedOptions[i]] }
-      }
-    },
     regionChange (data) {
-          console.log(data) // 打印的是选择的省市区地址
-        },
-
-  async getReligiousSect(){
-    this.$axios.get('/dict/getSysDicts', {
-      params: {
-        dictTypeCd: '1001',
-      }
-    }).then(successResponse => {
-      if (successResponse.status === 200) {
-        this.religiousSects=successResponse.data;
-      }else{
-        this.$router.replace({path: '/error'})
-      }
-    })
-  },
+      //console.log(data)
+    },
+    async getReligiousSect(){
+        this.$axios.get('/dict/getSysDicts', {
+          params: {
+            dictTypeCd: '1001',
+          }
+        }).then(successResponse => {
+          if (successResponse.status === 200) {
+            this.religiousSects=successResponse.data;
+          }else{
+            this.$router.replace({path: '/error'})
+          }
+        })
+    },
     handleCancel () {
       this.$emit('cActive') // $emit应是用来子组件向父组件传参的,但是,这里我只是想改变父组件中isActive为false,
       // 对应事件cActive
@@ -240,7 +223,7 @@ methods: {
       this.form.religiousSect = '';
       this.form.registerNbr = '';
       this.form.venuesPhone = '';
-      this.form.organization = '';
+      this.form.organization = null;
       this.form.venuesAddres = '';
       this.form.responsiblePerson = '';
       this.form.liaisonMan = '';

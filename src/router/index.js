@@ -28,7 +28,7 @@ export const constantRouterMap = [
     { path: '/error', component: () => import('@/views/errorView'), hidden: true },
 
 
-    { path: '/test', component: () => import('@/test/testTd'), hidden: true },
+    { path: '/test', component: () => import('@/test/testRegion'), hidden: true },
 
     //菜单
     {path:'/layOut',name:'layOut',component:layOut,redirect:'firstPage',

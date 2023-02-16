@@ -5,10 +5,13 @@ import router from './router' //引入路由配置
 import store from './store' //引入 Vuex 状态管理
 import VueSimpleAlert from "vue-simple-alert";
 import { Message } from 'element-ui'
+import Region from 'v-region'
+
+Vue.use(VueSimpleAlert);
+Vue.use(Region);
 
 Vue.prototype.$message = Message
 
-Vue.use(VueSimpleAlert);
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
 axios.defaults.baseURL ='/api'
