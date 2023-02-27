@@ -40,18 +40,63 @@
               <el-input v-model="form.userMobile"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色:" prop="identity">
-              <el-select v-model="form.identity"  placeholder="----------- 请选择 -----------">
-                <el-option
-                    v-for="item in roleslist"
-                    :key="item.roleId"
-                    :label="item.roleNm"
-                    :value="item.roleId"
+        </el-row>
+
+        <el-row>
+            <el-col :span="12">
+                <el-form-item label="角色:" prop="identity">
+                  <el-select v-model="form.identity"  placeholder="----------- 请选择 -----------" @change="getList($event)">
+                    <el-option
+                        v-for="item in roleslist"
+                        :key="item.roleId"
+                        :label="item.roleNm"
+                        :value="item.roleId"
+                    />
+                  </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+
+        <el-row>
+          <el-form-item label="管辖街" prop="organization1" v-show="isShowOne">
+               <region-selects
+                  :town="true"
+                  v-model="regions"
+                  @change="regionChangeTown"
                 />
-              </el-select>
-            </el-form-item>
-          </el-col>
+           </el-form-item>
+      </el-row>
+
+        <el-row>
+          <el-form-item label="场所名称:" prop="venuesName" v-show="isShow">
+                 <el-select v-model="form.venuesName"
+                            style="height:30px;margin-right:20px;"
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="请输入关键词"
+                            :remote-method="getVenuesList"
+                            @focus="repeatList"
+                            clearable
+                            @change="handleSelectBranchCom">
+                     <el-option v-for="item in venuesList"
+                            :key="item.venuesId"
+                            :label="item.venuesAddres"
+                            style="height:30px"
+                            :value="item.venuesId">
+                     </el-option>
+                 </el-select>
+          </el-form-item>
+      </el-row>
+
+      <el-row>
+            <el-form-item label="管辖区" prop="organization2" v-show="isShowTwo">
+                 <region-selects
+                    v-model="regions"
+                    @change="regionChange"
+                  />
+             </el-form-item>
         </el-row>
 
         <el-form-item label="照片" v-show="false">
@@ -61,7 +106,6 @@
         <el-form-item  prop="fileList">
           <el-row>
             <el-col>
-              <h1>上传图片：</h1>
               <el-upload ref="elupload"
                          action="#"
                          multiple
@@ -71,14 +115,13 @@
                 <i class="el-icon-plus"></i>
               </el-upload>
             </el-col>
-            <el-col>
-              <button @click="uploadelupload" type="primary" style="padding:5px;background-color: #156AA8;color: white">点击提交</button>
-            </el-col>
           </el-row>
-
         </el-form-item>
       </el-form>
 
+        <div style="padding: 0 80px;">
+             <button @click="picUpload" type="primary" style="padding:5px;background-color: #156AA8;color: white">图片上传</button>
+        </div>
       <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
           <el-button @click="handleSubmit()">确定</el-button>
@@ -89,14 +132,39 @@
 </template>
 
 <script>
+import { RegionSelects } from 'v-region';
+
 export default {
   props: ['dialogVisibleUserAdd'],
+  components: {
+        RegionSelects
+    },
   data () {
 
     return {
+        regions: {
+            province: '330000',
+            city: '330300',
+            area: '',
+            town: ''
+          },
+      region  :'',
+      province:'',
+      city:'',
+      area:'',
+      town:'',
+      relVenuesId:0,
+      regionArr  :[],
       message: '来自子组件的消息',
+      isShow:false,
+      isShowOne:false,
+      isShowTwo:false,
       roleslist:[],
       fileList:[],
+      venuesList:[],
+      repeatList:[],
+      searchId: '',
+      search: '',
       form: {
         userNm: '',
         loginNm: '',
@@ -114,9 +182,77 @@ export default {
   },
   created(){
     this.getRoleslist();
+    this.getVenuesList('');
   },
 
   methods: {
+    regionChange (data) {
+       var provinceKey='';
+       var cityKey='';
+       var areaKey='';
+       var townKey='';
+       if(undefined!=data.province){
+            provinceKey=data.province.key;
+       }
+       if(undefined!=data.city){
+            cityKey=data.city.key;
+       }
+       if(undefined!=data.area){
+           areaKey=data.area.key;
+       }
+       if(undefined!=data.town){
+           townKey=data.town.key;
+       }
+        this.province=provinceKey;
+        this.city=cityKey;
+        this.area=areaKey;
+    },
+
+    regionChangeTown (data) {
+           var provinceKey='';
+           var cityKey='';
+           var areaKey='';
+           var townKey='';
+           if(undefined!=data.province){
+                provinceKey=data.province.key;
+           }
+           if(undefined!=data.city){
+                cityKey=data.city.key;
+           }
+           if(undefined!=data.area){
+               areaKey=data.area.key;
+           }
+           if(undefined!=data.town){
+               townKey=data.town.key;
+           }
+            this.province=provinceKey;
+            this.city=cityKey;
+            this.area=areaKey;
+            this.town=townKey;
+
+        },
+    // 搜索模糊查询数据下拉框
+    getVenuesList(query) {
+    this.$axios.get('/venues/queryAll', {
+            params: {
+                search: query
+            }
+          }).then(successResponse => {
+            if (successResponse.status === 200) {
+              this.venuesList=successResponse.data;
+            }else{
+              this.$router.replace({path: '/error'})
+            }
+          });
+    },
+    handleSelectBranchCom(item) {
+        this.relVenuesId=item;
+          console.log('远程搜索选中后返回的item：：：：：即value的值')
+          console.log(item)
+          //如果要获取选择的 id或者名字   从item中取值
+          this.searchId = item;
+          console.log(this.searchId)
+    },
     async getRoleslist(){
       this.$axios.get('/role/getRoles').then(successResponse => {
         if (successResponse.status === 200) {
@@ -149,7 +285,12 @@ export default {
         userEmail: this.form.userEmail,
         userNbr: this.form.userNbr,
         identity:this.form.identity,
-        userPhotoUrl: this.form.userPhotoUrl
+        userPhotoUrl: this.form.userPhotoUrl,
+        province: this.province,
+        city: this.city,
+        area: this.area,
+        town: this.town,
+        relVenuesId:this.relVenuesId
 
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
@@ -159,7 +300,12 @@ export default {
           this.$emit('cAdd', this.form)
           this.$refs.elupload.clearFiles()
         }else{
-          this.$alert('新增用户失败,请联系管理员！');
+          let message=successResponse.data.result;
+          if(''!=message && null!=message){
+            this.$alert(message);
+          }else{
+            this.$alert('新增用户失败,请联系管理员！');
+          }
         }
       })
     },
@@ -187,7 +333,7 @@ export default {
       this.fileList.push(param);
     },
     // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
-    uploadelupload() {
+    picUpload() {
       this.$refs.elupload.submit()
       let fd = new FormData()
       this.$refs.elupload.submit(); // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
@@ -217,9 +363,22 @@ export default {
         }
       })
     },
-
-  },
-
+    getList (opt) {
+        if(10000002==opt || 10000003==opt){
+            this.isShow =false;
+            this.isShowOne =false;
+            this.isShowTwo =true;
+        }else if(10000004==opt || 10000005==opt){
+            this.isShow =false;
+            this.isShowOne =true;
+            this.isShowTwo =false;
+        }else if(10000006==opt || 10000007==opt){
+            this.isShow =true;
+            this.isShowOne =true;
+            this.isShowTwo =false;
+        }
+    },
+}
 }
 </script>
 

@@ -153,6 +153,7 @@ export default {
     getVenueslist(){
       this.$axios.get('/venues/queryAll', {
         params: {
+             search:''
         }
       }).then(successResponse => {
         if (successResponse.status === 200) {

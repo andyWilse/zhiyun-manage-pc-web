@@ -42,50 +42,54 @@
       <el-table-column
           prop="venuesName"
           label="场所名称"
-          width="90"
+          width="150"
           align="center"
           fixed>
       </el-table-column>
       <el-table-column
           prop="religiousSect"
           label="教派类别"
-          width="100"
+          width="90"
           align="center">
       </el-table-column>
-      <el-table-column
-          prop="registerNbr"
-          label="登记证号"
-          align="center"
-          width="100">
-      </el-table-column>
+
+       <el-table-column
+            prop="responsiblePerson"
+            label="负责人"
+            align="center"
+            width="100">
+        </el-table-column>
+
       <el-table-column
           prop="venuesPhone"
           label="场所电话"
           align="center"
-          width="100">
+          width="135">
       </el-table-column>
       <el-table-column
           prop="organization"
           label="所属机构"
           align="center"
-          width="100">
+          width="140">
       </el-table-column>
+
       <el-table-column
           prop="venuesAddres"
           label="场所地址"
           align="center">
       </el-table-column>
-      <el-table-column
-          prop="responsiblePerson"
-          label="负责人"
-          align="center"
-          width="100">
-      </el-table-column>
+
+       <el-table-column
+           prop="registerNbr"
+           label="登记证号"
+           align="center"
+           width="205">
+       </el-table-column>
 
       <el-table-column
           fixed="right"
           align="center"
-          width="130"
+          width="120"
           label="操作">
         <template slot-scope="scope">
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" class="mclass">
@@ -244,9 +248,10 @@ export default {
       this.initTableData()
     },
     handleSearch () {
-      this.initTableData()
-      /*this.searchList = [] // 每次搜索,要将上次的搜索结果searchList清空
-      for (var i = 0; i < this.tableData.length; i++) {
+this.page =1;
+      //this.searchList = []; // 每次搜索,要将上次的搜索结果searchList清空
+      this.initTableData();
+     /* for (var i = 0; i < this.tableData.length; i++) {
         if (this.tableData[i].venuesName.includes(this.searchForm.one) ||
             this.tableData[i].religiousSect.includes(this.searchForm.four) ||
             this.tableData[i].responsiblePerson.includes(this.searchForm.three)) {

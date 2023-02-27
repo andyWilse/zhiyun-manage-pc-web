@@ -195,10 +195,10 @@ export default {
       return arr
     },
   /*  childmodifyClick () {
-      /!*this.form.venuesName = ''*!/
+      /!*this.form.venuesName = ''
       this.form.registerNbr = ''
       this.form.religiousSect = ''
-      this.form.venuesAddres = 'dddd'
+      this.form.venuesAddres = ''
       this.form.venuesPhone = ''
     },*/
     selectChanged(params) {

@@ -6,9 +6,13 @@ import store from './store' //引入 Vuex 状态管理
 import VueSimpleAlert from "vue-simple-alert";
 import { Message } from 'element-ui'
 import Region from 'v-region'
+import VueCookies from "vue-cookies";
+
+import util from '@/libs/util.js'
 
 Vue.use(VueSimpleAlert);
 Vue.use(Region);
+Vue.use(VueCookies);
 
 Vue.prototype.$message = Message
 
@@ -52,3 +56,31 @@ new Vue({
     router, //使用路由配置
     store //使用 Vuex 进行状态管理
 }).$mount('#app');
+
+
+/*//使用钩子函数对路由进行权限跳转
+router.beforeEach((to, from, next) => {
+    const roles = localStorage.getItem('roles');
+    const permissions = localStorage.getItem('permissions');
+    //这边可以用match()来判断所有需要权限的路径，to.matched.some(item => return item.meta.loginRequire)
+    //let cookieroles = util.getCookie('roles');
+    //console.log('cookies' +util.cookies.get('roles'));
+    console.log("key: "+VueCookies.keys())
+    let cookieRoles =VueCookies.keys("roles");
+    console.log('cookie' + cookieRoles);
+    if (!cookieRoles && to.path !== '/') { // cookie中有登陆用户信息跳转页面，否则到登陆页面
+        next('/');
+    } else if (to.meta.permission) {// 如果该页面配置了权限属性（自定义permission）
+        // 如果是管理员权限则可进入
+        roles.indexOf('admin') > -1 ? next() : next('/403');
+    } else {
+        // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容
+        if (navigator.userAgent.indexOf('MSIE') > -1 && to.path === '/editor') {
+            Vue.prototype.$alert('vue-quill-editor组件不兼容IE10及以下浏览器，请使用更高版本的浏览器查看', '浏览器不兼容通知', {
+                confirmButtonText: '确定'
+            });
+        } else {
+            next();
+        }
+    }
+})*/

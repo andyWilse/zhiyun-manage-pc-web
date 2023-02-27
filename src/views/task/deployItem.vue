@@ -58,7 +58,7 @@ methods: {
             taskKey: this.form.taskKey,
         }).then(successResponse => {
               if (successResponse.status === 200) {
-                this.$message.info({message: '流程部署成功', type: 'success'});
+                this.$message({message: '流程部署成功', type: 'success'});
                 // &emit向父组件提交form表单
                 this.$emit('cAdd', this.form)
               }else{

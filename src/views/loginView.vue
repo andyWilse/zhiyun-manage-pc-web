@@ -57,6 +57,7 @@
 </template>
 
 <script>
+
 export default {
   name: "loginView",
   data() {
@@ -83,10 +84,13 @@ export default {
             password: this.loginForm.password
           })
           .then(successResponse => {
-            if (successResponse.data.msg === 'success') {
+            if (successResponse.data.code === 200) {
               console.log("登录成功！")
               localStorage.setItem("token",successResponse.data.token)
               localStorage.setItem("userNbr",successResponse.data.userNbr)
+              //localStorage.setItem("roles",successResponse.data.loginInfo.roleList[0])
+              //localStorage.setItem("permissions",successResponse.data.loginInfo.permissionList[0])
+              //this.$cookies.set("roles", successResponse.data.loginInfo.roleList[0])
 
               this.$router.replace({path: '/layOut'})
             }else{

@@ -4,8 +4,9 @@
       <el-dialog title="场所基本信息新增" :visible="dialogVisibleVenuesAdd" :before-close="handleClose" width="50%">
         <el-form ref="form" :model="form" label-width="80px" :rules="formRules">
         <el-form-item label="religious" prop="religious" v-show="false">
-          <el-input v-model="form.religious" class="religiousclass"></el-input>j
+          <el-input v-model="form.religious" class="religiousclass"></el-input>
         </el-form-item>
+
           <el-row>
             <el-col :span="12">
               <el-form-item label="场所名称" prop="venuesName">
@@ -86,23 +87,23 @@
           <el-form-item  prop="fileList">
             <el-row>
               <el-col>
-                <h1>上传图片：</h1>
-                <el-upload ref="elupload"
+                <el-upload ref="elUpload"
                            action=""
                            multiple
                            :auto-upload="false"
-                           :http-request="handleupload"
+                           :http-request="handleUpload"
+                           :on-success="imgSuccess"
                            list-type="picture-card">
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </el-col>
-              <el-col>
-                <button @click="uploadelupload" type="primary" style="padding:5px;background-color: #156AA8;color: white">点击提交</button>
-              </el-col>
             </el-row>
-
           </el-form-item>
         </el-form>
+
+        <div style="padding: 0 80px;">
+             <button @click="picUpload" type="primary" style="padding:5px;background-color: #156AA8;color: white">图片上传</button>
+        </div>
 
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleCancel">取消</el-button>
@@ -127,6 +128,7 @@ export default {
       selectedOptions: [],
       religiousSects:[],
       fileList:[],
+      region:'',
       form: {
         venuesName: '',
         religiousSect: '',
@@ -143,26 +145,28 @@ export default {
         venuesName:[{required: true, message: '请输入场所名称', trigger: 'blur'}],
         organization: [{ required: true, message: '请输入所属机构', trigger: 'blur' }],
         religiousSect: [{ required: true, message: '请选择宗教类别', trigger: 'change' }],
-        // 验证手机号
+        registerNbr: [{ required: true, message: '请输入等级证号', trigger: 'change' }],
+        responsiblePerson: [{ required: true, message: '请输入负责人', trigger: 'change' }],
+        venuesAddres: [{ required: true, message: '请输入详细地址', trigger: 'change' }],
+        // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
         venuesPhone: [{
           required: true,
-          pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+          pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,
           message: "请输入正确的手机号码",
           trigger: "blur"
-
         }],
-
     },
     }
-
   },
   created(){
     this.getReligiousSect();
   },
 
 methods: {
-    regionChange (data) {
-      //console.log(data)
+ // 上传成功
+    imgSuccess(res, file, fileList) {
+      this.fileList = fileList;
+
     },
     async getReligiousSect(){
         this.$axios.get('/dict/getSysDicts', {
@@ -190,32 +194,58 @@ methods: {
           this.$alert('填写信息有误，请重新填写后提交！');
         }
       });
+    },
+    regionChange (data) {
+       var province='';
+       var city='';
+       var area='';
+       var town='';
+       if(undefined!=data.province){
+            province=data.province.value;
+       }
+       if(undefined!=data.city){
+            city=data.city.value;
+       }
+       if(undefined!=data.area){
+           area=data.area.value;
+       }
+       if(undefined!=data.town){
+           town=data.town.value;
+       }
+
+      this.region=province + city + area + town;
 
     },
-  handleSubmitPost(){
-    this.$axios.post('/venues/add', {
-      venuesName: this.form.venuesName,
-      religiousSect: this.form.religiousSect,
-      registerNbr: this.form.registerNbr,
-      venuesPhone: this.form.venuesPhone,
-      organization: this.form.organization,
-      venuesAddres: this.form.venuesAddres,
-      picturesPath: this.form.picturesPath,
-      responsiblePerson: this.form.responsiblePerson,
-      liaisonMan: this.form.liaisonMan,
-      briefIntroduction: this.form.briefIntroduction
-    }).then(successResponse => {
-          if (successResponse.data.code === 200) {
-            this.$message.info({message: '新增场所成功！', type: 'success'});
-            // 对应事件cAdd
-            // &emit向父组件提交form表单
-            this.$emit('cAdd', this.form)
-            this.$refs.elupload.clearFiles()
-          }else{
-            this.$alert('新增场所失败,请联系管理员！');
-            /*this.messageWarn("新增场所失败,请联系管理员！","");*/
-          }
-        })
+   handleSubmitPost(){
+    var pictures=this.form.picturesPath;
+    if(''===pictures){
+        this.$message.error('图片信息为空，请上传图片！');
+    }else{
+     this.$axios.post('/venues/add', {
+          venuesName: this.form.venuesName,
+          religiousSect: this.form.religiousSect,
+          registerNbr: this.form.registerNbr,
+          venuesPhone: this.form.venuesPhone,
+          organization: this.region,
+          venuesAddres: this.form.venuesAddres,
+          picturesPath: this.form.picturesPath,
+          responsiblePerson: this.form.responsiblePerson,
+          liaisonMan: this.form.liaisonMan,
+          briefIntroduction: this.form.briefIntroduction
+        }).then(successResponse => {
+              if (successResponse.data.code === 200) {
+                this.$message.info({message: '新增场所成功！', type: 'success'});
+                // 对应事件cAdd
+                // &emit向父组件提交form表单
+                this.$emit('cAdd', this.form)
+                this.$refs.elUpload.clearFiles()
+              }else{
+                this.$alert('新增场所失败,请联系管理员！');
+                /*this.messageWarn("新增场所失败,请联系管理员！","");*/
+              }
+            })
+    }
+
   },
 
     childaddClick () {
@@ -233,13 +263,13 @@ methods: {
     handleClose (done) {
       this.messageWarn('确认关闭？',done);
     },
-    handleupload(param) {
+    handleUpload(param) {
       this.fileList.push(param);// 一般情况下是在这里创建FormData对象，但我们需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
     },
-  uploadelupload() {
-    this.$refs.elupload.submit()
+  picUpload() {
+    this.$refs.elUpload.submit()
     let fd = new FormData()
-    this.$refs.elupload.submit(); // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
+    this.$refs.elUpload.submit(); // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
 
     this.fileList.forEach(item => {
       fd.append(item.file.name, item.file,item.file.name)  //将每一个文件图片都加进formdata
