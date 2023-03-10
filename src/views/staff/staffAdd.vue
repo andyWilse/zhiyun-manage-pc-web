@@ -15,7 +15,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="教派类别:" prop="religiousSect">
-              <el-select v-model="form.religiousSect" @change="selectChanged" placeholder="----------- 请选择 -----------">
+              <el-select v-model="form.religiousSect" @change="selectChanged" clearable >
                 <el-option
                     v-for="item in religiousSects"
                     :key="item.dictCd"
@@ -30,7 +30,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="职位:"  prop="staffPost">
-              <el-select v-model="form.staffPost"  placeholder="----------- 请选择 -----------">
+              <el-select v-model="form.staffPost"  clearable>
                 <el-option
                     v-for="item in staffPostList"
                     :key="item.key"
@@ -50,7 +50,7 @@
         <el-row>
           <el-col :span="12">
           <el-form-item label="证件类型:" prop="certTypeCd" >
-            <el-select v-model="form.certTypeCd"  placeholder="----------- 请选择 -----------">
+            <el-select v-model="form.certTypeCd"  clearable>
               <el-option
                   v-for="item in certTypeCdArr"
                   :key="item.dictCd"
@@ -69,7 +69,7 @@
 <!--        label-width="120px"-->
         <el-row>
           <el-form-item label="宗教场所:" prop="venuesAddres">
-            <el-select v-model="form.venuesAddres"  placeholder="----------- 请选择 -----------">
+            <el-select v-model="form.venuesAddres"  clearable>
               <el-option
                   v-for="item in venueslist"
                   :key="item.venuesId"
@@ -167,26 +167,26 @@ export default {
       })
     },
    getCertTypeCd(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '3010',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.certTypeCdArr=successResponse.data;
+        if (successResponse.data.code === 200) {
+          this.certTypeCdArr=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }
       })
     },
     async getReligiousSect(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1001',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.religiousSects=successResponse.data;
+        if (successResponse.data.code === 200) {
+          this.religiousSects=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }

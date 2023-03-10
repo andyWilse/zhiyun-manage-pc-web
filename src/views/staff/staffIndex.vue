@@ -4,17 +4,17 @@
       <el-row>
         <el-col :span="6.2">
           <el-form-item label="中文名称:">
-            <el-input v-model="searchForm.one" placeholder="中文名称"></el-input>
+            <el-input v-model="searchForm.one" placeholder="中文名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
           <el-form-item label="职位:">
-            <el-input v-model="searchForm.three" placeholder="职位"></el-input>
+            <el-input v-model="searchForm.three" placeholder="职位" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
           <el-form-item label="教派类别：">
-            <el-select v-model="searchForm.four"  placeholder="请选择">
+            <el-select v-model="searchForm.four"  placeholder="请选择" clearable>
               <el-option
                   v-for="item in religiousSects"
                   :key="item.dictCd"
@@ -41,7 +41,7 @@
       <el-table-column
           prop="staffName"
           label="中文名称"
-          width="260"
+          width="220"
           align="center"
           fixed>
       </el-table-column>
@@ -71,7 +71,7 @@
           prop="venuesName"
           label="场所"
           align="center"
-          width="320">
+          width="335">
       </el-table-column>
 
       <el-table-column
@@ -149,15 +149,13 @@ export default {
   },
   methods: {
     async getreligiousSect(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1001',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.religiousSects=successResponse.data;
-          this.religiousSects[this.religiousSects.length]=this.religiousSects[0]
-          this.religiousSects[0]={"dictCnDesc":"----------- 请选择 -----------"}
+        if (successResponse.data.code === 200) {
+          this.religiousSects=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }
@@ -221,6 +219,7 @@ export default {
       this.initTableData()
     },
     handleSearch () {
+      this.page =1;
       this.initTableData()
     },
     handleClear () {

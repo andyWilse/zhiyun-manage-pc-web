@@ -58,7 +58,7 @@ export default {
       // 左侧菜单数据
       menuList: [],
       menuListc: [],
-      openeds: ['1001','1006'],
+      openeds: ['1001','1006','1007'],
     };
   },
   // 在模板渲染成html前调用方法获取左侧菜单栏数据
@@ -78,18 +78,16 @@ export default {
     async getMenuList() {
       this.$axios.get('/menu/find', {
           }).then(successResponse => {
-            if (successResponse.status === 200) {
-              this.menuList=successResponse.data;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
-              console.log(successResponse.data)
-
-              this.menuList=successResponse.data.parent;
-              this.menuListc=successResponse.data.children;
-
+            if (successResponse.data.code === 200) {
+              console.log(successResponse.data.data)
+              this.menuList=successResponse.data.data.parent;
+              this.menuListc=successResponse.data.data.children;
             }else{
               this.$fire({
-                text: "后台错误，请联系管理员！",
+                text: successResponse.data.Message,
                 timer: 3000
-              })
+              });
+              this.$router.replace({path: '/'});
             }
           })
     },

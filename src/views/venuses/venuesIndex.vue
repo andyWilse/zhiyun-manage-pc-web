@@ -4,17 +4,17 @@
       <el-row>
         <el-col :span="6.1">
       <el-form-item label="场所名称:">
-        <el-input v-model="searchForm.one" placeholder="场所名称"></el-input>
+        <el-input v-model="searchForm.one" placeholder="场所名称" clearable></el-input>
       </el-form-item>
         </el-col>
         <el-col :span="6.1">
           <el-form-item label="负责人:">
-            <el-input v-model="searchForm.three" placeholder="负责人"></el-input>
+            <el-input v-model="searchForm.three" placeholder="负责人" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
           <el-form-item label="教派类别：">
-            <el-select v-model="searchForm.four"  placeholder="----------- 请选择 -----------">
+            <el-select v-model="searchForm.four" clearable >
               <el-option
                   v-for="item in religiousSects"
                   :key="item.dictCd"
@@ -37,7 +37,7 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 200%"
     >
       <el-table-column
           prop="venuesName"
@@ -143,6 +143,7 @@ export default {
       total:0,
       page:1,
       size:10,
+      dictCd: '',
       // 类型下拉选择内容
       religiousSects:[],
       // 绑定搜索数据
@@ -167,15 +168,13 @@ export default {
   },
   methods: {
     async getReligiousSect(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1001',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.religiousSects=successResponse.data;
-          this.religiousSects[this.religiousSects.length]=this.religiousSects[0]
-          this.religiousSects[0]={"dictCnDesc":"----------- 请选择 -----------"}
+        if (successResponse.data.code=== 200) {
+          this.religiousSects=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }
@@ -190,7 +189,7 @@ export default {
       this.index_modify = index
 
       this.$refs.mymodifychild.form.venuesName = this.tableData[this.index_modify].venuesName
-      this.$refs.mymodifychild.form.religiousSect = this.tableData[this.index_modify].religiousSect
+      this.$refs.mymodifychild.form.religiousSect = this.tableData[this.index_modify].dictCd
       this.$refs.mymodifychild.form.registerNbr = this.tableData[this.index_modify].registerNbr
       this.$refs.mymodifychild.form.venuesPhone = this.tableData[this.index_modify].venuesPhone
       this.$refs.mymodifychild.form.responsiblePerson = this.tableData[this.index_modify].responsiblePerson
@@ -202,7 +201,6 @@ export default {
 
       this.$refs.mymodifychild.form.picturesPath = this.tableData[this.index_modify].picturesPath
       this.getPictures(this.tableData[this.index_modify].picturesPath);
-
 
     },
     handleDelete (index, rows) {
@@ -222,6 +220,7 @@ export default {
       // eslint-disable-next-line no-unused-vars
       this.tableData[this.index_modify].venuesName = form.venuesName
       this.tableData[this.index_modify].religiousSect = form.religious
+      this.tableData[this.index_modify].dictCd = form.religiousSect
       this.tableData[this.index_modify].registerNbr = form.registerNbr
       this.tableData[this.index_modify].venuesPhone = form.venuesPhone
       this.tableData[this.index_modify].organization = form.organization
@@ -248,7 +247,7 @@ export default {
       this.initTableData()
     },
     handleSearch () {
-this.page =1;
+        this.page =1;
       //this.searchList = []; // 每次搜索,要将上次的搜索结果searchList清空
       this.initTableData();
      /* for (var i = 0; i < this.tableData.length; i++) {
@@ -286,17 +285,21 @@ this.page =1;
         params: {
           page: this.page,
           size: this.size,
-          venuesName:this.searchForm.one
-          ,
+          venuesName:this.searchForm.one,
           responsiblePerson: this.searchForm.three,
           religiousSect: this.searchForm.four,
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+        if (successResponse.data.code === 200) {
+          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$router.replace({path: '/error'})
+            let message=successResponse.data.result;
+            if(''!=message && null!=message){
+              this.$alert(message);
+            }else{
+              this.$router.replace({path: '/'})
+            }
         }
       })
     },

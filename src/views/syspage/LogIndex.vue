@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="用户名称:">
-            <el-input v-model="searchForm.one" placeholder="用户名称"></el-input>
+            <el-input v-model="searchForm.one" placeholder="用户名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -20,39 +20,30 @@
         style="width: 200%"
     >
       <el-table-column
-          prop="userName"
-          label="用户名"
-          width="160"
+          prop="operator"
+          label="操作人"
+          width="180"
           align="center"
           fixed>
       </el-table-column>
+
       <el-table-column
-          prop="interfaceCode"
-          label="接口"
-          width="180"
+          prop="operateContent"
+          label="操作内容"
+          width="250"
           align="center">
       </el-table-column>
+
       <el-table-column
-          prop="interfaceName"
-          label="接口中文描述"
+          prop="operateDetail"
+          label="详情描述"
           align="center"
-          width="180">
+          width="560">
       </el-table-column>
+
       <el-table-column
-          prop="requestParam"
-          label="请求参数"
-          align="center"
-          width="400">
-      </el-table-column>
-<!--      <el-table-column
-          prop="responseResult"
-          label="响应结果"
-          align="center"
-          width="260">
-      </el-table-column>-->
-      <el-table-column
-          prop="fkDate"
-          label="调用接口时间"
+          prop="operateTm"
+          label="操作时间"
           align="center"
           >
       </el-table-column>
@@ -77,10 +68,7 @@ export default {
   data () {
     return {
       message: '',
-      isShow: true,
-      searchdata: '',
-      searchList: [],
-      tempList: [],
+
       //查询
       tableData:[],
       total:0,
@@ -90,13 +78,6 @@ export default {
       searchForm: {
         all: null,
         one: null,
-        two: null,
-        three: null,
-        four: null,
-        value: null,
-        key: null,
-        time: '',
-        startTime: ''
       },
     }
   },
@@ -120,16 +101,16 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/logs/findpage', {
+      this.$axios.get('/record/findByPage', {
         params: {
           page: this.page,
           size: this.size,
           userName:this.searchForm.one
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
+        if (successResponse.data.code === 200) {
 
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
           this.$router.replace({path: '/error'})
@@ -142,8 +123,6 @@ export default {
       this.search.startTime = val
     },
     searchData() {},
-
-
   }
 }
 </script>

@@ -131,12 +131,16 @@ export default {
           accessNumber:this.searchForm.one
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+        if (successResponse.data.code === 200) {
+          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$router.replace({path: '/error'})
+              let message=successResponse.data.result;
+              if(''!=message && null!=message){
+                this.$alert(message);
+              }else{
+                this.$alert('预警查询失败,请联系管理员！');
+              }
         }
       })
     },

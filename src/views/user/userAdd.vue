@@ -1,17 +1,17 @@
 <template>
 
   <div>
-    <el-dialog title="职员信息新增" :visible="dialogVisibleUserAdd" :before-close="handleClose" width="50%">
+    <el-dialog title="用户新增" :visible="dialogVisibleUserAdd" :before-close="handleClose" width="50%">
       <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
         <el-row>
           <el-col :span="12">
             <el-form-item label="中文名:" prop="userNm">
-              <el-input v-model="form.userNm"></el-input>
+              <el-input v-model="form.userNm" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="登录名:" prop="loginNm">
-              <el-input v-model="form.loginNm"></el-input>
+              <el-input v-model="form.loginNm" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -19,25 +19,29 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="密码:" prop="passwords">
-              <el-input v-model="form.passwords"></el-input>
+              <el-input v-model="form.passwords" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱:" prop="userEmail">
-              <el-input v-model="form.userEmail"></el-input>
+              <el-input v-model="form.userEmail" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
-<!--          <el-col :span="12">
+
+        <!--
+        <el-col :span="12">
             <el-form-item label="工号:"  prop="userNbr">
-              <el-input v-model="form.userNbr"></el-input>
+              <el-input v-model="form.userNbr" ></el-input>
             </el-form-item>
-          </el-col>-->
+          </el-col>
+          -->
+
           <el-col :span="12">
             <el-form-item label="电话号码:" prop="userMobile">
-              <el-input v-model="form.userMobile"></el-input>
+              <el-input v-model="form.userMobile" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -45,7 +49,7 @@
         <el-row>
             <el-col :span="12">
                 <el-form-item label="角色:" prop="identity">
-                  <el-select v-model="form.identity"  placeholder="----------- 请选择 -----------" @change="getList($event)">
+                  <el-select v-model="form.identity" clearable @change="getList($event)">
                     <el-option
                         v-for="item in roleslist"
                         :key="item.roleId"
@@ -57,7 +61,6 @@
             </el-col>
         </el-row>
 
-
         <el-row>
           <el-form-item label="管辖街" prop="organization1" v-show="isShowOne">
                <region-selects
@@ -68,26 +71,13 @@
            </el-form-item>
       </el-row>
 
-        <el-row>
-          <el-form-item label="场所名称:" prop="venuesName" v-show="isShow">
-                 <el-select v-model="form.venuesName"
-                            style="height:30px;margin-right:20px;"
-                            filterable
-                            remote
-                            reserve-keyword
-                            placeholder="请输入关键词"
-                            :remote-method="getVenuesList"
-                            @focus="repeatList"
-                            clearable
-                            @change="handleSelectBranchCom">
-                     <el-option v-for="item in venuesList"
-                            :key="item.venuesId"
-                            :label="item.venuesAddres"
-                            style="height:30px"
-                            :value="item.venuesId">
-                     </el-option>
-                 </el-select>
-          </el-form-item>
+      <el-row>
+          <el-button class="llClass" icon="el-icon-circle-plus-outline" type="primary" @click="modifyClick" v-show="isShowBut">选择场所</el-button>
+          <el-col :span="20">
+            <el-form-item label="场所名称:" prop="venuesName" v-show="isShow">
+              <el-input v-model="form.venuesName" clearable></el-input>
+            </el-form-item>
+          </el-col>
       </el-row>
 
       <el-row>
@@ -126,6 +116,8 @@
           <el-button @click="handleCancel">取消</el-button>
           <el-button @click="handleSubmit()">确定</el-button>
         </span>
+
+        <venues-select :dialog-visible-venues-select="isActive_modify" @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></venues-select>
     </el-dialog>
   </div>
 
@@ -133,15 +125,18 @@
 
 <script>
 import { RegionSelects } from 'v-region';
+import VenuesSelect from './VenuesSelect';
 
 export default {
   props: ['dialogVisibleUserAdd'],
   components: {
-        RegionSelects
+        RegionSelects,
+        'venues-select': VenuesSelect
     },
   data () {
 
     return {
+    isActive_modify: false,
         regions: {
             province: '330000',
             city: '330300',
@@ -157,11 +152,13 @@ export default {
       regionArr  :[],
       message: '来自子组件的消息',
       isShow:false,
+      isShowBut:false,
       isShowOne:false,
       isShowTwo:false,
       roleslist:[],
       fileList:[],
       venuesList:[],
+      venuesIds:'',
       repeatList:[],
       searchId: '',
       search: '',
@@ -176,54 +173,61 @@ export default {
       },
       formRules: {
         userNm:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
+        passwords:[{required: true, message: '请输入密码', trigger: 'blur'}],
+        identity:[{required: true, message: '请选择角色', trigger: 'blur'}],
+        // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+        userMobile: [{
+          required: true,
+          pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+          message: "请输入正确的手机号码",
+          trigger: "blur"
+        }],
+
       },
     }
 
   },
   created(){
     this.getRoleslist();
-    this.getVenuesList('');
   },
 
   methods: {
-    regionChange (data) {
-       var provinceKey='';
-       var cityKey='';
-       var areaKey='';
-       var townKey='';
-       if(undefined!=data.province){
-            provinceKey=data.province.key;
-       }
-       if(undefined!=data.city){
-            cityKey=data.city.key;
-       }
-       if(undefined!=data.area){
-           areaKey=data.area.key;
-       }
-       if(undefined!=data.town){
-           townKey=data.town.key;
-       }
-        this.province=provinceKey;
-        this.city=cityKey;
-        this.area=areaKey;
-    },
-
+   regionChange (data) {
+         var provinceKey='';
+         var cityKey='';
+         var areaKey='';
+         if(''!==data.province && typeof(data.province) != "undefined"){
+              provinceKey=data.province.key;
+         }
+         if(''!==data.city && typeof(data.city) != "undefined"){
+              cityKey=data.city.key;
+         }
+         if(''!==data.area && typeof(data.area) != "undefined"){
+             areaKey=data.area.key;
+         }
+          this.province=provinceKey;
+          this.city=cityKey;
+          this.area=areaKey;
+      },
     regionChangeTown (data) {
+           this.venuesIds = '';
+           this.form.venuesName= '';
            var provinceKey='';
            var cityKey='';
            var areaKey='';
            var townKey='';
-           if(undefined!=data.province){
+           if(''!==data.province && typeof(data.province) != "undefined"){
                 provinceKey=data.province.key;
            }
-           if(undefined!=data.city){
+           if(''!==data.city && typeof(data.city) != "undefined"){
                 cityKey=data.city.key;
            }
-           if(undefined!=data.area){
+           if(''!==data.area && typeof(data.area) != "undefined"){
                areaKey=data.area.key;
            }
-           if(undefined!=data.town){
+           if(''!==data.town && typeof(data.town) != "undefined"){
                townKey=data.town.key;
+               this. getVenuesList('');
            }
             this.province=provinceKey;
             this.city=cityKey;
@@ -231,29 +235,32 @@ export default {
             this.town=townKey;
 
         },
+
     // 搜索模糊查询数据下拉框
     getVenuesList(query) {
-    this.$axios.get('/venues/queryAll', {
+        //执行查询
+        this.$axios.get('/venues/querySelect', {
             params: {
-                search: query
+                search: query,
+                town:this.regions.town
             }
-          }).then(successResponse => {
-            if (successResponse.status === 200) {
-              this.venuesList=successResponse.data;
+        }).then(successResponse => {
+            if (successResponse.data.code === 200) {
+                this.venuesList=successResponse.data.resultArr;
             }else{
-              this.$router.replace({path: '/error'})
+                let message=successResponse.data.result;
+                if(''!=message && null!=message){
+                  this.$alert(message);
+                }else{
+                  this.$router.replace({path: '/'})
+                }
             }
-          });
+        });
     },
-    handleSelectBranchCom(item) {
-        this.relVenuesId=item;
-          console.log('远程搜索选中后返回的item：：：：：即value的值')
-          console.log(item)
-          //如果要获取选择的 id或者名字   从item中取值
-          this.searchId = item;
-          console.log(this.searchId)
-    },
+
     async getRoleslist(){
+        this.venuesIds = '';
+        this.form.venuesName= '';
       this.$axios.get('/role/getRoles').then(successResponse => {
         if (successResponse.status === 200) {
           this.roleslist=successResponse.data;
@@ -270,7 +277,14 @@ export default {
     handleSubmit () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.handleSubmitPost();
+              //图片校验
+              var pictures=this.form.userPhotoUrl;
+              if(''===pictures || typeof(pictures) == "undefined"){
+                  this.$message.error('图片信息为空，请上传图片！');
+              }else{
+                  this.handleSubmitPost();
+              }
+
         }else{
           this.$alert('填写信息有误，请重新填写后提交！');
         }
@@ -290,7 +304,7 @@ export default {
         city: this.city,
         area: this.area,
         town: this.town,
-        relVenuesId:this.relVenuesId
+        relVenuesId:this.venuesIds
 
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
@@ -310,15 +324,25 @@ export default {
       })
     },
 
-
+    //初始化页面
     childaddClick () {
-      this.form.userNm = ''
-      this.form.loginNm = ''
-      this.form.passwords = ''
-      this.form.userMobile = ''
-      this.form.userEmail = ''
-      this.form.userNbr = ''
-      this.form.identity = ''
+        this.isShow =false;
+        this.isShowBut=false;
+        this.isShowOne =false;
+        this.isShowTwo =false;
+        this.regions.town='';
+        this.regions.area='';
+        this.form.venuesName= '';
+        this.form.userPhotoUrl= '';
+
+        this.form.userNm = '';
+        this.form.loginNm = '';
+        this.form.passwords = '';
+        this.form.userMobile = '';
+        this.form.userEmail = '';
+        this.form.userNbr = '';
+        this.form.identity = '';
+
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -353,7 +377,7 @@ export default {
           config
       ).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.form.picturesPath=successResponse.data.result
+          this.form.userPhotoUrl=successResponse.data.result
           this.$message({
             message: '图片上传成功，请继续操作！',
             type: 'success'
@@ -363,20 +387,43 @@ export default {
         }
       })
     },
+    //根据角色显示
     getList (opt) {
         if(10000002==opt || 10000003==opt){
             this.isShow =false;
+            this.isShowBut =false;
             this.isShowOne =false;
             this.isShowTwo =true;
         }else if(10000004==opt || 10000005==opt){
             this.isShow =false;
+            this.isShowBut =false;
             this.isShowOne =true;
             this.isShowTwo =false;
         }else if(10000006==opt || 10000007==opt){
             this.isShow =true;
+            this.isShowBut =true;
             this.isShowOne =true;
             this.isShowTwo =false;
         }
+
+    },
+    //地址弹窗
+     modifyClick (index, rows) {
+          let town=this.regions.town ;
+          if(''===town || typeof(town) == "undefined" || null===town){
+              this.$alert("请先选择所在街镇");
+          }else{
+              this.isActive_modify = true;
+              this.$refs.mymodifychild.venuesList = this.venuesList;
+          }
+    },
+    handleRewrite () {
+        this.venuesIds = this.$refs.mymodifychild.venuesIds;
+        this.form.venuesName= this.$refs.mymodifychild.venuesNms;
+        this.isActive_modify = false;
+    },
+    changeActive_modify () {
+        this.isActive_modify = false;
     },
 }
 }

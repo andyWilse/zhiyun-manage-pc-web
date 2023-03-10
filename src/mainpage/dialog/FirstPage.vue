@@ -124,7 +124,7 @@ export default {
           this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$alert('新闻信息获取失败,请联系管理员！');
+          this.$alert('任务信息获取失败,请联系管理员！');
         }
       })
     },

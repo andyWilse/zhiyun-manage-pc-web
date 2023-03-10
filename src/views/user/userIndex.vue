@@ -4,12 +4,12 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="登录名:">
-            <el-input v-model="searchForm.one" placeholder="登录名"></el-input>
+            <el-input v-model="searchForm.one" placeholder="登录名" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="角色：">
-            <el-select v-model="searchForm.two"  placeholder="----------- 请选择 -----------">
+            <el-select v-model="searchForm.two"  clearable>
               <el-option
                   v-for="item in roleslist"
                   :key="item.roleId"
@@ -32,21 +32,22 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 200%"
     >
-      <el-table-column
-          prop="loginNm"
-          label="登录名"
-          width="150"
-          align="center"
-          fixed>
-      </el-table-column>
 
       <el-table-column
           prop="userNm"
           label="中文名"
           width="200"
           align="center">
+      </el-table-column>
+
+      <el-table-column
+          prop="loginNm"
+          label="登录名"
+          width="150"
+          align="center"
+          fixed>
       </el-table-column>
 
       <el-table-column
@@ -80,7 +81,6 @@
       <el-table-column
           fixed="right"
           align="center"
-          width="130"
           label="操作">
         <template slot-scope="scope">
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
@@ -89,6 +89,9 @@
           <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
             删除
           </el-button>
+          <el-button @click.native.prevent="grandClick(scope.$index, tableData)" style="padding:5px;" type="primary">
+              权限管理
+           </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +100,11 @@
     <!--    @cAdd控制提交form表单的信息,点击确定时,子组件向父组件传递表单数据,同时isActive=false,不再显示弹窗-->
     <modify-item :dialog-visible-user-modify="isActive_modify" :index_from_parent="index_modify"
                  @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></modify-item>
+
+      <grand-item :dialog-visible-user-grand="isActive_grand" :index_from_parent="index_grand"
+              @cActive_grand="changeActive_grand" @cGrand="handleGrand" ref="myGrandChild">
+      </grand-item>
+
 
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
@@ -113,18 +121,22 @@
 <script>
 import userAdd from './userAdd'
 import userModify from './userModify'
+import userGrand from './limit/grandAdd'
 
 export default {
   components: {
     'add-item': userAdd,
-    'modify-item': userModify
+    'modify-item': userModify,
+    'grand-item': userGrand,
   },
   data () {
     return {
       message: '',
       isActive: false,
       isActive_modify: false,
+      isActive_grand: false,
       index_modify: 0,
+      index_grand: 0,
       isShow: true,
       searchdata: '',
       searchList: [],
@@ -155,11 +167,8 @@ export default {
       this.$axios.get('/role/getRoles').then(successResponse => {
         if (successResponse.status === 200) {
           this.roleslist=successResponse.data;
-          this.roleslist[this.roleslist.length]=this.roleslist[0]
-          this.roleslist[0]={"roleNm":"----------- 请选择 -----------"}
-
         }else{
-          this.$router.replace({path: '/error'})
+          this.$router.replace({path: '/'})
         }
       })
     },
@@ -182,6 +191,12 @@ export default {
       this.$refs.mymodifychild.form.userPhotoUrl = this.tableData[this.index_modify].userPhotoUrl
       this.getPictures(this.tableData[this.index_modify].userPhotoUrl);
     },
+    //点击事件
+    grandClick (index, rows) {
+        this.isActive_grand = true;
+        this.index_grand = index;
+        this.$refs.myGrandChild.userId = this.tableData[this.index_grand].userId
+    },
     handleDelete (index, rows) {
       console.log(index)
       this.$confirm('此操作将永久删除场所信息, 是否继续?', '提示', {
@@ -196,7 +211,7 @@ export default {
 
     },
     handleRewrite (form) {
-      this.isActive_modify = false // 显示修改弹窗
+
       this.tableData[this.index_modify].userNm = form.userNm
       this.tableData[this.index_modify].loginNm = form.loginNm
       this.tableData[this.index_modify].passwords = form.passwords
@@ -205,9 +220,14 @@ export default {
       this.tableData[this.index_modify].userNbr = form.userNbr
       //this.tableData[this.index_modify].identity = form.identity
 
-      this.isActive_modify = false
+      this.isActive_modify = false // 显示修改弹窗
       this.tempList = this.tableData
     },
+    //授权管理
+    handleGrand (index, rows) {
+      this.isActive_grand = true ;
+    },
+
     handleAdd (form) {
       const obj = {
         userNm: form.userNm,
@@ -222,6 +242,7 @@ export default {
       this.initTableData()
     },
     handleSearch () {
+      this.page =1;
       this.initTableData()
     },
     handleClear () {
@@ -233,6 +254,9 @@ export default {
     changeActive_modify () {
       this.isActive_modify = false
     },
+    changeActive_grand () {
+      this.isActive_grand= false
+    },
     sizeChange(pageSize){
       this.size=pageSize;
       this.initTableData();
@@ -241,6 +265,7 @@ export default {
       this.page=currentPage;
       this.initTableData();
     },
+    //查询
     initTableData(){
       this.$axios.get('/user/find', {
         params: {
@@ -250,11 +275,16 @@ export default {
           identity: this.searchForm.two,
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+        if (successResponse.data.code === 200) {
+          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$router.replace({path: '/error'})
+              let message=successResponse.data.result;
+              if(''!=message && null!=message){
+                this.$alert(message);
+              }else{
+                this.$alert('新增失败,请联系管理员！');
+              }
         }
       })
     },
@@ -274,14 +304,14 @@ export default {
               rows.splice(index, 1)*/
               this.initTableData()
             }else{
-              this.$router.replace({path: '/error'})
+              this.$router.replace({path: '/'})
             }
           })
     },
 
     // 时间确认触发
     dateChange(val) {
-      this.search.startTime = val
+      this.search.startTime = val;
     },
     searchData() {},
 

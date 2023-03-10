@@ -164,26 +164,26 @@ export default {
       })
     },
     getCertTypeCd(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '3010',
         }
       }).then(successResponse => {
         if (successResponse.status === 200) {
-          this.certTypeCdArr=successResponse.data;
+          this.certTypeCdArr=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }
       })
     },
     async getReligiousSect(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1001',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.religiousSects=successResponse.data;
+        if (successResponse.data.code === 200) {
+          this.religiousSects=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }

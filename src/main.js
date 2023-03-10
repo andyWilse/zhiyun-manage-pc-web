@@ -1,56 +1,55 @@
-import Vue from 'vue'
-import App from './App.vue'
-import './plugins/element.js'
-import router from './router' //引入路由配置
-import store from './store' //引入 Vuex 状态管理
+import Vue from 'vue';
+import App from './App.vue';
+import './plugins/element.js';
+import router from './router' ;//引入路由配置
+import store from './store'; //引入 Vuex 状态管理
 import VueSimpleAlert from "vue-simple-alert";
-import { Message } from 'element-ui'
-import Region from 'v-region'
-import VueCookies from "vue-cookies";
+import { Message } from 'element-ui';
+import Region from 'v-region';
+import VueCookies  from "vue-cookies";
+import axios from 'axios'
+import util from '@/libs/util.js';
+//前端每次发送请求时就会带上 sessionId
+import './static/http.js';
+import VueRouter from 'vue-router';
 
-import util from '@/libs/util.js'
 
+Vue.use(router);
+Vue.use(VueRouter);
 Vue.use(VueSimpleAlert);
 Vue.use(Region);
 Vue.use(VueCookies);
+Vue.prototype.$store = store;
+Vue.prototype.$message = Message;
+Vue.config.productionTip = false;
 
-Vue.prototype.$message = Message
-
-// 设置反向代理，前端请求默认发送到 http://localhost:8443/api
-var axios = require('axios')
-axios.defaults.baseURL ='/api'
-// 全局注册，之后可在其他组件中通过 this.$axios 发送数据
-Vue.prototype.$axios = axios
-
-Vue.config.productionTip = false
-
-axios.interceptors.request.use(
-    function (config) {
-                let token = localStorage.getItem('token');
-                if (token) {
-                    config.headers['x-token'] = token;
-                    config.headers['login-name']=localStorage.getItem('userNbr');
-                }
-                return config;
-            }
-    );
-
-// 全局路由守卫
+//使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    let token = localStorage.getItem('token')
-    if (to.meta.needLogin) { // 判断该路由是否需要登录权限
-        // 判断是否已经登录
-        if (token) {
-            next();
-        }else {
-            next({path: '/'}) ; //跳转到登录页
-        }
+ if (to.matched.some(m => m.meta.requireAuth)) {    // 需要登录
+    if(window.localStorage.token && window.localStorage.isLogin === '1'){
+      next()
+    } else if (to.path !== '/firstPage' && to.path !== '/') {
+      let token = window.localStorage.token;
+      if (token === 'null' || token === '' || token === undefined){
+          next({path: '/'})
+          //Toast({ message: '检测到您还未登录,请登录后操作！', duration: 1500 })
+      }else{
+        next();
+      }
     } else {
-        next()
+        if (to.meta.title) {
+            document.title = to.meta.title
+        };
+        next();
+
     }
+  } else {
+    if (to.meta.title) {
+            document.title = to.meta.title
+        };// 不需要登录
+    next();
+  }
 });
-
-
 new Vue({
     render: h => h(App),
     router, //使用路由配置
@@ -58,17 +57,62 @@ new Vue({
 }).$mount('#app');
 
 
-/*//使用钩子函数对路由进行权限跳转
-router.beforeEach((to, from, next) => {
-    const roles = localStorage.getItem('roles');
+//Vue.prototype.$cookies = cookies;
+// 设置反向代理，前端请求默认发送到 http://localhost:8443/api
+//var axios = require('axios');
+//axios.defaults.baseURL ='/api';
+
+/*// 配置请求默认接口
+axios.defaults.baseURL = "http://localhost:8093"
+axios.defaults.withCredentials = true;
+
+// 全局注册，之后可在其他组件中通过 this.$axios 发送数据
+Vue.prototype.$axios = axios;*/
+
+
+/*//添加请求拦截器
+axios.interceptors.request.use(
+  config =>{
+    if(store.state.token){
+      config.headers.common['token'] =store.state.token
+    }
+    return config;
+  },
+  error =>{
+    //对请求错误做什么
+    return Promise.reject(error);
+  });
+
+//http reponse响应拦截器
+axios.interceptors.response.use(
+  response =>{
+    return response;
+  },
+  error=>{
+    if(error.response){
+      switch(error.response.status){
+        case 401:
+          localStorage.removeItem('token');
+          router.replace({
+            path: '/views/login',
+            query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
+          })
+      }
+    }
+  });*/
+
+/*Vue.prototype.$apps = Apps;    //  app.js公用方法
+Vue.config.productionTip = false;*/
+    /*const roles = localStorage.getItem('roles');
     const permissions = localStorage.getItem('permissions');
     //这边可以用match()来判断所有需要权限的路径，to.matched.some(item => return item.meta.loginRequire)
     //let cookieroles = util.getCookie('roles');
     //console.log('cookies' +util.cookies.get('roles'));
+
     console.log("key: "+VueCookies.keys())
     let cookieRoles =VueCookies.keys("roles");
     console.log('cookie' + cookieRoles);
-    if (!cookieRoles && to.path !== '/') { // cookie中有登陆用户信息跳转页面，否则到登陆页面
+    if (1=== cookieRoles.length && to.path !== '/') { // cookie中有登陆用户信息跳转页面，否则到登陆页面
         next('/');
     } else if (to.meta.permission) {// 如果该页面配置了权限属性（自定义permission）
         // 如果是管理员权限则可进入
@@ -80,7 +124,11 @@ router.beforeEach((to, from, next) => {
                 confirmButtonText: '确定'
             });
         } else {
+         // 更改标题
+          util.title("ddd")
             next();
         }
-    }
-})*/
+    }*/
+
+
+

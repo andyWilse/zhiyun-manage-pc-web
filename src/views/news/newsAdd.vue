@@ -89,13 +89,13 @@ export default {
   },
   methods: {
     async getNewsTypeArr(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1002',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.newsTypeArr=successResponse.data;
+        if (successResponse.data.code === 200) {
+          this.newsTypeArr=successResponse.data.resultArr;
         }else{
           this.$alert('数据获取失败,请联系管理员！');
         }

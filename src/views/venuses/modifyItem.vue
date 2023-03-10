@@ -135,13 +135,13 @@ export default {
       // 对应事件cActive
     },
     async getReligiousSect(){
-      this.$axios.get('/dict/getSysDicts', {
+      this.$axios.get('/dict/getSysDict', {
         params: {
           dictTypeCd: '1001',
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.religiousSects=successResponse.data;
+        if (successResponse.data.code  === 200) {
+          this.religiousSects=successResponse.data.resultArr;
         }else{
           this.$router.replace({path: '/error'})
         }

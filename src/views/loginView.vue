@@ -79,25 +79,28 @@ export default {
       }
     },
     handleLogin () {
-      this.$axios.post('/login/in', {
+    //let api='/api/ajaxLogin';
+    //api='/login/in';
+      this.$axios.post('/login', {
             username: this.loginForm.username,
             password: this.loginForm.password
           })
           .then(successResponse => {
             if (successResponse.data.code === 200) {
-              console.log("登录成功！")
-              localStorage.setItem("token",successResponse.data.token)
-              localStorage.setItem("userNbr",successResponse.data.userNbr)
-              //localStorage.setItem("roles",successResponse.data.loginInfo.roleList[0])
-              //localStorage.setItem("permissions",successResponse.data.loginInfo.permissionList[0])
-              //this.$cookies.set("roles", successResponse.data.loginInfo.roleList[0])
+             // localStorage.setItem("token",successResponse.data.token)
+             var userInfo = successResponse.data.data.token;
+             this.$store.commit('$_setToken', userInfo);
+             sessionStorage.setItem('$_setToken', userInfo) ;
 
               this.$router.replace({path: '/layOut'})
+              console.log("登录成功！");
+              sessionStorage.clear();
             }else{
               this.$fire({
                 //title: "Title",
                 //type: "success",
-                text: "用户名或密码错误，请重新输入！",
+                //text: "用户名或密码错误，请重新输入！",
+                text:successResponse.data.message,
                 timer: 3000
               })
             }
