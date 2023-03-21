@@ -141,9 +141,9 @@ export default {
     }
   },
   created(){
-    this.getReligiousSect();
-    this.getCertTypeCd();
-    this.getVenueslist();
+    //this.getReligiousSect();
+    //this.getCertTypeCd();
+    //this.getVenueslist();
   },
   methods: {
     handleCancel () {
@@ -151,7 +151,7 @@ export default {
       // 对应事件cActive
     },
     getVenueslist(){
-      this.$axios.get('/venues/queryAll', {
+      this.$axios.get('/venues/getStaffVenues', {
         params: {
              search:''
         }

@@ -101,12 +101,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <add-item :dialog-visible-venues-add="isActive_add" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
-    <!--    @cActive控制添加表单的显示,每当点击取消时,不再显示弹窗-->
-    <!--    @cAdd控制提交form表单的信息,点击确定时,子组件向父组件传递表单数据,同时isActive=false,不再显示弹窗-->
-    <modify-item :dialog-visible-venues-modify="isActive_modify" :index_from_parent="index_modify"
-                 @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></modify-item>
-
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
           background
@@ -120,20 +114,11 @@
 </template>
 
 <script>
-import additem from './addItem'
-import modifyitem from './modifyItem'
 
 export default {
-  components: {
-    'add-item': additem,
-    'modify-item': modifyitem
-  },
   data () {
     return {
       message: '',
-      isActive_add: false,
-      isActive_modify: false,
-      index_modify: 0,
       isShow: true,
       searchdata: '',
       searchList: [],
@@ -181,27 +166,17 @@ export default {
       })
     },
     addClick () { // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
-      this.isActive_add = true // 显示弹窗
-      this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
+       this.$router.replace({path: '/venusesAdd'})
+
+      //this.isActive_add = true // 显示弹窗
+      //this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
     },
     modifyClick (index, rows) {
-      this.isActive_modify = true // 显示修改弹窗
-      this.index_modify = index
-
-      this.$refs.mymodifychild.form.venuesName = this.tableData[this.index_modify].venuesName
-      this.$refs.mymodifychild.form.religiousSect = this.tableData[this.index_modify].dictCd
-      this.$refs.mymodifychild.form.registerNbr = this.tableData[this.index_modify].registerNbr
-      this.$refs.mymodifychild.form.venuesPhone = this.tableData[this.index_modify].venuesPhone
-      this.$refs.mymodifychild.form.responsiblePerson = this.tableData[this.index_modify].responsiblePerson
-      this.$refs.mymodifychild.form.liaisonMan = this.tableData[this.index_modify].liaisonMan
-      this.$refs.mymodifychild.form.venuesAddres = this.tableData[this.index_modify].venuesAddres
-      this.$refs.mymodifychild.form.organization = this.tableData[this.index_modify].organization
-      this.$refs.mymodifychild.form.briefIntroduction = this.tableData[this.index_modify].briefIntroduction
-      this.$refs.mymodifychild.form.venuesId = this.tableData[this.index_modify].venuesId
-
-      this.$refs.mymodifychild.form.picturesPath = this.tableData[this.index_modify].picturesPath
-      this.getPictures(this.tableData[this.index_modify].picturesPath);
-
+        //this.$router.replace({path: '/venusesModify'});
+        //this.$router.push({name: 'Test',params:{ index:'1'}});
+        this.index_modify = index;
+        let vid= this.tableData[this.index_modify].venuesId;
+        this.$router.push({path: '/venusesModify',query:{ venuesId:vid}});
     },
     handleDelete (index, rows) {
       console.log(index)

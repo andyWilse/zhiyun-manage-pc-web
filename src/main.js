@@ -12,9 +12,19 @@ import util from '@/libs/util.js';
 //前端每次发送请求时就会带上 sessionId
 import './static/http.js';
 import VueRouter from 'vue-router';
+import Plugin from 'v-fit-columns';
+
+import videojs from 'video.js';
+import 'videojs-contrib-hls';
+
+import VideoPlayer from 'vue-video-player';
+import 'vue-video-player/src/custom-theme.css'
+import 'video.js/dist/video-js.css'
+Vue.use(VideoPlayer);
 
 
 Vue.use(router);
+Vue.use(Plugin);
 Vue.use(VueRouter);
 Vue.use(VueSimpleAlert);
 Vue.use(Region);

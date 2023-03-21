@@ -58,7 +58,7 @@ export default {
       // 左侧菜单数据
       menuList: [],
       menuListc: [],
-      openeds: ['1001','1006','1007'],
+      openeds: ['1001','1002','1003'],
     };
   },
   // 在模板渲染成html前调用方法获取左侧菜单栏数据

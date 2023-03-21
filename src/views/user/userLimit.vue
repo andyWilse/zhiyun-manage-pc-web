@@ -183,14 +183,15 @@ export default {
     },
     /*权限反显*/
     showMenu(){
-      this.$axios.get('/menu/getByrole/'+this.roleId).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.roleMenu=successResponse.data.parent
-          this.$refs.tree.setCheckedKeys(this.roleMenu);
-        }else{
-          this.$router.replace({path: '/error'})
-        }
-      })
+      this.$axios.get('/menu/getByrole/'+this.roleId)
+          .then(successResponse => {
+                if (successResponse.data.code === 200) {
+                  this.roleMenu=successResponse.data.result;
+                  this.$refs.tree.setCheckedKeys(this.roleMenu);
+                }else{
+                  this.$router.replace({path: '/'})
+                }
+          })
     }
   }
 }

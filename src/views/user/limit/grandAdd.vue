@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="权限菜单" :visible="dialogVisibleUserGrand" :before-close="handleClose" width="30%">
+    <el-dialog title="权限菜单" :visible="dialogVisibleUserGrand" :before-close="handleClose" width="40%">
         <div class="main-container">
           <el-tree
               :data="treeOptionsMenu"
@@ -29,6 +29,7 @@ export default {
     return {
       message: '来自子组件的消息',
       treeOptionsMenu:[],
+      userMenu:[],
       userId:'',
       menus:'',
       defaultProps: {
@@ -39,6 +40,7 @@ export default {
   },
   created(){
     this.getTreeMenus();
+    //this.showMenu();
   },
   methods: {
     getTreeMenus(){
@@ -63,12 +65,13 @@ export default {
         this.$refs['tree'].setCheckedKeys([])
     },
     /*权限反显*/
-    showMenu(){
-      this.$axios.get('/menu/getByUser/'+this.userId)
+    showMenu(data){
+      //重新获取
+      this.$axios.get('/menu/getByUser/'+data)
       .then(successResponse => {
             if (successResponse.data.code === 200) {
-              this.roleMenu=successResponse.data.parent
-              this.$refs.tree.setCheckedKeys(this.roleMenu);
+              this.userMenu=successResponse.data.result;
+              this.$refs.tree.setCheckedKeys(this.userMenu);
             }else{
               this.$router.replace({path: '/'})
             }
@@ -82,21 +85,20 @@ export default {
     },
     /*权限保存*/
     handleSubmit () {
+      let toMenu='';
       this.$refs['tree'].getCheckedNodes().forEach(value => {
-          this.menus+=value.id+","
+          toMenu=value.id+","+toMenu;
       })
       this.$axios.post('/menu/userGrand',
           {
               userId:this.userId,
-              menus:this.menus
+              menus:toMenu
             }
     ).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.$message.info({message: '用户权限保存成功！', type: 'success'});
-          // 对应事件cAdd
-          // &emit向父组件提交form表单
-          this.$emit('cGrand', '');
           this.clearTag ();
+          this.$emit('cGrand', '');
+          this.$message({message: '用户权限保存成功！',type: 'success'});
         }else{
           this.$router.replace({path: '/'})
         }

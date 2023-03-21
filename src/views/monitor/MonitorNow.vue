@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import flvjs from 'flv.js'
+import flvJs from 'flv.js'
 export default {
   data () {
     return {
@@ -13,10 +13,10 @@ export default {
     }
   },
    mounted() {
-        if (flvjs.isSupported()) {
+        if (flvJs.isSupported()) {
             var monitorUrl=this.$route.query.monitorUrl;
             var videoElement = document.getElementById('videoElement');
-            this.flvPlayer = flvjs.createPlayer(
+            this.flvPlayer = flvJs.createPlayer(
             {
                     type: 'flv',
                     isLive: true,

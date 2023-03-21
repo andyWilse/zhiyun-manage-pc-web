@@ -1,25 +1,19 @@
 <template>
 <div>
       <div class="roleclass">
-      <span style="font-size: 16px">员工选择:</span>
-      <el-select v-model="userId"
-      				style="height:30px;margin-right:20px;"
-      				filterable
-      				remote
-      				reserve-keyword
-      				placeholder="请输入关键词"
-      				@focus="repeatList"
-      				clearable
-      				@change="selecteRole">
-      		 <el-option v-for="item in userList"
-      				:key="item.userId"
-      				:label="item.userNm"
-      				:value="item.userId"
-      				style="height:30px"
-      				>
-      		 </el-option>
-      	 </el-select>
+      <span style="font-size: 16px">角色选择:</span>
+      <el-select v-model="roleId"  placeholder="----------- 请选择 -----------"
+      @change="selecteRole"
+      >
+        <el-option
+            v-for="item in roleslist"
+            :key="item.roleId"
+            :label="item.roleNm"
+            :value="item.roleId"
+        />
+      </el-select>
       </div>
+
   <div class="main-container">
       <el-tree
           :data="treeOptionsMenu"
@@ -48,19 +42,58 @@ export default {
     return {
       // 控制popover弹出框是否展示
       popoverVisible: false,
-      userList:[],
-      userId:[],
+      roleslist:[],
+      roleId:[],
       roleMenu:[],
       menus:'',
+      // 需把数据整理成以下结构
+      // tree数据(children的id第一位为父级id，用于在select中清除某一点，可找到其父级去掉全选)
       treeOptionsMenu:[],
+      treeOptions: [
+        {id:'',name: '全部菜单',children: [
+        {
+          id: '1001',
+          name: '数据填报',
+          children: [
+            {
+              id: '10010001',
+              name: '场所信息管理'
+            }, {
+              id: '10010002',
+              name: '职员信息管理'
+            }
+          ]
+        },
+        {
+          id: '1006',
+          name: '系统管理',
+          children: [
+            {
+              id: '10060001',
+              name: '人员管理'
+            }, {
+              id: '10060002',
+              name: '权限管理'
+            }
+          ]
+        },
+        {id: '1003', name: '监控接入管理'},
+        {id: '1004', name: '预警事件管理'},
+        {id: '1005', name: '日志信息管理'},
+          ]}
+      ],
+      // select选择框选项
+      typeOption: [],
       defaultProps: {
         children: 'children',
         label: 'name'
       },
+      // select的值
+      typeValue: []
     }
   },
   created () {
-    this.getUserList()
+    this.getRoleslist()
   },
     computed: {},
     watch: {},
@@ -116,23 +149,13 @@ export default {
       this.$refs['tree'].setCheckedKeys(chooseData)
     },
 
-    //查询
-    getUserList(){
-      this.$axios.get('/user/find', {
-        params: {
-          page: 1,
-          size: 10000,
-        }
-      }).then(successResponse => {
-        if (successResponse.data.code === 200) {
-          this.userList=successResponse.data.resultArr;
+    /*角色下拉*/
+    async getRoleslist(){
+      this.$axios.get('/role/getRoles').then(successResponse => {
+        if (successResponse.status === 200) {
+          this.roleslist=successResponse.data;
         }else{
-              let message=successResponse.data.result;
-              if(''!=message && null!=message){
-                this.$alert(message);
-              }else{
-                this.$router.replace({path: '/'})
-              }
+          this.$router.replace({path: '/error'})
         }
       })
     },
@@ -144,7 +167,7 @@ export default {
       })
       this.$axios.post('/menu/save',
           {
-              userId:this.userId,
+              roleId:this.roleId,
               menus:this.menus
             }
     ).then(successResponse => {
@@ -160,16 +183,16 @@ export default {
     },
     /*权限反显*/
     showMenu(){
-      this.$axios.get('/menu/getByrole/'+this.userId).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.roleMenu=successResponse.data.parent
-          this.$refs.tree.setCheckedKeys(this.roleMenu);
-        }else{
-          this.$router.replace({path: '/error'})
-        }
-      })
-    },
-
+      this.$axios.get('/menu/getByrole/'+this.roleId)
+          .then(successResponse => {
+                if (successResponse.data.code === 200) {
+                  this.roleMenu=successResponse.data.result;
+                  this.$refs.tree.setCheckedKeys(this.roleMenu);
+                }else{
+                  this.$router.replace({path: '/'})
+                }
+          })
+    }
   }
 }
 </script>

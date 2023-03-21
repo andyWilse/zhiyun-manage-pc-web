@@ -45,11 +45,10 @@ export default {
             this.$axios.post('/logout')
             .then(successResponse => {
                     if (successResponse.data.code === 200) {
-                      this.$router.replace({path: '/'});
                       this.$store.commit('$_removeStorage');    // 清除登录信息
                       this.$router.replace({path: '/'});
                     }else{
-                      this.$router.replace({path: '/error'})
+                      this.$router.replace({path: '/'})
                     }
                   })
       }else if("modiPass"===command){

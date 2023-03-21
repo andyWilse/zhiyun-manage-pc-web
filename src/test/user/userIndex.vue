@@ -15,7 +15,8 @@
                   :key="item.roleId"
                   :label="item.roleNm"
                   :value="item.roleId"
-                  ref="ad"/>
+                  ref="ad"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -31,7 +32,8 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%">
+        style="width: 200%"
+    >
 
       <el-table-column
           prop="userNm"
@@ -93,9 +95,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <add-item :dialog-visible-user-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
+    <!--    @cActive控制添加表单的显示,每当点击取消时,不再显示弹窗-->
+    <!--    @cAdd控制提交form表单的信息,点击确定时,子组件向父组件传递表单数据,同时isActive=false,不再显示弹窗-->
+    <modify-item :dialog-visible-user-modify="isActive_modify" :index_from_parent="index_modify"
+                 @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></modify-item>
+
       <grand-item :dialog-visible-user-grand="isActive_grand" :index_from_parent="index_grand"
               @cActive_grand="changeActive_grand" @cGrand="handleGrand" ref="myGrandChild">
       </grand-item>
+
 
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
@@ -110,18 +119,27 @@
 </template>
 
 <script>
+import userAdd from './userAdd'
+import userModify from './userModify'
 import userGrand from './limit/grandAdd'
 
 export default {
   components: {
+    'add-item': userAdd,
+    'modify-item': userModify,
     'grand-item': userGrand,
   },
   data () {
     return {
       message: '',
+      isActive: false,
+      isActive_modify: false,
       isActive_grand: false,
+      index_modify: 0,
       index_grand: 0,
       isShow: true,
+      searchdata: '',
+      searchList: [],
       tempList: [],
       roleslist: [],
       fileList: [],
@@ -133,17 +151,20 @@ export default {
       // 绑定搜索数据
       searchForm: {
         one: null,
+        two: null,
+        three: null,
+        four: null,
       },
     }
   },
-
-    created(){
-        this.initTableData();
-        this.getRolesList();
-    },
-  //方法
+  mounted(){
+    this.initTableData();
+  },
+  created(){
+    this.getRoleslist();
+  },
   methods: {
-    async getRolesList(){
+    async getRoleslist(){
       this.$axios.get('/role/getRoles').then(successResponse => {
         if (successResponse.status === 200) {
           this.roleslist=successResponse.data;
@@ -152,15 +173,57 @@ export default {
         }
       })
     },
-    //新增
-    addClick () {
-      this.$router.replace({path: 'userAdd/'});
+    addClick () { // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
+      this.isActive = true // 显示弹窗
+      this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
     },
-    //修改
     modifyClick (index, rows) {
-      this.index_modify = index;
-      let userId= this.tableData[this.index_modify].userId;
-      this.$router.push({path: '/userModify',query:{ userId:userId}});
+      this.isActive_modify = true // 显示修改弹窗
+      this.index_modify = index
+
+      this.$refs.mymodifychild.form.userNm = this.tableData[this.index_modify].userNm;
+      this.$refs.mymodifychild.form.loginNm = this.tableData[this.index_modify].loginNm;
+      this.$refs.mymodifychild.form.weakPwInd = this.tableData[this.index_modify].weakPwInd;
+      this.$refs.mymodifychild.form.userMobile = this.tableData[this.index_modify].userMobile;
+      this.$refs.mymodifychild.form.userEmail = this.tableData[this.index_modify].userEmail;
+      this.$refs.mymodifychild.form.userNbr = this.tableData[this.index_modify].userNbr;
+      this.$refs.mymodifychild.form.identity = this.tableData[this.index_modify].identity;
+      this.$refs.mymodifychild.form.userId = this.tableData[this.index_modify].userId;
+      this.$refs.mymodifychild.form.userPhotoUrl = this.tableData[this.index_modify].userPhotoUrl;
+      let url=this.tableData[this.index_modify].userPhotoUrl;
+      if(null!=url && ''!=url){
+            this.getFile(url);
+            this.$refs.mymodifychild.fileList = this.fileList;
+      }
+      let province= this.tableData[this.index_modify].province;
+      let city= this.tableData[this.index_modify].city;
+      let area= this.tableData[this.index_modify].area;
+      let town= this.tableData[this.index_modify].town;
+      let venuesIds= this.tableData[this.index_modify].relVenuesId;
+      this.$refs.mymodifychild.venuesIds =venuesIds;
+      this.$refs.mymodifychild.regions.province =province;
+      this.$refs.mymodifychild.regions.city =city;
+      this.$refs.mymodifychild.regions.area =area;
+      this.$refs.mymodifychild.regions.town =town;
+      //用户
+      let identity= this.tableData[this.index_modify].identityType;
+      if(10000002==identity || 10000003==identity){
+          this.$refs.mymodifychild.isShow =false;
+          this.$refs.mymodifychild.isShowBut =false;
+          this.$refs.mymodifychild.isShowOne =false;
+          this.$refs.mymodifychild.isShowTwo =true;
+      }else if(10000004==identity || 10000005==identity){
+          this.$refs.mymodifychild.isShow =false;
+          this.$refs.mymodifychild.isShowBut =false;
+          this.$refs.mymodifychild.isShowOne =true;
+          this.$refs.mymodifychild.isShowTwo =false;
+      }else if(10000006==identity || 10000007==identity){
+          this.$refs.mymodifychild.isShow =true;
+          this.$refs.mymodifychild.isShowBut =true;
+          this.$refs.mymodifychild.isShowOne =true;
+          this.$refs.mymodifychild.isShowTwo =false;
+      }
+
     },
     //点击事件
     grandClick (index, rows) {
@@ -183,18 +246,48 @@ export default {
       });
 
     },
+    handleRewrite (form) {
+      this.tableData[this.index_modify].userNm = form.userNm
+      this.tableData[this.index_modify].loginNm = form.loginNm
+      this.tableData[this.index_modify].passwords = form.passwords
+      this.tableData[this.index_modify].userMobile = form.userMobile
+      this.tableData[this.index_modify].userEmail = form.userEmail
+      this.tableData[this.index_modify].userNbr = form.userNbr
+      //this.tableData[this.index_modify].identity = form.identity
 
+      this.isActive_modify = false // 显示修改弹窗
+      this.tempList = this.tableData
+    },
     //授权管理
     handleGrand (data) {
       this.isActive_grand = false ;
     },
 
+    handleAdd (form) {
+      const obj = {
+        userNm: form.userNm,
+        loginNm: form.loginNm,
+        passwords: form.passwords,
+        userNbr:form.userNbr
+      } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
+      // 增加了同一个form(个数有多个),修改一次form,其他的数据也会改变
+      this.tableData.push(obj)
+      this.tempList = this.tableData
+      this.isActive = false // 关闭显示弹窗
+      this.initTableData()
+    },
     handleSearch () {
       this.page =1;
       this.initTableData()
     },
     handleClear () {
       this.tableData = this.tempList
+    },
+    changeActive () { // 用于只改变isActive的值来取消显示弹窗
+      this.isActive = false
+    },
+    changeActive_modify () {
+      this.isActive_modify = false
     },
     changeActive_grand () {
       this.isActive_grand= false
@@ -256,7 +349,21 @@ export default {
     dateChange(val) {
       this.search.startTime = val;
     },
+    searchData() {},
 
+    getPictures(userPhotoUrls){
+      this.$axios.get('/file/show', {
+        params: {
+          picture: userPhotoUrls,
+        }
+      }).then(successResponse => {
+        if (successResponse.status === 200) {
+          this.$refs.mymodifychild.imagesrcList=successResponse.data;
+        }else{
+          this.$router.replace({path: '/error'})
+        }
+      })
+    },
     //获取图片url
     getFile(path){
           this.$axios.get('/file/getFile', {
@@ -266,6 +373,10 @@ export default {
             }).then(successResponse => {
               if (successResponse.data.code === 200) {
                     this.fileList=successResponse.data.result;
+                    //this.$message({message: '获取图片地址成功！', type: 'success'});
+              }else{
+                    //let message=successResponse.data.message;
+                    //this.$message({ message: message,type: "warning"});
               }
           })
       },

@@ -8,8 +8,8 @@
           </el-form-item>
         </el-col>
          <el-col :span="7">
-          <el-form-item label="任务内容:">
-            <el-input v-model="searchForm.two" placeholder="任务内容"></el-input>
+          <el-form-item label="任务场所:">
+            <el-input v-model="searchForm.two" placeholder="任务场所"></el-input>
           </el-form-item>
         </el-col>
 
@@ -20,49 +20,67 @@
     </el-form>
 
     <el-table
+        v-fit-columns
         :data="tableData"
         border
         stripe
-        style="width: 100%"
-    >
+        style="width: 200%">
+
       <el-table-column
           prop="taskName"
           label="任务名称"
-          width="190"
           align="center"
           fixed>
       </el-table-column>
 
       <el-table-column
-          prop="taskContent"
-          label="任务内容"
-          width="280"
+          prop="venuesAddres"
+          label="任务场所"
           align="center">
       </el-table-column>
 
       <el-table-column
-          prop="venuesAddres"
-          label="场所地址"
-          align="center"
-          width="450">
+            prop="launchPerson"
+            label="发起人"
+            align="center">
+        </el-table-column>
+
+      <el-table-column
+          prop="flowType"
+          label="任务类型"
+          align="center">
       </el-table-column>
+
+        <el-table-column
+            prop="handleResults"
+            label="任务状态"
+            align="center">
+        </el-table-column>
+
+        <el-table-column
+            prop="statTask"
+            label="流程状态"
+            align="center">
+        </el-table-column>
 
       <el-table-column
           prop="endTime"
           label="截至时间"
-          align="center"
-          width="200">
+          align="center">
       </el-table-column>
 
-      <el-table-column
-            prop="emergencyLevel"
-            label="紧急状态"
-            align="center"
-            width="150">
-        </el-table-column>
-
+      <el-table-column  align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="handleClick(scope.$index, tableData)" style="padding:5px;" type="primary">
+            查看详情
+         </el-button>
+        </template>
+      </el-table-column>
     </el-table>
-    <div style="display:flex;justify-content:flex-start">
+
+    <comment-item :detail-visible="isActive" :index_from_parent="index_comment" @cActive_comment="changeActive"
+                                     @cGrand="handleComment" ref="myCommentChild"></comment-item>
+
       <el-pagination
           background
           @current-change="currentChange"
@@ -71,20 +89,27 @@
           :total="total">
       </el-pagination>
     </div>
+
   </div>
 </template>
 
 <script>
+import taskComment from "./taskComment";
+
 export default {
   name: "FirstPage",
-
+    components:{
+         'comment-item': taskComment
+      },
   data () {
     return {
       message: '',
+      isActive: false,
+      index_comment: 0,
       //查询
       tableData:[],
       total:0,
-      page:0,
+      page:1,
       size:10,
       // 绑定搜索数据
       searchForm: {
@@ -112,7 +137,7 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/eventTask/getTasking', {
+      this.$axios.get('/task/getTasks', {
         params: {
           page: this.page,
           size: this.size,
@@ -121,7 +146,7 @@ export default {
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+          this.tableData=successResponse.data.result;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
           this.$alert('任务信息获取失败,请联系管理员！');
@@ -133,6 +158,19 @@ export default {
       this.search.startTime = val
     },
     searchData() {},
+
+    handleClick(index, rows){
+      this.isActive=true;
+      let procInstId=this.tableData[index].procInstId
+      this.$refs.myCommentChild.getComment(procInstId);
+    },
+    handleComment (data) {
+        this.isActive= false;
+    },
+    changeActive () {
+      this.isActive = false ;
+    },
+
   }
 }
 </script>

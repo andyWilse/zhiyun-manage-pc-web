@@ -124,7 +124,7 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/event/findpage', {
+      this.$axios.get('/event/findPage', {
         params: {
           page: this.page,
           size: this.size,

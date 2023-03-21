@@ -2,35 +2,51 @@
 
   <div>
     <el-dialog title="新闻信息新增" class="dialogClass"
-               :visible="dialogVisibleNewsAdd" :before-close="handleClose" width="100%">
+               :visible="dialogVisibleNewsAdd" :before-close="handleClose" width="90%">
       <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
+
+        <el-row>
+             <el-col :span="6">
+                 <el-form-item label="面向群体:" prop="newsFor">
+                   <el-select v-model="form.newsFor"  placeholder="请选择">
+                     <el-option
+                         v-for="item in newsForArr"
+                         :key="item.cd"
+                         :label="item.desc"
+                         :value="item.cd"/>
+                   </el-select>
+                 </el-form-item>
+             </el-col>
+             <el-col :span="6">
+                  <el-form-item label="新闻类别:" prop="newsType">
+                    <el-select v-model="form.newsType"  placeholder="请选择">
+                      <el-option
+                          v-for="item in newsTypeArr"
+                          :key="item.dictCd"
+                          :label="item.dictCnDesc"
+                          :value="item.dictCd"/>
+                    </el-select>
+                  </el-form-item>
+             </el-col>
+        </el-row>
+
         <el-row>
             <el-form-item label="新闻标题:" prop="newsTitle">
               <el-input v-model="form.newsTitle"></el-input>
             </el-form-item>
         </el-row>
-        <el-row>
-          <el-form-item label="新闻类别:" prop="newsType">
-            <el-select v-model="form.newsType"  placeholder="请选择">
-              <el-option
-                  v-for="item in newsTypeArr"
-                  :key="item.dictCd"
-                  :label="item.dictCnDesc"
-                  :value="item.dictCd"
-              />
-            </el-select>
-          </el-form-item>
+            <el-row>
+              <el-form-item label="新闻链接:" prop="newsRef">
+                <el-input v-model="form.newsRef"></el-input>
+              </el-form-item>
         </el-row>
+
         <el-row>
           <el-form-item label="新闻来源:" prop="newsFrom">
             <el-input v-model="form.newsFrom"></el-input>
           </el-form-item>
         </el-row>
-        <el-row>
-          <el-form-item label="新闻链接:" prop="newsRef">
-            <el-input v-model="form.newsRef"></el-input>
-          </el-form-item>
-        </el-row>
+
         <el-row>
           <el-form-item label="新闻关键字:" prop="newsKeyword">
             <el-input v-model="form.newsKeyword" placeholder="多个关键字请用逗号（ ，）隔开"></el-input>
@@ -38,7 +54,11 @@
         </el-row>
         <el-row>
           <el-form-item label="新闻内容:" prop="newsContent">
-            <el-input v-model="form.newsContent"></el-input>
+            <el-input v-model="form.newsContent"
+              placeholder="请填写"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 5}">
+            </el-input>
           </el-form-item>
         </el-row>
 
@@ -69,6 +89,7 @@ export default {
     return {
       message: '来自子组件的消息',
       newsTypeArr:[],
+      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'教职人员'}],
       fileList:[],
       form: {
         newsTitle: '',
@@ -77,9 +98,12 @@ export default {
         newsContent: '',
         newsFrom:'',
         newsRef:'',
+        newsFor:'',
       },
       formRules: {
         newsTitle:[{required: true, message: '请输入新闻标题', trigger: 'blur'}],
+        newsFor:[{required: true, message: '请选择面向群体', trigger: 'blur'}],
+        newsRef:[{required: true, message: '请输入新闻链接', trigger: 'blur'}],
       },
     }
 
@@ -123,15 +147,17 @@ export default {
         newsContent: this.form.newsContent,
         newsFrom:this.form.newsFrom,
         newsRef:this.form.newsRef,
+        newsFor:this.form.newsFor,
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.$message.info({message: '新增新闻信息成功！', type: 'success'});
+          this.$message({message: '新增新闻信息成功！', type: 'success'});
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cAdd', this.form)
           this.$refs.elupload.clearFiles()
         }else{
-          this.$alert('新增新闻信息失败,请联系管理员！');
+          this.$message({message: '新增新闻信息失败！', type: 'error'});
+          //this.$alert('新增新闻信息失败,请联系管理员！');
         }
       })
     },
@@ -142,6 +168,7 @@ export default {
       this.form.newsContent = ''
       this.form.newsFrom=''
       this.form.newsRef=''
+      this.form.newsFor=''
     },
     handleClose (done) {
       this.$confirm('确认关闭？')

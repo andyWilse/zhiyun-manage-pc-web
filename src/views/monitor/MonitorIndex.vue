@@ -22,7 +22,6 @@
       <el-table-column
           prop="accessNumber"
           label="设备编号"
-          width="160"
           align="center"
           fixed>
       </el-table-column>
@@ -30,22 +29,22 @@
       <el-table-column
           prop="functionType"
           label="功能类别"
-          width="180"
+          width="170"
           align="center">
       </el-table-column>
       -->
       <el-table-column
           prop="venuesAddres"
-          label="场所地址"
+          label="场所名称"
           align="center"
-          width="385">
+          width="220">
       </el-table-column>
 
       <el-table-column
           prop="state"
           label="状态"
           align="center"
-          width="130">
+          width="110">
       </el-table-column>
 
       <el-table-column
@@ -115,7 +114,8 @@ export default {
 
   methods: {
     handleSearch () {
-      this.initTableData()
+        this.page=1;
+        this.initTableData()
     },
     handleClear () {
       this.tableData = this.tempList
@@ -129,18 +129,19 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/monitor/findpage', {
+      this.$axios.get('/monitor/findPage', {
         params: {
           page: this.page,
           size: this.size,
           accessNumber:this.searchForm.one
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.tableData=successResponse.data.datas;
+        if (successResponse.data.code === 200) {
+          this.tableData=successResponse.data.result;
           this.total=successResponse.data.total;
         }else{
-          this.$router.replace({path: '/error'})
+            let message=successResponse.data.message;
+            this.$message({message: message, type: 'error'});
         }
       })
     },

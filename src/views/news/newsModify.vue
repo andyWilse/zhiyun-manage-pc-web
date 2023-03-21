@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="修改新闻信息" :visible="dialogVisibleNewsModify" :before-close="handleClose" width="50%">
+    <el-dialog title="修改新闻信息" class="dialogClass" :visible="dialogVisibleNewsModify" :before-close="handleClose" width="90%">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
 
         <el-form-item label="新闻id:" prop="newsId" v-show="false">
@@ -8,32 +8,47 @@
         </el-form-item>
 
         <el-row>
+             <el-col :span="6">
+                 <el-form-item label="面向群体:" prop="newsFor">
+                   <el-select v-model="form.newsFor"  placeholder="请选择">
+                     <el-option
+                         v-for="item in newsForArr"
+                         :key="item.cd"
+                         :label="item.desc"
+                         :value="item.cd"/>
+                   </el-select>
+                 </el-form-item>
+             </el-col>
+             <el-col :span="6">
+                  <el-form-item label="新闻类别:" prop="newsType">
+                    <el-select v-model="form.newsType"  placeholder="请选择">
+                      <el-option
+                          v-for="item in newsTypeArr"
+                          :key="item.dictCd"
+                          :label="item.dictCnDesc"
+                          :value="item.dictCd"/>
+                    </el-select>
+                  </el-form-item>
+             </el-col>
+        </el-row>
+        <el-row>
           <el-form-item label="新闻标题:" prop="newsTitle">
             <el-input v-model="form.newsTitle"></el-input>
           </el-form-item>
         </el-row>
-        <el-row>
-          <el-form-item label="新闻类别:" prop="newsType">
-            <el-select v-model="form.newsType"  placeholder="----------- 请选择 -----------">
-              <el-option
-                  v-for="item in newsTypeArr"
-                  :key="item.dictCd"
-                  :label="item.dictCnDesc"
-                  :value="item.dictCd"
-              />
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="新闻来源:" prop="newsFrom">
-            <el-input v-model="form.newsFrom"></el-input>
-          </el-form-item>
-        </el-row>
+
         <el-row>
           <el-form-item label="新闻链接:" prop="newsRef">
             <el-input v-model="form.newsRef"></el-input>
           </el-form-item>
         </el-row>
+
+        <el-row>
+          <el-form-item label="新闻来源:" prop="newsFrom">
+            <el-input v-model="form.newsFrom"></el-input>
+          </el-form-item>
+        </el-row>
+
         <el-row>
           <el-form-item label="新闻关键字:" prop="newsKeyword">
             <el-input v-model="form.newsKeyword"></el-input>
@@ -42,9 +57,14 @@
 
         <el-row>
           <el-form-item label="新闻内容:" prop="newsContent">
-            <el-input v-model="form.newsContent"></el-input>
+            <el-input v-model="form.newsContent"
+              placeholder="请填写"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 5}">
+            </el-input>
           </el-form-item>
         </el-row>
+
       </el-form>
 <!--      <el-image
           style="width: 150px; height: 100px"
@@ -75,16 +95,20 @@ export default {
       newsTypeArr:[],
       imagesrcList:[],
       fileList:[],
+      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'教职人员'}],
       form: {
         newsTitle: '',
         newsType: '',
         newsKeyword: '',
         newsContent: '',
         newsFrom:'',
+        newsFor:'',
         newsRef:'',
       },
       rules: {
         newsTitle:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
+        newsFor:[{required: true, message: '请选择面向群体', trigger: 'blur'}],
+        newsRef:[{required: true, message: '请输入新闻链接', trigger: 'blur'}],
       },
     }
   },
@@ -121,10 +145,11 @@ export default {
         newsKeyword: this.form.newsKeyword,
         newsContent: this.form.newsContent,
         newsFrom:this.form.newsFrom,
+        newsFor:this.form.newsFor,
         newsRef:this.form.newsRef,
       }).then(successResponse => {
         if (successResponse.data.code=== 200) {
-          this.$message.info('修改新闻信息成功！');
+          this.$message({message: '修改新闻信息成功！', type: 'success'});
           // 对应事件cAdd
           // &emit向父组件提交form表单
           this.$emit('cmodify', this.form)
@@ -187,5 +212,8 @@ export default {
 </script>
 
 <style scoped>
-
+.dialogClass{
+  margin-left: 200px;
+  margin-top: 0px;
+}
 </style>

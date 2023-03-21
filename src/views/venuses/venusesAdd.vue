@@ -1,81 +1,94 @@
 <template>
     <div>
-      <el-dialog title="场所基本信息新增" :visible="dialogVisibleVenuesAdd" :before-close="handleClose" width="50%">
-        <el-form ref="form" :model="form" label-width="80px" :rules="formRules">
+        <el-form ref="form" :model="form" label-width="100px" :rules="formRules">
         <el-form-item label="religious" prop="religious" v-show="false">
           <el-input v-model="form.religious" class="religiousclass"></el-input>
         </el-form-item>
 
-          <el-row>
-            <el-col :span="12">
+        <el-row :gutter="24">
+            <el-col :span="7">
               <el-form-item label="场所名称" prop="venuesName">
                 <el-input v-model="form.venuesName" clearable></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="7">
               <el-form-item label="教派类别" prop="religiousSect">
                 <el-select v-model="form.religiousSect" @change="selectChanged" clearable>
                   <el-option
                       v-for="item in religiousSects"
                       :key="item.dictCd"
                       :label="item.dictCnDesc"
-                      :value="item.dictCd"
-                  />
+                      :value="item.dictCd"/>
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-
-          <el-row>
-              <el-col :span="12">
-                <el-form-item label="登记证号"  prop="registerNbr">
-                  <el-input v-model="form.registerNbr" clearable></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="场所电话" prop="venuesPhone">
-                  <el-input v-model="form.venuesPhone" clearable></el-input>
-                </el-form-item>
-              </el-col>
-          </el-row>
-
-          <el-row>
-              <el-form-item label="场所地址" prop="organization" >
+            <el-col :span="10">
+              <el-form-item label="所属机构" prop="organization" >
                    <region-selects
                       :town="true"
                       v-model="regions"
                       @change="regionChange"
-                      clearable
-                    />
+                      clearable/>
                </el-form-item>
-          </el-row>
+            </el-col>
 
-          <el-row>
-            <el-form-item label="详细地址" prop="venuesAddres">
-              <el-input v-model="form.venuesAddres" clearable></el-input>
-            </el-form-item>
-          </el-row>
+        </el-row>
 
-        <el-row :gutter="48">
-          <el-col :span="13">
+        <el-row :gutter="24">
+            <el-col :span="7">
+              <el-form-item label="场所电话" prop="venuesPhone">
+                <el-input v-model="form.venuesPhone" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="17">
+               <el-form-item label="场所地址" prop="venuesAddres">
+                 <el-input v-model="form.venuesAddres" clearable></el-input>
+               </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="24">
+            <el-col :span="7">
+                <el-form-item label="登记证号"  prop="registerNbr">
+                  <el-input v-model="form.registerNbr" clearable></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+              <el-form-item label="管理组成员" prop="groupMembers">
+                  <el-input v-model="form.groupMembers" clearable></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="3">
+                <el-button class="groClass" icon="el-icon-circle-plus-outline" type="primary" @click="addGroClick" v-show="groShow">添加管理组成员</el-button>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="24">
+          <el-col :span="7">
             <el-form-item label="负责人" prop="responsiblePerson">
               <el-input v-model="form.responsiblePerson" clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8" >
+          <el-col :span="3">
               <el-button class="fzClass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="fzShow">添加负责人</el-button>
           </el-col>
+           <el-col :span="7">
+              <el-form-item label="工作联络员" prop="liaisonMan">
+                  <el-input v-model="form.liaisonMan" clearable></el-input>
+                </el-form-item>
+          </el-col>
+           <el-col :span="3">
+              <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="addLiaClick" v-show="liaShow">添加工作联络员</el-button>
+           </el-col>
         </el-row>
-        <el-row :gutter="48">
-              <el-col :span="13">
-                <el-form-item label="联络员" prop="liaisonMan">
-                    <el-input v-model="form.liaisonMan" clearable></el-input>
-                  </el-form-item>
+        <el-row :gutter="24">
+            <el-button class="staffClass" icon="el-icon-circle-plus-outline" type="primary" @click="staffClick">选择教职人员</el-button>
+              <el-col :span="20">
+                <el-form-item label="教职人员:" prop="venusesStaff">
+                  <el-input readonly v-model="form.venusesStaff" clearable ></el-input>
+                </el-form-item>
               </el-col>
-              <el-col :span="8" >
-                   <el-button class="llClass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="llShow">添加联络员</el-button>
-              </el-col>
-        </el-row>
+         </el-row>
 
           <el-row>
             <el-col :span="24">
@@ -97,54 +110,66 @@
           <el-form-item  prop="fileList">
             <el-row>
               <el-col>
-                <el-upload ref="elUpload"
-                           action=""
-                           multiple
-                           :auto-upload="false"
-                           :http-request="handleUpload"
-                           :on-success="imgSuccess"
-                           list-type="picture-card">
-                  <i class="el-icon-plus"></i>
-                </el-upload>
+              <!-- <el-upload ref="elUpload"
+                                          action=""
+                                          multiple
+                                          :auto-upload="false"
+                                          :http-request="handleUpload"
+                                          :on-success="imgSuccess"
+                                          list-type="picture-card">
+                                 <i class="el-icon-plus"></i>
+                               </el-upload>  -->
+                <el-upload
+                   action="http://localhost:8081/api/file/images/upload"
+                   list-type="picture-card"
+                   :on-preview="handlePictureCardPreview"
+                   :on-success="imgSuccess"
+                   :on-error="imgError"
+                   :on-remove="imgRemove"
+                   :file-list="fileList">
+                   <i class="el-icon-plus"></i>
+                 </el-upload>
               </el-col>
             </el-row>
           </el-form-item>
         </el-form>
 
-        <div style="padding: 0 80px;">
-             <button @click="picUpload" type="primary" style="padding:5px;background-color: #156AA8;color: white">图片上传</button>
+        <div style="position:absolute;right:100px;">
+          <el-button @click="handleCancel" type="warning">取消</el-button>
+          <el-button @click="handleSubmit()" type="primary">确定</el-button>
         </div>
 
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="handleCancel">取消</el-button>
-          <el-button @click="handleSubmit()">确定</el-button>
-        </span>
-
-            <add-item :dialog-visible-manager-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
-
-      </el-dialog>
+        <add-item :dialog-visible-manager-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
+        <staff-item :dialog-visible-staff="isActive_staff" @cActive_staff="changeActive_staff" @cStaff="handleStaff" ref="myStaffChild">
+        </staff-item>
     </div>
 </template>
 
 <script>
 import { RegionSelects } from 'v-region';
 import managerAdd from './managerAdd'
+import staffSelect from './StaffSelect'
 
 export default {
-  props: ['dialogVisibleVenuesAdd'],
   components: {
       RegionSelects,
       'add-item': managerAdd,
+      'staff-item': staffSelect,
   },
   data () {
     return {
       message: '来自子组件的消息',
+      isActive_staff: false,
       isActive: false,
       fzShow : false,
-      llShow : false,
+      liaShow : false,
+      groShow : false,
       selectedOptions: [],
       religiousSects:[],
+      fileRemove:'',
+      fileUpload:'',
       fileList:[],
+      staffIds:'',
       region:'',
       regions: {
           province: '330000',
@@ -161,6 +186,7 @@ export default {
         venuesAddres: '',
         responsiblePerson:'',
         liaisonMan : '',
+        groupMembers:'',
         briefIntroduction :'',
         picturesPath:'',
       },
@@ -205,8 +231,7 @@ methods: {
         })
     },
     handleCancel () {
-      this.$emit('cActive') // $emit应是用来子组件向父组件传参的,但是,这里我只是想改变父组件中isActive为false,
-      // 对应事件cActive
+       this.$router.replace({path: '/venuesIndex'});
     },
 
     //省市区县
@@ -237,7 +262,7 @@ methods: {
           //图片校验
           var pictures=this.form.picturesPath;
           if(''===pictures || typeof(pictures) == "undefined"){
-              this.$message.error('图片信息为空，请上传图片！');
+              this.$message.error('图片信息为空，请选择图片！如已选择，请点击图片上传！');
           }else{
               this.handleSubmitPost();
           }
@@ -248,6 +273,7 @@ methods: {
     },
     //保存
    handleSubmitPost(){
+
      //数据保存
      this.$axios.post('/venues/add', {
           venuesName: this.form.venuesName,
@@ -260,22 +286,32 @@ methods: {
           area:this.regions.area,
           town:this.regions.town,
           venuesAddres: this.form.venuesAddres,
-          picturesPath: this.form.picturesPath,
           responsiblePerson: this.form.responsiblePerson,
+          groupMembers: this.form.groupMembers,
           liaisonMan: this.form.liaisonMan,
-          briefIntroduction: this.form.briefIntroduction
+          briefIntroduction: this.form.briefIntroduction,
+          venuesStaff:this.staffIds,
+          picturesPath: this.form.picturesPath,
+          picturesPathRemove: this.fileRemove
+
         }).then(successResponse => {
            let message=successResponse.data.result;
           if (successResponse.data.code === 200) {
-            this.$message.info({message: '新增场所成功！', type: 'success'});
+            this.$message({message: '新增场所成功！', type: 'success'});
             this.fzShow=false;
-            // 对应事件cAdd
-            // &emit向父组件提交form表单
-            this.$emit('cAdd', this.form)
+            this.liaShow=false;
+            this.groShow=false;
+            this.$router.replace({path: '/venuesIndex'});
             this.$refs.elUpload.clearFiles()
-          }else if(successResponse.data.code === 404){
-            this.$alert(message);
-            this.fzShow=true;
+          }else if(successResponse.data.code === 101){
+                this.fzShow=true;
+                this.$alert(message);
+          }else if(successResponse.data.code === 102){
+               this.$alert(message);
+               this.liaShow=true;
+          }else if(successResponse.data.code === 103){
+              this.$alert(message);
+              this.groShow=true;
           }else{
             this.$alert(message);
             /*this.messageWarn("新增场所失败,请联系管理员！","");*/
@@ -292,6 +328,7 @@ methods: {
       this.form.venuesAddres = '';
       this.form.responsiblePerson = '';
       this.form.liaisonMan = '';
+      this.form.groupMembers = '';
       this.form.briefIntroduction = '';
       this.form.picturesPath = '';
       this.regions.town='';
@@ -352,15 +389,57 @@ methods: {
      handleAdd (form) {
         this.isActive = false // 关闭显示弹窗
      },
-     addClick () { // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
-         this.isActive = true // 显示弹窗
-         this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
+
+     handleStaff (form) {
+         this.staffIds = this.$refs.myStaffChild.searchForm.ids;
+         this.form.venusesStaff= this.$refs.myStaffChild.searchForm.staff;
+         this.isActive_staff = false;
      },
-     changeActive () { // 用于只改变isActive的值来取消显示弹窗
+     addClick () {
+         this.isActive = true;
+         this.$refs.myaddchild.childaddClick();
+     },
+     addLiaClick () {
+          this.isActive = true;
+          this.$refs.myaddchild.childaddClick();
+     },
+     addGroClick () {
+           this.isActive = true;
+           this.$refs.myaddchild.childaddClick();
+     },
+     changeActive () {
          this.isActive = false
      },
+    changeActive_staff () {
+         this.isActive_staff = false
+    },
+    staffClick () {
+       this.isActive_staff = true; // 显示弹窗
+       this.$refs.myStaffChild.clearSelect();
+       //this.$refs.myStaffChild.getSelect(); // 调用子组件中的getSelect获取
+    },
+    // 删除图片
+    imgRemove(file, fileList) {
+        let remove=file.response.result;
+        this.fileRemove=this.fileRemove+remove+',';
+        this.fileList1 = fileList;
+    },
+    // 上传失败
+    imgError(res) {
+        this.$message({type: "error", message: "图片上传失败",});
+    },
+    handlePictureCardPreview(file) {
+        console.log(file);
+    },
+    // 上传成功
+    imgSuccess(res, file, fileList) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        //重点  得到上传图片的名字
+        //this.ruleForm.userHeaderPicture = res.result;
+        this.form.picturesPath=this.form.picturesPath+res.result+',';
+        this.fileList1 = fileList;
+    },
   },
-
 }
 </script>
 

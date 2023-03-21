@@ -1,19 +1,39 @@
 <template>
-  <div>
-    <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
+  <div v-show="true">
+    <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm" >
       <el-row>
+        <el-col :span="10">
+        <el-form-item label="场所名称:">
+            <el-select
+               v-model="searchForm.two"
+               clearable
+               filterable
+               placeholder="请输入关键词"
+               class="product-input"
+               @blur="productSelect"
+               allow-create
+            >
+               <el-option
+                   v-for="item in venuesList"
+                   :key="item.venuesId"
+                   :label="item.venuesName"
+                   :value="item.venuesId"
+               />
+            </el-select>
+        </el-form-item>
+        </el-col>
         <el-col :span="6.2">
-          <el-form-item label="中文名称:">
+          <el-form-item label="人员名称:" v-show="false">
             <el-input v-model="searchForm.one" placeholder="中文名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
-          <el-form-item label="职位:">
+          <el-form-item label="职位:" v-show="false">
             <el-input v-model="searchForm.three" placeholder="职位" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
-          <el-form-item label="教派类别：">
+          <el-form-item label="教派类别：" v-show="false">
             <el-select v-model="searchForm.four"  placeholder="请选择" clearable>
               <el-option
                   v-for="item in religiousSects"
@@ -26,7 +46,7 @@
         </el-col>
         <el-col :span="6.8">
             <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="false">新增</el-button>
         </el-col>
       </el-row>
 
@@ -36,42 +56,20 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width:50%"
+        v-show="tableShow"
     >
       <el-table-column
           prop="staffName"
           label="中文名称"
-          width="220"
           align="center"
           fixed>
       </el-table-column>
 
       <el-table-column
-          prop="religiousSect"
-          label="教派类别"
-          width="160"
-          align="center">
-      </el-table-column>
-
-      <el-table-column
           prop="staffTelphone"
           label="电话"
-          align="center"
-          width="200">
-      </el-table-column>
-      
-      <el-table-column
-          prop="staffPost"
-          label="职位"
-          align="center"
-          width="160">
-      </el-table-column>
-
-      <el-table-column
-          prop="venuesName"
-          label="场所"
-          align="center"
-          width="335">
+          align="center">
       </el-table-column>
 
       <el-table-column
@@ -79,7 +77,7 @@
           width="175"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;" v-show="false">
             修改
           </el-button>
           <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
@@ -94,7 +92,7 @@
     <modify-item :dialog-visible-staff-modify="isActive_modify" :index_from_parent="index_modify"
                  @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></modify-item>
 
-    <div style="display:flex;justify-content:flex-start">
+    <div style="display:flex;justify-content:flex-start" v-show="pagShow">
       <el-pagination
           background
           @current-change="currentChange"
@@ -122,9 +120,16 @@ export default {
       isActive_modify: false,
       index_modify: 0,
       isShow: true,
+      tableShow:false,
+      pagShow:false,
       searchdata: '',
       searchList: [],
       tempList: [],
+      //场所下拉
+      venuesList:[],
+      repeatList:[],
+      relVenuesId:0,
+      searchId: '',
       //查询
       tableData:[],
       total:0,
@@ -142,10 +147,20 @@ export default {
     }
   },
   mounted(){
-    this.initTableData();
+    this.getTableData();
   },
+  //加载
   created(){
     this.getreligiousSect();
+    let venuesNm=this.$route.query.venuesNm;
+    if(''!==venuesNm && typeof(venuesNm) != "undefined" && venuesNm!==null){
+        this.searchForm.two=venuesNm;
+        this.getTableData(venuesNm);
+        this.tableShow=true;
+        this.pagShow=true;
+    };
+    this.getVenuesList();
+
   },
   methods: {
     async getreligiousSect(){
@@ -182,7 +197,7 @@ export default {
     },
     handleDelete (index, rows) {
       console.log(index)
-      this.$confirm('此操作将永久删除场所信息, 是否继续?', '提示', {
+      this.$confirm('此操作将把教职人员在该场所除名, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -216,72 +231,56 @@ export default {
       this.tableData.push(obj)
       this.tempList = this.tableData
       this.isActive = false // 关闭显示弹窗
-      this.initTableData()
+      this.getTableData(this.searchForm.two);
     },
+    //查询
     handleSearch () {
       this.page =1;
-      this.initTableData()
+      let search=this.searchForm.two;
+      if(typeof(search) != "undefined" && ''!==search && null!=search){
+            this.getTableData(search);
+            this.tableShow=true;
+            this.pagShow=true;
+      }else{
+        this.$alert('请先选择场所名称！');
+      }
     },
-    handleClear () {
-      this.tableData = this.tempList
-    },
-    changeActive () { // 用于只改变isActive的值来取消显示弹窗
-      this.isActive = false
-    },
-    changeActive_modify () {
-      this.isActive_modify = false
-    },
-    sizeChange(pageSize){
-      this.size=pageSize;
-      this.initTableData();
-    },
-    currentChange(currentPage){
-      this.page=currentPage;
-      this.initTableData();
-    },
-    initTableData(){
+    //列表数据
+    getTableData(search){
       this.$axios.get('/staff/find', {
         params: {
           page: this.page,
           size: this.size,
           staffName:this.searchForm.one,
-          staffPost: this.searchForm.three,
-          religiousSect: this.searchForm.four,
+          staffVenues: search,
         }
       }).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.tableData=successResponse.data.datas;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+        if (successResponse.data.code === 200) {
+          this.tableData=successResponse.data.result;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$router.replace({path: '/error'})
+          let message=successResponse.data.message;
+          this.$message({message: message,type: 'warning'});
         }
       })
     },
+    //删除
     deleteData(index, rows){
-      let fd = new FormData()
-      fd.append("staffId",rows[index].staffId)
-      let staffId=rows[index].staffId
-      this.$axios.post('/staff/delete/'+staffId)
-          .then(successResponse => {
-              if (successResponse.status === 200) {
-                 this.initTableData()
-                /*for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
-                  if (this.tempList[i].name === rows[index].name) {
-                    this.tempList.splice(i, 1)
-                  }
-                }
-                rows.splice(index, 1)*/
+      // let fd = new FormData()
+      // fd.append("staffId",rows[index].staffId);
+      let staffId=rows[index].staffId;
+      this.$axios.post('/staff/delete/', {
+              staffId: staffId + '',
+              staffVenues:this.searchForm.two + '',
+          }).then(successResponse => {
+              if (successResponse.data.code === 200) {
+                 this.getTableData(this.searchForm.two);
               }else{
-                this.$router.replace({path: '/error'})
+                let message=successResponse.data.message;
+                this.$message({message: message,type: 'warning'});
               }
-      })
+        })
     },
-
-    // 时间确认触发
-    dateChange(val) {
-      this.search.startTime = val
-    },
-    searchData() {},
 
     //获取图片
     getPictures(userPhotoUrls){
@@ -298,6 +297,48 @@ export default {
       })
     },
 
+    //获取场所
+    getVenuesList(query) {
+        this.$axios.get('/venues/getStaffVenues', {
+            params: {
+                search: query
+            }
+          }).then(successResponse => {
+            if (successResponse.data.code === 200) {
+              this.venuesList=successResponse.data.result;
+            }else{
+                let message=successResponse.data.message;
+                this.$message({message: message,type: 'warning'});
+          }
+        });
+    },
+    //查询
+    productSelect(e) {
+         let value = e.target.value;
+          if(value) {
+              this.searchForm.two = value
+          }
+          this.getVenuesList(this.searchForm.two);
+      },
+
+
+      handleClear () {
+        this.tableData = this.tempList
+      },
+      changeActive () { // 用于只改变isActive的值来取消显示弹窗
+        this.isActive = false
+      },
+      changeActive_modify () {
+        this.isActive_modify = false
+      },
+      sizeChange(pageSize){
+        this.size=pageSize;
+        this.getTableData(this.searchForm.two);
+      },
+      currentChange(currentPage){
+        this.page=currentPage;
+        this.getTableData(this.searchForm.two);
+      },
   }
 }
 </script>

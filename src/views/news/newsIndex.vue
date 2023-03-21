@@ -66,7 +66,7 @@
       </el-table-column>
 
       <el-table-column
-          prop="releaseTime"
+          prop="createTime"
           label="发布日期"
           align="center"
           width="200">
@@ -161,52 +161,41 @@ export default {
       this.$refs.mymodifychild.form.newsTitle = this.tableData[this.index_modify].newsTitle
       this.$refs.mymodifychild.form.newsKeyword = this.tableData[this.index_modify].newsKeyword
       this.$refs.mymodifychild.form.newsFrom = this.tableData[this.index_modify].newsFrom
+      this.$refs.mymodifychild.form.newsFor = this.tableData[this.index_modify].newsFor
       this.$refs.mymodifychild.form.newsRef = this.tableData[this.index_modify].newsRef
       this.$refs.mymodifychild.form.newsType = this.tableData[this.index_modify].newsType
       this.$refs.mymodifychild.form.creator = this.tableData[this.index_modify].creator
       this.$refs.mymodifychild.form.newsContent = this.tableData[this.index_modify].newsContent
-      this.$refs.mymodifychild.form.releaseTime = this.tableData[this.index_modify].releaseTime
+      this.$refs.mymodifychild.form.createTime = this.tableData[this.index_modify].createTime
       this.$refs.mymodifychild.form.newsId = this.tableData[this.index_modify].newsId
       this.$refs.mymodifychild.form.newsPicturesPath = this.tableData[this.index_modify].newsPicturesPath
       this.getPictures(this.tableData[this.index_modify].newsPicturesPath);
     },
-    handleDelete (index, rows) {
-      console.log(index)
-      this.$confirm('此操作将永久删除场所信息, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.deleteData(index, rows)
-      }).catch(() => {
-        this.$message.info('已取消删除');
-      });
-
-    },
     handleRewrite (form) {
-      this.isActive_modify = false // 显示修改弹窗
-      this.tableData[this.index_modify].newsTitle = form.newsTitle
-      this.tableData[this.index_modify].newsKeyword = form.newsKeyword
-      this.tableData[this.index_modify].newsType = form.newsType
-      this.tableData[this.index_modify].creator = form.creator
-      this.tableData[this.index_modify].releaseTime = form.releaseTime
-      this.tableData[this.index_modify].newsFrom = form.newsFrom
-      this.tableData[this.index_modify].newsRef = form.newsRef
-
-      this.isActive_modify = false
-      this.tempList = this.tableData
+      this.isActive_modify = false; // 显示修改弹窗
+      this.tableData[this.index_modify].newsTitle = form.newsTitle;
+      this.tableData[this.index_modify].newsKeyword = form.newsKeyword;
+      this.tableData[this.index_modify].newsType = form.newsType;
+      this.tableData[this.index_modify].creator = form.creator;
+      this.tableData[this.index_modify].createTime = form.createTime;
+      this.tableData[this.index_modify].newsFrom = form.newsFrom;
+      this.tableData[this.index_modify].newsRef = form.newsRef;
+      this.tableData[this.index_modify].newsFor = form.newsFor;
+      this.isActive_modify = false;
+      this.tempList = this.tableData;
+      this.initTableData();
     },
     handleAdd (form) {
       const obj = {
         newsTitle: form.newsTitle,
         newsKeyword: form.newsKeyword,
-        releaseTime:form.releaseTime
+        createTime:form.createTime
       } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
       // 增加了同一个form(个数有多个),修改一次form,其他的数据也会改变
-      this.tableData.push(obj)
-      this.tempList = this.tableData
-      this.isActive = false // 关闭显示弹窗
-      this.initTableData()
+      this.tableData.push(obj);
+      this.tempList = this.tableData;
+      this.isActive = false; // 关闭显示弹窗
+      this.initTableData();
     },
     handleSearch () {
       this.initTableData()
@@ -237,12 +226,26 @@ export default {
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
-          this.tableData=successResponse.data.resultArr;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
+          this.tableData=successResponse.data.result;//这里resp里面返回的数据是个对象，真正的数据在resp的data里；
           this.total=successResponse.data.total;
         }else{
-          this.$alert('新闻信息获取失败,请联系管理员！');
+          let message=successResponse.data.message;
+          this.$message({message: message, type: 'error'});
         }
       })
+    },
+    //删除
+    handleDelete (index, rows) {
+      console.log(index)
+      this.$confirm('此操作将删除该新闻信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteData(index, rows)
+      }).catch(() => {
+        this.$message('已取消删除');
+      });
     },
     deleteData(index, rows){
       let fd = new FormData()
