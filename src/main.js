@@ -13,15 +13,9 @@ import util from '@/libs/util.js';
 import './static/http.js';
 import VueRouter from 'vue-router';
 import Plugin from 'v-fit-columns';
-
-import videojs from 'video.js';
-import 'videojs-contrib-hls';
-
-import VideoPlayer from 'vue-video-player';
-import 'vue-video-player/src/custom-theme.css'
-import 'video.js/dist/video-js.css'
-Vue.use(VideoPlayer);
-
+import * as echarts from 'echarts';
+//import * as echarts from 'echarts/lib/echarts';
+import * as utils from './utils/util.js'
 
 Vue.use(router);
 Vue.use(Plugin);
@@ -31,6 +25,7 @@ Vue.use(Region);
 Vue.use(VueCookies);
 Vue.prototype.$store = store;
 Vue.prototype.$message = Message;
+Vue.prototype.$utils = utils
 Vue.config.productionTip = false;
 
 //使用钩子函数对路由进行权限跳转
