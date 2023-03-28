@@ -10,8 +10,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="6.8">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: manaQue }">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: manaAdd }">新增</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -47,10 +47,10 @@
           width="175"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;" :style="{ display: manaMod }">
             修改
           </el-button>
-          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
+          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{ display: manaDel }">
             删除
           </el-button>
         </template>
@@ -77,6 +77,10 @@ export default {
   data () {
     return {
       message: '',
+      manaQue:'',
+      manaAdd:'none',
+      manaMod:'none',
+      manaDel:'none',
       //查询
       tableData:[],
       total:0,
@@ -94,6 +98,9 @@ export default {
   //加载
   created(){
     this.handleSearch();
+    this.manaAdd=this.$gloMsg.manaAdd;
+    this.manaMod=this.$gloMsg.manaMod;
+    this.manaDel=this.$gloMsg.manaDel;
   },
   methods: {
     //列表数据

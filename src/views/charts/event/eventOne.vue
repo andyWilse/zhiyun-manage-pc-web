@@ -7,19 +7,19 @@
         </div>
         <div class="name" style="position: absolute;top:10px;left: 30px;">AI预警动态数据</div>
         <div class="day" style="position: absolute;top:10px;left: 1045px;">
-             <el-button  round icon="el-icon-tian" @click="searchByHand('02')"
+             <el-button  round icon="el-icon-tian" @click="searchByHand('02')" :type="faceType"
              style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                    <span>人脸</span>
              </el-button>
          </div>
          <div class="month" style="position: absolute;top:10px;left: 1100px;">
-              <el-button  round icon="el-icon-tian" @click="searchByHand('04')"
+              <el-button  round icon="el-icon-tian" @click="searchByHand('04')" :type="flowType"
               style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                     <span>人流</span>
               </el-button>
          </div>
          <div class="week" style="position: absolute;top:10px;left: 1155px;">
-              <el-button  round icon="el-icon-tian" @click="searchByHand('01')"
+              <el-button  round icon="el-icon-tian" @click="searchByHand('01')" :type="fireType"
               style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                     <span>火灾</span>
               </el-button>
@@ -34,6 +34,10 @@ import * as echarts from 'echarts'
         return {
             searchName: "",
             eventType: "01",
+            faceType:"primary",
+            flowType:"",
+            fireType:"",
+
         };
     },
     mounted() {
@@ -45,6 +49,19 @@ import * as echarts from 'echarts'
         //查询
         searchByHand(type){
             this.getZxtDay(type);
+            if('02'===type){
+                this.faceType="primary";
+                this.flowType="";
+                this.fireType="";
+            }else if('04'===type){
+                this.faceType="";
+                this.flowType="primary";
+                this.fireType="";
+            }else if('01'===type){
+               this.faceType="";
+               this.flowType="";
+               this.fireType="primary";
+           }
         },
         //获取
         getZxtDay(eventType) {
@@ -188,9 +205,5 @@ import * as echarts from 'echarts'
     text-align:justify;
     height: 28px;
 }
-.el-button {
-  background-color:#ffffff;
-  color: black;
 
-}
 </style>

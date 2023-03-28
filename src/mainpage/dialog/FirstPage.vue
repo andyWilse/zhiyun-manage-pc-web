@@ -20,54 +20,68 @@
     </el-form>
 
     <el-table
-        v-fit-columns
         :data="tableData"
         border
         stripe
-        style="width: 200%">
+        style="width: 100%">
 
       <el-table-column
           prop="taskName"
           label="任务名称"
+          width="130"
           align="center"
           fixed>
       </el-table-column>
 
       <el-table-column
+          prop="venuesName"
+          label="场所名称"
+          width="100"
+          align="center">
+      </el-table-column>
+
+      <el-table-column
           prop="venuesAddres"
-          label="任务场所"
+          label="场所地址"
+          width="280"
           align="center">
       </el-table-column>
 
       <el-table-column
             prop="launchPerson"
-            label="发起人"
+            label="发起者"
+            width="110"
             align="center">
         </el-table-column>
 
       <el-table-column
-          prop="flowType"
-          label="任务类型"
+          prop="taskTime"
+          label="发起时间"
+          width="160"
           align="center">
       </el-table-column>
 
-        <el-table-column
-            prop="handleResults"
-            label="任务状态"
-            align="center">
-        </el-table-column>
+      <el-table-column
+          prop="emeLevelCn"
+          label="紧急程度"
+          width="80"
+          align="center">
+      </el-table-column>
 
-        <el-table-column
+      <el-table-column
+            prop="taskContent"
+            label="任务描述"
+            width="180"
+            align="center">
+      </el-table-column>
+
+      <el-table-column
             prop="statTask"
-            label="流程状态"
+            label="任务状态"
+            width="80"
             align="center">
-        </el-table-column>
-
-      <el-table-column
-          prop="endTime"
-          label="截至时间"
-          align="center">
       </el-table-column>
+
 
       <el-table-column  align="center" label="操作">
         <template slot-scope="scope">
@@ -137,7 +151,7 @@ export default {
       this.initTableData();
     },
     initTableData(){
-      this.$axios.get('/task/getTasks', {
+      this.$axios.get('/task/app/getMyTask', {
         params: {
           page: this.page,
           size: this.size,

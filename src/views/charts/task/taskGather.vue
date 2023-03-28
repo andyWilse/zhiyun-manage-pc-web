@@ -5,22 +5,27 @@
         <div class="left" style="position: absolute;top:10px;left: 10px;">
             <img class="icon" src="/image/icon028.jpg" style="height: 15px;margin-right: 5px;" />
         </div>
-        <div class="name" style="position: absolute;top:10px;left: 30px;height: 20px;">任务数据汇总</div>
+        <div class="name" style="position: absolute;top:10px;left: 30px;height: 20px;"> 我的任务数据汇总</div>
         <div class="day" style="position: absolute;top:10px;left: 1060px;height: 20px;">
-             <el-button  round icon="el-icon-tian" @click="searchByHand('day')" style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
+             <el-button id="dayTask" round icon="el-icon-tian" @click="searchByHand('day')" :type="dayType"
+             style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
                    <span>日</span>
              </el-button>
          </div>
-         <div class="month" style="position: absolute;top:10px;left: 1110px;height: 20px;">
-              <el-button  round icon="el-icon-tian" @click="searchByHand('month')" style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
-                    <span>月</span>
-              </el-button>
-         </div>
-         <div class="week" style="position: absolute;top:10px;left: 1160px;height: 20px;">
-              <el-button  round icon="el-icon-tian" @click="searchByHand('week')" style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
+
+         <div class="week" style="position: absolute;top:10px;left: 1110px;height: 20px;">
+              <el-button id="weekTask" round icon="el-icon-tian" @click="searchByHand('week')" :type="weekType"
+              style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
                     <span>周</span>
               </el-button>
          </div>
+
+          <div class="month" style="position: absolute;top:10px;left: 1160px;height: 20px;">
+               <el-button id="monthTask" round icon="el-icon-tian" @click="searchByHand('month')" :type="monthType"
+               style="width: 30px;left:0;padding: 2px;text-align:justify;height: 28px;">
+                     <span>月</span>
+               </el-button>
+          </div>
     </div>
 </template>
 <script>
@@ -31,6 +36,9 @@ import * as echarts from 'echarts'
         return {
             searchName: "",
             dateType: "day",
+            dayType:"primary",
+            weekType:"",
+            monthType:"",
         };
     },
     mounted() {
@@ -41,6 +49,19 @@ import * as echarts from 'echarts'
     methods: {
         searchByHand(type){
             this.getZxtGather(type);
+            if('week'===type){
+                this.dayType="";
+                this.monthType="";
+                this.weekType="primary";
+            }else if('day'===type){
+                this.dayType="primary";
+                this.monthType="";
+                this.weekType="";
+            }else if('month'===type){
+               this.dayType="";
+               this.monthType="primary";
+               this.weekType="";
+           }
         },
         getZxtGather(dateType) {
             this.$axios.get('/task/zxt/getTaskZxt',

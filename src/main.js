@@ -16,6 +16,9 @@ import Plugin from 'v-fit-columns';
 import * as echarts from 'echarts';
 //import * as echarts from 'echarts/lib/echarts';
 import * as utils from './utils/util.js'
+import gloMsg from './utils/global.js'   //注意文件路径，实际路径以项目目录结构为准
+Vue.prototype.$gloMsg = gloMsg;
+
 
 Vue.use(router);
 Vue.use(Plugin);

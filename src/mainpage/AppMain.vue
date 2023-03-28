@@ -26,4 +26,6 @@ export default {
   bottom: 0px;
   /* background-color: rebeccapurple; */
 }
+
+
 </style>

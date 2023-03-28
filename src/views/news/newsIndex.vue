@@ -9,8 +9,8 @@
         </el-col>
 
         <el-col :span="7">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: newsQue }">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: newsMod }">新增</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -81,10 +81,10 @@
                 新闻链接
             </el-button>
 
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" style="padding:5px;" type="primary">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" style="padding:5px;" type="primary" :style="{ display: newsMod }">
             修改
           </el-button>
-          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
+          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{ display: newsDel }">
             删除
           </el-button>
         </template>
@@ -121,6 +121,10 @@ export default {
   data () {
     return {
       message: '',
+      newsQue:'',
+      newsAdd:'none',
+      newsDel:'none',
+      newsMod:'none',
       isActive: false,
       isActive_modify: false,
       index_modify: 0,
@@ -144,6 +148,9 @@ export default {
   },
   mounted(){
     this.initTableData();
+    this.newsAdd=this.$gloMsg.newsAdd;
+    this.newsDel=this.$gloMsg.newsDel;
+    this.newsMod=this.$gloMsg.newsMod;
   },
   methods: {
     refClick (index, rows) {

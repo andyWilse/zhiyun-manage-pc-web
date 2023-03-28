@@ -5,7 +5,7 @@
         <div class="left" style="position: absolute;top:10px;left: 10px;">
             <img class="icon" src="/image/icon029.jpg" style="height: 15px;margin-right: 5px;" />
         </div>
-        <div class="name" style="position: absolute;top:10px;left: 30px;height: 20px;">任务数据对比图</div>
+        <div class="name" style="position: absolute;top:10px;left: 30px;height: 20px;">任务完成量对比图</div>
     </div>
 </template>
 <script>
@@ -47,7 +47,7 @@ import * as echarts from 'echarts'
 
           for (var i = 0; i < result.length; i++) {
               var item = result[i];
-              XData.push(item.remarkDate);
+              XData.push(item.date);
               SDataMe.push(item.myTotal);//我的
               SDataOu.push(item.ouHai);//瓯海
           }
@@ -69,7 +69,7 @@ import * as echarts from 'echarts'
                     icon: '',
                       left: 'right',
                       top: 0,
-                      data: ['我的', '瓯海区'],
+                      data: ['我的', '区均值'],
                       "textStyle": {
                           "fontSize": 8
                 },
@@ -96,7 +96,7 @@ import * as echarts from 'echarts'
                 min:0,
                 max:60,
                 interval:20,
-                data: ['0', '20', '40', '60', '80']
+                data: ['0', '5', '10', '15', '20']
             },
             series: [
                 {
@@ -105,7 +105,7 @@ import * as echarts from 'echarts'
                     data:SDataMe
                 },
                 {
-                    name: '瓯海区',
+                    name: '区均值',
                     type: 'bar',
                     data: SDataOu
                 },

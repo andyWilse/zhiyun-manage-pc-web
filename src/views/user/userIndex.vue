@@ -20,8 +20,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="7">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: userQue }">查询</el-button>
+            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: userAdd }">新增</el-button>
         </el-col>
       </el-row>
 
@@ -81,13 +81,13 @@
           align="center"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;" :style="{ display: userMod }">
             修改
           </el-button>
-          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
+          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{ display: userDel }">
             删除
           </el-button>
-          <el-button @click.native.prevent="grandClick(scope.$index, tableData)" style="padding:5px;" type="primary">
+          <el-button @click.native.prevent="grandClick(scope.$index, tableData)" style="padding:5px;" type="primary" :style="{ display: userGra }">
               权限管理
            </el-button>
         </template>
@@ -119,6 +119,11 @@ export default {
   data () {
     return {
       message: '',
+      userAdd:'none',
+      userMod:'none',
+      userDel:'none',
+      userGra:'none',
+      userQue:'',
       isActive_grand: false,
       index_grand: 0,
       isShow: true,
@@ -140,6 +145,10 @@ export default {
     created(){
         this.initTableData();
         this.getRolesList();
+        this.userAdd=this.$gloMsg.userAdd;
+        this.userMod=this.$gloMsg.userMod;
+        this.userDel=this.$gloMsg.userDel;
+        this.userGra=this.$gloMsg.userGra;
     },
   //方法
   methods: {

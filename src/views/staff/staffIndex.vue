@@ -45,7 +45,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6.8">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
+            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: staffQue }">查询</el-button>
             <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="false">新增</el-button>
         </el-col>
       </el-row>
@@ -80,7 +80,7 @@
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" style="padding:5px;" v-show="false">
             修改
           </el-button>
-          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
+          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{ display: staffDel }">
             删除
           </el-button>
         </template>
@@ -116,6 +116,8 @@ export default {
   data () {
     return {
       message: '',
+      staffQue:'',
+      staffDel:'none',
       isActive: false,
       isActive_modify: false,
       index_modify: 0,
@@ -160,6 +162,9 @@ export default {
         this.pagShow=true;
     };
     this.getVenuesList();
+
+    this.staffQue=this.$gloMsg.staffQue;
+    this.staffDel=this.$gloMsg.staffDel;
 
   },
   methods: {

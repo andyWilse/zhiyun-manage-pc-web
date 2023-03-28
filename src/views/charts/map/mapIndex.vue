@@ -24,19 +24,6 @@ export default {
 
 <style >
 
-/*  #2d3a6b */
-.eventChartClass {
-  position: absolute;
-  left: 0px;
-  /* 内部框框距离 */
-  top: 0px;
-  padding: 10px;
-  right: 0px;
-  overflow-y: auto;
-  bottom: 0px;
-  /* background-color: rebeccapurple; */
-}
-
 .mapChartClass{
 	width: 1360px;
 	height: 100px;
@@ -47,19 +34,6 @@ export default {
 	top: 0px;
 	margin-left: -50px;
 	margin-top: -50px;
-}
-
-
-.taskChartClass {
-  position: absolute;
-  right: 0px;
-  /* 内部框框距离 */
-  top: 0px;
-  padding: 10px;
-  right: 0px;
-  overflow-y: auto;
-  bottom: 0px;
-  /* background-color: rebeccapurple; */
 }
 
 </style>

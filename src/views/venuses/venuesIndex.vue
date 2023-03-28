@@ -26,8 +26,8 @@
         </el-col>
 
         <el-col :span="6.8">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick">新增</el-button>
+            <el-button class="veQueryClass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: veQue }">查询</el-button>
+            <el-button class="veAddClass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: veAdd }">新增</el-button>
         </el-col>
 
       </el-row>
@@ -92,10 +92,10 @@
           width="120"
           label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" class="mclass">
+          <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" class="veModifyClass" :style="{ display: veMod }">
               修改
           </el-button>
-          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger">
+          <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" class="veDeleteClass" :style="{ display: veDel }">
               删除
           </el-button>
         </template>
@@ -119,6 +119,10 @@ export default {
   data () {
     return {
       message: '',
+      veAdd:'none',
+      veMod:'none',
+      veDel:'none',
+      veQue:'',
       isShow: true,
       searchdata: '',
       searchList: [],
@@ -147,6 +151,9 @@ export default {
   },
   mounted(){
     this.initTableData();
+    this.veAdd=this.$gloMsg.veAdd;
+    this.veMod=this.$gloMsg.veMod;
+    this.veDel=this.$gloMsg.veDel;
   },
   created(){
     this.getReligiousSect();
@@ -222,6 +229,8 @@ export default {
       this.initTableData()
     },
     handleSearch () {
+     alert(this.$gloMsg.city);
+
         this.page =1;
       //this.searchList = []; // 每次搜索,要将上次的搜索结果searchList清空
       this.initTableData();
@@ -325,15 +334,14 @@ export default {
 </script>
 
 <style>
-.qclass{
+.veQueryClass{
   background-color:#156AA8;
 }
 
-.aclass{
+.veAddClass{
   background-color:#aa7700;
 }
-
-.mclass{
+.veModifyClass{
   background-color:#156AA8;
   padding:5px;
 }

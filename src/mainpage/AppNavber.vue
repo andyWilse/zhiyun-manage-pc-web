@@ -82,6 +82,9 @@ export default {
               console.log(successResponse.data.data)
               this.menuList=successResponse.data.data.parent;
               this.menuListc=successResponse.data.data.children;
+              //按钮权限
+              let buttonArr=successResponse.data.data.button;
+              this.buttonGrand(buttonArr);
             }else{
               this.$fire({
                 text: successResponse.data.Message,
@@ -91,7 +94,66 @@ export default {
             }
           })
     },
+    
+    buttonGrand(buttonArr){
+              this.$gloMsg.veAdd= "none";
+              this.$gloMsg.veMod= "none";
+              this.$gloMsg.veDel= "none";
 
+              this.$gloMsg.staffQue= "none";
+              this.$gloMsg.staffDel= "none";
+
+              this.$gloMsg.manaAdd="none";
+              this.$gloMsg.manaMod= "none";
+              this.$gloMsg.manaDel= "none";
+              //this.$gloMsg.manaQue= "none";
+
+              this.$gloMsg.newsAdd= "none";
+              this.$gloMsg.newsDel= "none";
+              this.$gloMsg.newsMod= "none";
+
+              this.$gloMsg.userAdd= "none";
+              this.$gloMsg.userMod= "none";
+              this.$gloMsg.userDel= "none";
+              this.$gloMsg.userGra= "none";
+
+              for(var i=0;i<buttonArr.length;i++){
+                let but=buttonArr[i].menuId;
+                if(1001000101===but){
+                    this.$gloMsg.veAdd='';
+                }else if(1001000102===but){
+                    this.$gloMsg.veMod='';
+                }else if(1001000103===but){
+                    this.$gloMsg.veDel='';
+                }else if(1001000201===but){
+                    this.$gloMsg.staffQue='';
+                }else if(1001000202===but){
+                    this.$gloMsg.staffDel='';
+                }else if(1001000301===but){
+                    this.$gloMsg.manaAdd='';
+                }else if(1001000302===but){
+                    this.$gloMsg.manaMod='';
+                }else if(1001000303===but){
+                    this.$gloMsg.manaDel='';
+                }else if(1001000401===but){
+                    this.$gloMsg.newsAdd='';
+                }else if(1001000402===but){
+                    this.$gloMsg.newsMod='';
+                }else if(1001000403===but){
+                    this.$gloMsg.newsDel='';
+                }else if(1002000101===but){
+                    this.$gloMsg.userAdd='';
+                }else if(1002000102===but){
+                    this.$gloMsg.userMod='';
+                }else if(1002000103===but){
+                    this.$gloMsg.userDel='';
+                }else if(1002000104===but){
+                    this.$gloMsg.userQue='';
+                }else if(1002000105===but){
+                    this.$gloMsg.userGra='';
+                }
+              }
+    },
   }
 };
 </script>
