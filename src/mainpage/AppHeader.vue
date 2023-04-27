@@ -5,16 +5,18 @@
       <span class="company">后台管理系统</span>
     </a>
 
-    <a href="http://zszjadmin.860577.net:8808/#/firstPage" >
-      <img class="firstlogo" src="@/assets/first.png" alt width="80px" />
+    <router-link to="/firstPage">
+      <img class="firstLogo" src="@/assets/first.png" alt width="80px" />
+    </router-link>
+    <a class="userClass">
+         <span class="conClass" style="display:inline-block;width:220px;font-weight:bold;">{{userName}}</span>
     </a>
-
     <!-- 出发时间   -->
     <el-dropdown  @command="handleCommand">
       <span class="el-dropdown-link">
         系统设置
        <!-- <i class="el-icon-arrow-down el-icon--right"></i>-->
-           <img class="initlogo" src="@/assets/init.png" alt width="15px" />
+           <img class="initLogo" src="@/assets/init.png" alt width="15px" />
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item icon="el-icon-edit"  command="modiPass">修改密码</el-dropdown-item>
@@ -36,9 +38,12 @@ export default {
     return {
       isActive_modify: false,
       index_modify: 0,
+      userName:'',
     };
   },
-
+    created() {
+        this.getUser();
+    },
   methods: {
     handleCommand(command){
       if("logOut"===command){
@@ -55,6 +60,19 @@ export default {
         this.isActive_modify = true
       }
     },
+
+    getUser(){
+          this.$axios.get('/user/getUser')
+          .then(successResponse => {
+              if (successResponse.data.code === 200) {
+                let userNm= successResponse.data.result[0].userNm;
+                let identityCn= successResponse.data.result[0].identityCn;
+                this.userName=userNm+'('+identityCn+')';
+              }else{
+
+              }
+          })
+        },
     changeActive_modify () {
       this.isActive_modify = false
     },
@@ -71,11 +89,11 @@ export default {
   vertical-align: middle;
   padding: 0px 10px 0 40px;
 }
-.firstlogo {
+.firstLogo {
   vertical-align: middle;
   padding: 0px 10px 0 150px;
 }
-.initlogo{
+.initLogo{
   vertical-align: middle;
   padding: 0px 10px 0 10px;
 }
@@ -104,4 +122,10 @@ export default {
 
 }
 */
+
+
+.userClass{
+    padding: 0px 10px 0 860px;
+
+}
 </style>

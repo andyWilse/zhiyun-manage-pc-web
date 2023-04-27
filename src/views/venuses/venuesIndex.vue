@@ -229,7 +229,7 @@ export default {
       this.initTableData()
     },
     handleSearch () {
-     alert(this.$gloMsg.city);
+     //alert(this.$gloMsg.city);
 
         this.page =1;
       //this.searchList = []; // 每次搜索,要将上次的搜索结果searchList清空

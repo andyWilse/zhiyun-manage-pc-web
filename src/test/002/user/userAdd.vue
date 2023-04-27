@@ -97,7 +97,7 @@
           <el-row>
             <el-col>
              <el-upload
-                action="http://localhost:8081/api/file/images/upload"
+                action="http://zszjadmin.860577.net:8808/api/file/images/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-success="imgSuccess"

@@ -163,7 +163,7 @@ export default {
     };
     this.getVenuesList();
 
-    this.staffQue=this.$gloMsg.staffQue;
+    //this.staffQue=this.$gloMsg.staffQue;
     this.staffDel=this.$gloMsg.staffDel;
 
   },

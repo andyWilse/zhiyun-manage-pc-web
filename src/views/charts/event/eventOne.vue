@@ -33,7 +33,7 @@ import * as echarts from 'echarts'
     data() {
         return {
             searchName: "",
-            eventType: "01",
+            eventType: "02",
             faceType:"primary",
             flowType:"",
             fireType:"",
@@ -41,7 +41,7 @@ import * as echarts from 'echarts'
         };
     },
     mounted() {
-        this.getZxtDay("01");
+        this.getZxtDay("02");
     },
     created() {
     },
@@ -138,7 +138,7 @@ import * as echarts from 'echarts'
                 {
                     name: '',
                     type: 'line',
-                    // smooth: true, // 平滑曲线显示
+                    smooth: true, // 平滑曲线显示
                     data:SData,
                     areaStyle: {
                         //显示区域颜色---渐变效果

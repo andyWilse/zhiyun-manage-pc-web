@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-dialog title="修改新闻信息" class="dialogClass" :visible="dialogVisibleNewsModify" :before-close="handleClose" width="90%">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
 
         <el-form-item label="新闻id:" prop="newsId" v-show="false">
@@ -8,6 +7,18 @@
         </el-form-item>
 
         <el-row>
+             <el-col :span="6">
+                 <el-form-item label="链接类型:" prop="newsRefType" readonly="true">
+                   <el-select v-model="form.newsRefType"  placeholder="请选择" @change="handleSelect($event)" disabled>
+                     <el-option
+                         v-for="item in newsRefTypeArr"
+                         :key="item.cd"
+
+                         :label="item.desc"
+                         :value="item.cd"/>
+                   </el-select>
+                 </el-form-item>
+             </el-col>
              <el-col :span="6">
                  <el-form-item label="面向群体:" prop="newsFor">
                    <el-select v-model="form.newsFor"  placeholder="请选择">
@@ -31,16 +42,16 @@
                   </el-form-item>
              </el-col>
         </el-row>
-        <el-row>
-          <el-form-item label="新闻标题:" prop="newsTitle">
-            <el-input v-model="form.newsTitle"></el-input>
-          </el-form-item>
-        </el-row>
 
         <el-row>
-          <el-form-item label="新闻链接:" prop="newsRef">
-            <el-input v-model="form.newsRef"></el-input>
-          </el-form-item>
+            <el-form-item label="新闻标题:" prop="newsTitle">
+              <el-input v-model="form.newsTitle"></el-input>
+            </el-form-item>
+        </el-row>
+            <el-row>
+              <el-form-item label="新闻链接:" prop="newsRef">
+                <el-input v-model="form.newsRef"></el-input>
+              </el-form-item>
         </el-row>
 
         <el-row>
@@ -51,51 +62,64 @@
 
         <el-row>
           <el-form-item label="新闻关键字:" prop="newsKeyword">
-            <el-input v-model="form.newsKeyword"></el-input>
+            <el-input v-model="form.newsKeyword" placeholder="多个关键字请用逗号（ ，）隔开"></el-input>
           </el-form-item>
         </el-row>
-
         <el-row>
-          <el-form-item label="新闻内容:" prop="newsContent">
+          <el-form-item label="新闻内容:" prop="newsContent" v-show="newsContentShow">
             <el-input v-model="form.newsContent"
               placeholder="请填写"
               type="textarea"
-              :autosize="{ minRows: 2, maxRows: 5}">
+              :autosize="{ minRows: 2, maxRows: 10}">
             </el-input>
           </el-form-item>
         </el-row>
 
+         <el-form-item label="照片1" v-show="false">
+                <el-input v-model="form.newsPicturesPath"></el-input>
+          </el-form-item>
+
+          <el-form-item  prop="fileList" v-show="picturesPathShow">
+            <el-row>
+              <el-col>
+                <el-upload
+                   action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                   list-type="picture-card"
+                   :limit="1"
+                   :on-exceed="handleExceed"
+                   :on-preview="handlePictureCardPreview"
+                   :on-success="imgSuccess"
+                   :on-error="imgError"
+                   :on-remove="imgRemove"
+                   :file-list="fileList">
+                   <i class="el-icon-plus"></i>
+                 </el-upload>
+              </el-col>
+            </el-row>
+          </el-form-item>
       </el-form>
-<!--      <el-image
-          style="width: 150px; height: 100px"
-          v-for="item in imagesrcList"
-          :src="'data:image/png;base64,' +item.filePath"
-          :key="item.fileId"
-          :preview-src-list="getImgList(imagesrcList)"
-      >
-      </el-image>-->
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button @click="handleSubmit">确定</el-button>
-      </span>
-
-    </el-dialog>
-
+      <div style="position:absolute;right:100px;">
+        <el-button @click="handleCancel" type="warning">取消</el-button>
+        <el-button @click="handleSubmit()" type="primary">确定</el-button>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "newsModify",
-  props: ['isactive', 'dialogVisibleNewsModify', 'index_from_parent'],
+  props: [],
   data () {
     return {
       message: '来自子组件的消息',
-      newsTypeArr:[],
-      imagesrcList:[],
+      picturesPathShow:false,
+      newsContentShow:false,
+      fileRemove:'',
       fileList:[],
-      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'教职人员'}],
+      newsTypeArr:[],
+      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'教职人员'},{cd:'03',desc:'监管/管理人员'}],
+      newsRefTypeArr:[{cd:'01',desc:'一般新闻'},{cd:'02',desc:'图片新闻'}],
       form: {
         newsTitle: '',
         newsType: '',
@@ -104,8 +128,11 @@ export default {
         newsFrom:'',
         newsFor:'',
         newsRef:'',
+        newsRefType:'',
+        newsPicturesPath:'',
       },
       rules: {
+        newsRefType:[{required: true, message: '请选择链接类型', trigger: 'blur'}],
         newsTitle:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
         newsFor:[{required: true, message: '请选择面向群体', trigger: 'blur'}],
         newsRef:[{required: true, message: '请输入新闻链接', trigger: 'blur'}],
@@ -114,8 +141,32 @@ export default {
   },
   created(){
     this.getNewsTypeArr();
+    this.getModifyNews();
   },
   methods: {
+    getModifyNews(){
+        let newsId=this.$route.query.newsId;
+        this.$axios.get('/news/getNewsById/'+newsId)
+            .then(successResponse => {
+                let message=successResponse.data.message;
+                if (successResponse.data.code === 200) {
+                    this.form.newsTitle =successResponse.data.result[0].newsTitle ;
+                    this.form.newsType =successResponse.data.result[0].newsType ;
+                    this.form.newsKeyword =successResponse.data.result[0].newsKeyword ;
+                    this.form.newsContent =successResponse.data.result[0].newsContent ;
+                    this.form.newsFrom =successResponse.data.result[0].newsFrom ;
+                    this.form.newsFor =successResponse.data.result[0].newsFor ;
+                    this.form.newsRef =successResponse.data.result[0].newsRef ;
+                    this.form.newsPicturesPath =successResponse.data.result[0].newsPicturesPath ;
+                    this.fileList=successResponse.data.result[0].fileList;
+                    let refType=successResponse.data.result[0].newsRefType;
+                    this.form.newsRefType =refType;
+                    this.handleSelect(refType);
+                }else{
+                    this.$message({message: message, type: 'error'});
+                }
+            })
+    },
     async getNewsTypeArr(){
       this.$axios.get('/dict/getSysDict', {
         params: {
@@ -129,83 +180,74 @@ export default {
         }
       })
     },
-    // $emit应是用来子组件向父组件传参的,但是,这里我只是想改变父组件中isActive为false,
+    //取消
     handleCancel () {
-      // 对应事件cActive
-      this.$emit('cActive_modify')
+      this.$router.replace({path: '/newsIndex'});
     },
+    //保存修改
     handleSubmit () {
-      this.$emit('cmodify', this.form)
-      // 对应事件cAdd
-      // &emit向父组件提交form表单
-      this.$axios.post('/news/update', {
-        newsTitle: this.form.newsTitle,
-        newsId: this.form.newsId,
-        newsType: this.form.newsType,
-        newsKeyword: this.form.newsKeyword,
-        newsContent: this.form.newsContent,
-        newsFrom:this.form.newsFrom,
-        newsFor:this.form.newsFor,
-        newsRef:this.form.newsRef,
-      }).then(successResponse => {
-        if (successResponse.data.code=== 200) {
-          this.$message({message: '修改新闻信息成功！', type: 'success'});
-          // 对应事件cAdd
-          // &emit向父组件提交form表单
-          this.$emit('cmodify', this.form)
-        }else{
-          this.$alert('修改新闻信息失败,请联系管理员！');
-        }
-      })
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-          .then(_ => {
-            this.$emit('cActive_modify') // 如果确认,就取消弹窗,
-            done()
+          let newsId=this.$route.query.newsId;
+          this.$axios.post('/news/update', {
+                newsTitle: this.form.newsTitle,
+                newsId: newsId,
+                newsType: this.form.newsType,
+                newsKeyword: this.form.newsKeyword,
+                newsContent: this.form.newsContent,
+                newsFrom:this.form.newsFrom,
+                newsFor:this.form.newsFor,
+                newsRef:this.form.newsRef,
+                newsFor:this.form.newsFor,
+                newsPicturesPath:this.form.newsPicturesPath,
+                picturesPathRemove:this.fileRemove,
+          }).then(successResponse => {
+            let message=successResponse.data.message;
+            if (successResponse.data.code=== 200) {
+                  this.$message({message: message, type: 'success'});
+                  this.$router.replace({path: '/newsIndex'});
+            }else{
+                  this.$message({message: message, type: 'error'});
+            }
           })
-          .catch(_ => {})
     },
-    // 一般情况下是在这里创建FormData对象，但我们需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
-    handleupload(param) {
-      this.fileList.push(param);
-    },
-    // 这里是执行文件上传的函数，其实也就是获取我们要上传的文件
-    uploadelupload() {
-      this.$refs.elupload.submit()
-      let fd = new FormData()
-      this.$refs.elupload.submit();
-      //将每一个文件图片都加进formdata
-      this.fileList.forEach(item => {
-        fd.append(item.file.name, item.file,item.file.name)
-      })
-      //formdata.append("score", 4)
-      let config={
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-      this.$axios.post(
-          '/file/images/upload',
-          fd,
-          config
-      ).then(successResponse => {
-        if (successResponse.status === 200) {
-          this.form.picturesPath=successResponse.data
-          alert("图片上传成功！")
+    // 删除图片
+    imgRemove(file, fileList) {
+        let url=file.url;
+        let remove='';
+        if(url.includes('blob:http:')){
+            remove=file.response.result;
         }else{
-          this.$router.replace({path: '/error'})
+            remove=file.fileId;
         }
-      })
+        this.fileRemove=this.fileRemove+remove+',';
     },
-    //循环展示图片
-    getImgList(srcLis) {
-      let arr = []
-      let i = 0
-      for (i; i < srcLis.length; i++) {
-        arr.push(srcLis[i].filePath)
-      }
-      return arr
+    // 上传失败
+    imgError(res) {
+        this.$message({type: "error", message: "图片上传失败",});
+    },
+    handlePictureCardPreview(file) {
+        console.log(file);
+    },
+    // 上传成功
+    imgSuccess(res, file, fileList) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        //重点  得到上传图片的名字
+        //this.ruleForm.userHeaderPicture = res.result;
+        this.form.newsPicturesPath=this.form.newsPicturesPath+res.result+',';
+    },
+    handleExceed(){
+        //提示最多只能上传20个
+        this.$message({message: '上传一张图片即可！', type: 'warning'});
+    },
+    //根据选择显示
+    handleSelect(opt){
+        if("01"===opt){
+            this.picturesPathShow=false;
+            this.newsContentShow=true;
+        }else if("02"===opt){
+            this.picturesPathShow=true;
+            this.newsContentShow=false;
+            this.form.newsContent='';
+        }
     },
   }
 }

@@ -15,10 +15,17 @@ import VueRouter from 'vue-router';
 import Plugin from 'v-fit-columns';
 import * as echarts from 'echarts';
 //import * as echarts from 'echarts/lib/echarts';
-import * as utils from './utils/util.js'
-import gloMsg from './utils/global.js'   //注意文件路径，实际路径以项目目录结构为准
-Vue.prototype.$gloMsg = gloMsg;
+import * as utils from './utils/util.js';
+import gloMsg from './utils/global.js' ;  //注意文件路径，实际路径以项目目录结构为准
 
+/*import VueQuillEditor from 'vue-quill-editor';
+import * as Quill from 'quill'; //引入编辑器
+import resizeImage from 'quill-image-resize-module'; // 图片缩放组件。
+Quill.register('modules/resizeImage ', resizeImage);
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+Vue.use(VueQuillEditor);*/
 
 Vue.use(router);
 Vue.use(Plugin);
@@ -28,7 +35,8 @@ Vue.use(Region);
 Vue.use(VueCookies);
 Vue.prototype.$store = store;
 Vue.prototype.$message = Message;
-Vue.prototype.$utils = utils
+Vue.prototype.$gloMsg = gloMsg;
+Vue.prototype.$utils = utils;
 Vue.config.productionTip = false;
 
 //使用钩子函数对路由进行权限跳转

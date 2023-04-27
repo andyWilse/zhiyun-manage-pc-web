@@ -4,12 +4,12 @@
       <el-row>
         <el-col :span="7">
           <el-form-item label="任务名称:">
-            <el-input v-model="searchForm.one" placeholder="任务名称"></el-input>
+            <el-input v-model="searchForm.one" placeholder="任务名称" clearable></el-input>
           </el-form-item>
         </el-col>
          <el-col :span="7">
-          <el-form-item label="任务场所:">
-            <el-input v-model="searchForm.two" placeholder="任务场所"></el-input>
+          <el-form-item label="场所名称:">
+            <el-input v-model="searchForm.two" placeholder="场所名称" clearable></el-input>
           </el-form-item>
         </el-col>
 
@@ -156,7 +156,7 @@ export default {
           page: this.page,
           size: this.size,
           taskName:this.searchForm.one,
-          taskContent:this.searchForm.two,
+          venues:this.searchForm.two,
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

@@ -44,6 +44,21 @@
           width="130">
       </el-table-column>
 
+<!--
+      <el-table-column
+            prop="newsRef"
+            label="链接"
+            align="center"
+            width="200">
+        </el-table-column>
+
+      <el-table-column
+          prop="creator"
+          label="发布者名称"
+          align="center"
+          width="120">
+      </el-table-column>
+-->
       <el-table-column
           prop="createTime"
           label="发布日期"
@@ -82,6 +97,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <add-item :dialog-visible-news-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
+    <!--    @cActive控制添加表单的显示,每当点击取消时,不再显示弹窗-->
+    <!--    @cAdd控制提交form表单的信息,点击确定时,子组件向父组件传递表单数据,同时isActive=false,不再显示弹窗-->
+    <modify-item :dialog-visible-news-modify="isActive_modify" :index_from_parent="index_modify"
+                 @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></modify-item>
 
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
@@ -96,9 +116,14 @@
 </template>
 
 <script>
+import newsAdd from './newsAdd'
+import newsModify from './newsModify'
+
 export default {
   name: "newsIndex",
   components: {
+    'add-item': newsAdd,
+    'modify-item': newsModify
   },
   data () {
     return {
@@ -107,6 +132,12 @@ export default {
       newsAdd:'none',
       newsDel:'none',
       newsMod:'none',
+      isActive: false,
+      isActive_modify: false,
+      index_modify: 0,
+      isShow: true,
+      searchdata: '',
+      searchList: [],
       tempList: [],
       //查询
       tableData:[],
@@ -116,6 +147,9 @@ export default {
       // 绑定搜索数据
       searchForm: {
         one: null,
+        two: null,
+        three: null,
+        four: null,
       },
     }
   },
@@ -139,20 +173,64 @@ export default {
         let url=this.tableData[index].newsRef;
         window.open(url, '_blank');
     },
-    addClick () {
-      this.$router.replace({path: '/newsAdd'});
+    addClick () { // 每次点击“添加”按钮时,首先将isActive激活,显示表单;再调用子组件的childaddClicj方法,清空之前子组件中的form表单
+      this.isActive = true // 显示弹窗
+      this.$refs.myaddchild.childaddClick() // 调用子组件中的childaddClick方法,清空表单
     },
     modifyClick (index, rows) {
-      let newsId= this.tableData[index].newsId;
-      this.$router.push({path: '/newsModify',query:{ newsId:newsId}});
-    },
+      this.isActive_modify = true // 显示修改弹窗
+      this.index_modify = index
 
+      this.$refs.mymodifychild.form.newsTitle = this.tableData[this.index_modify].newsTitle
+      this.$refs.mymodifychild.form.newsKeyword = this.tableData[this.index_modify].newsKeyword
+      this.$refs.mymodifychild.form.newsFrom = this.tableData[this.index_modify].newsFrom
+      this.$refs.mymodifychild.form.newsFor = this.tableData[this.index_modify].newsFor
+      this.$refs.mymodifychild.form.newsRef = this.tableData[this.index_modify].newsRef
+      this.$refs.mymodifychild.form.newsType = this.tableData[this.index_modify].newsType
+      this.$refs.mymodifychild.form.creator = this.tableData[this.index_modify].creator
+      this.$refs.mymodifychild.form.newsContent = this.tableData[this.index_modify].newsContent
+      this.$refs.mymodifychild.form.createTime = this.tableData[this.index_modify].createTime
+      this.$refs.mymodifychild.form.newsId = this.tableData[this.index_modify].newsId
+      this.$refs.mymodifychild.form.newsPicturesPath = this.tableData[this.index_modify].newsPicturesPath
+      this.getPictures(this.tableData[this.index_modify].newsPicturesPath);
+    },
+    handleRewrite (form) {
+      this.isActive_modify = false; // 显示修改弹窗
+      this.tableData[this.index_modify].newsTitle = form.newsTitle;
+      this.tableData[this.index_modify].newsKeyword = form.newsKeyword;
+      this.tableData[this.index_modify].newsType = form.newsType;
+      this.tableData[this.index_modify].creator = form.creator;
+      this.tableData[this.index_modify].createTime = form.createTime;
+      this.tableData[this.index_modify].newsFrom = form.newsFrom;
+      this.tableData[this.index_modify].newsRef = form.newsRef;
+      this.tableData[this.index_modify].newsFor = form.newsFor;
+      this.isActive_modify = false;
+      this.tempList = this.tableData;
+      this.initTableData();
+    },
+    handleAdd (form) {
+      const obj = {
+        newsTitle: form.newsTitle,
+        newsKeyword: form.newsKeyword,
+        createTime:form.createTime
+      } // 这里用临时变量存储子组件提交来的form表单的数据,而不能直接push子组件的form,因为那样做会导致是将form添加到了tableDate中,每次push都只是
+      // 增加了同一个form(个数有多个),修改一次form,其他的数据也会改变
+      this.tableData.push(obj);
+      this.tempList = this.tableData;
+      this.isActive = false; // 关闭显示弹窗
+      this.initTableData();
+    },
     handleSearch () {
-        this.page=1;
-        this.initTableData();
+      this.initTableData()
     },
     handleClear () {
-      this.tableData = this.tempList;
+      this.tableData = this.tempList
+    },
+    changeActive () { // 用于只改变isActive的值来取消显示弹窗
+      this.isActive = false
+    },
+    changeActive_modify () {
+      this.isActive_modify = false
     },
     sizeChange(pageSize){
       this.size=pageSize;
@@ -218,6 +296,26 @@ export default {
               this.$router.replace({path: '/error'})
             }
           })
+    },
+
+    // 时间确认触发
+    dateChange(val) {
+      this.search.startTime = val
+    },
+    searchData() {},
+
+    getPictures(userPhotoUrls){
+      this.$axios.get('/file/show', {
+        params: {
+          picture: userPhotoUrls,
+        }
+      }).then(successResponse => {
+        if (successResponse.status === 200) {
+          this.$refs.mymodifychild.imagesrcList=successResponse.data;
+        }else{
+          this.$router.replace({path: '/error'})
+        }
+      })
     },
 
     //切换是否上架

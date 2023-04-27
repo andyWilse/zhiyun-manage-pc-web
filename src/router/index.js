@@ -23,6 +23,8 @@ import mapIndex from '@/views/charts/map/mapIndex';
 import eventChart from '@/views/charts/event/eventChart';
 import taskChart from '@/views/charts/task/taskChart';
 import newsIndex from '@/views/news/newsIndex';
+import newsAdd from '@/views/news/newsAdd';
+import newsModify from '@/views/news/newsModify';
 import firstPage from '@/mainpage/dialog/FirstPage';
 import deployTask from '@/views/task/deployTask';
 
@@ -34,21 +36,14 @@ Vue.use(VueRouter); //安装插件
 export const constantRouterMap = [
     //配置默认的路径，默认显示登录页
     { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true}},
-    { path: '/mu',name:'mu', component: () => import('@/test/charXian')},
-{ path: '/map',name:'map', component: () => import('@/views/charts/map/mapIndex')},
 
-{ path: '/ma',name:'ma', component: () => import('@/views/charts/task/taskContrast')},
-//{ path: '/ch',name:'ma', component: () => import('@/views/charts/mapChart')},
-    //gaoDe gdMap1 { path: '/managerAdd',name:'managerAdd', component: managerAdd,meta:{requireAuth:true}},
-//{ path: '/ch',name:'ch', component: () => import('@/views/chartsIndex/chartsIndex')},
-/*
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
     { path: '/success',name:'success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转
     { path: '/error', name:'error',component: () => import('@/views/errorView'), hidden: true },
 
-
-    { path: '/test',name:'test', component: () => import('@/test/shiroTest'), hidden: true },
+//{ path: '/test',name:'test', component: () => import('@/test/fu'), hidden: true },
+   /* { path: '/test',name:'test', component: () => import('@/test/shiroTest'), hidden: true },
     { path: '/pass',name:'pass', component: () => import('@/test/updatePassword'), hidden: true },
 */
 
@@ -74,6 +69,8 @@ export const constantRouterMap = [
             {path:'/eventChart',name:'eventChart',component:eventChart,meta:{requireAuth:true}},
             {path:'/taskChart',name:'taskChart',component:taskChart,meta:{requireAuth:true}},
             {path:'/newsIndex',name:'newsIndex',component:newsIndex,meta:{requireAuth:true}},
+            {path:'/newsAdd',name:'newsAdd',component:newsAdd,meta:{requireAuth:true}},
+            {path:'/newsModify',name:'newsModify',component:newsModify,meta:{requireAuth:true}},
             {path:'/monitorNow',name:'monitorNow',component:monitorNow,meta:{requireAuth:true}},
             {path:'/monitorBack',name:'monitorBack',component:monitorBack,meta:{requireAuth:true}},
             {path:'/deployTask',name:'deployTask',component:deployTask,meta:{requireAuth:true}},

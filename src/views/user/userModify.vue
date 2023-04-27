@@ -78,7 +78,7 @@
                 <el-row>
                   <el-col>
                    <el-upload
-                      action="http://localhost:8081/api/file/images/upload"
+                      action="http://zszjadmin.860577.net:8808/api/file/images/upload"
                       list-type="picture-card"
                       :on-preview="handlePictureCardPreview"
                       :on-success="imgSuccess"
@@ -382,7 +382,13 @@ export default {
         },
         // 删除图片
         imgRemove(file, fileList) {
-            let remove=file.response.result;
+            let url=file.url;
+            let remove='';
+            if(url.includes('blob:http:')){
+                remove=file.response.result;
+            }else{
+                remove=file.fileId;
+            }
             this.fileRemove=this.fileRemove+remove+',';
         },
         // 上传失败

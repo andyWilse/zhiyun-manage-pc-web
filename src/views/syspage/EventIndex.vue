@@ -19,55 +19,60 @@
         stripe
         style="width: 100%"
     >
+
       <el-table-column
-          prop="accessNumber"
-          label="预警设备"
-          width="160"
+          prop="eventType"
+          label="预警类型"
           align="center"
           fixed>
       </el-table-column>
+
       <el-table-column
-          prop="responsiblePerson"
-          label="责任人"
-          width="130"
+          prop="accessNumber"
+          label="设备编号"
+          width="200"
           align="center">
       </el-table-column>
+
       <el-table-column
-          prop="eventType"
-          label="类型"
-          align="center"
-          width="130">
+           prop="warnTime"
+           label="预警时间"
+           align="center"
+           width="160">
       </el-table-column>
+
       <el-table-column
-          prop="eventState"
-          label="状态"
+          prop="venuesName"
+          label="场所名称"
           align="center"
           width="100">
       </el-table-column>
 
       <el-table-column
-          prop="warnTime"
-          label="预警时间"
+          prop="venuesAddres"
+          label="场所地址"
           align="center"
-          width="160">
+          width="330">
       </el-table-column>
 
-      <el-table-column
-          prop="relVenuesId"
-          label="地点"
-          align="center"
-          width="260">
-      </el-table-column>
+       <el-table-column
+          prop="eventState"
+          label="状态"
+          width="90"
+          align="center">
+       </el-table-column>
 
       <el-table-column
-          prop="handleTesults"
-          label="处理结果"
+          prop="handlePerson"
+          label="处理人"
+           width="100"
           align="center">
       </el-table-column>
 
       <el-table-column
           prop="handleTime"
           label="处理时间"
+          width="160"
           align="center">
 
       </el-table-column>

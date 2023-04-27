@@ -15,7 +15,7 @@
           </el-table-column>
 
           <el-table-column
-                prop="message"
+                prop="feedBack"
                 label="意见"
                 align="left">
             </el-table-column>
