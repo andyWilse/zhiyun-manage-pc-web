@@ -14,17 +14,17 @@
               align="left">
           </el-table-column>
 
-          <el-table-column
-              prop="handleTime"
-              label="处理时间"
-              align="left">
-          </el-table-column>
+            <el-table-column
+                prop="handleTime"
+                label="处理时间"
+                align="left">
+            </el-table-column>
 
-          <el-table-column
-              prop="feedBack"
-              label="意见"
-              align="left">
-          </el-table-column>
+            <el-table-column
+                prop="feedBack"
+                label="意见"
+                align="left">
+            </el-table-column>
         </el-table>
   </el-dialog>
 </template>
@@ -55,8 +55,8 @@
                 })
         },
         handleClose (done) {
-              this.$emit('cActive_comment'); // 如果确认,就取消弹窗,
-              done();
+             this.$emit('cActive_comment'); // 如果确认,就取消弹窗,
+             done();
             },
       }
     }

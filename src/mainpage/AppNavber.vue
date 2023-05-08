@@ -1,12 +1,12 @@
 <template>
-  <div class="navber">
+  <div class="navBer">
     <!--  default-active="2"默认选中2-->
     <!--
       :router="true"表示开启路由，当开启路由后 index指向路由地址
     -->
     <el-menu
         :default-active="$route.path"
-        :default-openeds="openeds"
+        :default-openeds="openedArr"
         class="el-menu-vertical-demo"
         :router="true"
         @open="handleOpen"
@@ -18,10 +18,10 @@
     >
       <!-- 一级菜单 -->
       <el-submenu
-          v-for="item in menuListc"
+          v-for="item in menuListChild"
           :key="item.menuId"
-          :index="item.menuId + ''"
-      >
+          :index="item.menuId + ''">
+
         <!-- key是给每一个vnode的唯一id-->
         <template slot="title">
           <img :src="require('@/assets/'+item.iconNm)">
@@ -31,8 +31,8 @@
         <el-menu-item
             v-for="subItem in item.childs"
             :key="subItem.menuId"
-            :index="subItem.href + ''"
-        >
+            :index="subItem.href + ''">
+
           <template slot="title">
 <!--            <i class="el-icon-menu"></i>-->
             <span>{{ subItem.menuNm }}</span>
@@ -57,8 +57,8 @@ export default {
     return {
       // 左侧菜单数据
       menuList: [],
-      menuListc: [],
-      openeds: ['1001','1002','1003'],
+      menuListChild: [],
+      openedArr: ['1001'],
     };
   },
   // 在模板渲染成html前调用方法获取左侧菜单栏数据
@@ -81,7 +81,7 @@ export default {
             if (successResponse.data.code === 200) {
               console.log(successResponse.data.data)
               this.menuList=successResponse.data.data.parent;
-              this.menuListc=successResponse.data.data.children;
+              this.menuListChild=successResponse.data.data.children;
               //按钮权限
               let buttonArr=successResponse.data.data.button;
               this.buttonGrand(buttonArr);

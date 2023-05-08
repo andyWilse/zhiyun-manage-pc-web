@@ -156,7 +156,7 @@ export default {
           size: this.size,
           taskName:this.searchForm.one,
           venues:this.searchForm.two,
-          type:'00'
+          type:'02'
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

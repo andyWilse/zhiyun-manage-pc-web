@@ -1,14 +1,48 @@
 <template>
   <div>
-    <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
-      <el-row>
-        <el-col :span="7">
-          <el-form-item label="新闻标题:">
-            <el-input v-model="searchForm.one" placeholder="新闻标题"></el-input>
+    <el-form :inline="true" :model="searchForm" label-width="120px" class="searchForm">
+      <el-row :gutter="25">
+        <el-col :span="4.8">
+          <el-form-item>
+            <el-input v-model="searchForm.one" placeholder="新闻标题" clearable></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="4.8">
+          <el-form-item>
+             <el-select v-model="searchForm.two"  placeholder="链接类型" clearable>
+               <el-option
+                   v-for="item in newsRefTypeArr"
+                   :key="item.cd"
+                   :label="item.desc"
+                   :value="item.cd"/>
+             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4.8">
+             <el-form-item>
+               <el-select v-model="searchForm.three"  placeholder="面向群体" clearable>
+                 <el-option
+                     v-for="item in newsForArr"
+                     :key="item.cd"
+                     :label="item.desc"
+                     :value="item.cd"/>
+               </el-select>
+             </el-form-item>
+        </el-col>
 
-        <el-col :span="7">
+        <el-col :span="4.8">
+               <el-form-item>
+                 <el-select v-model="searchForm.four"  placeholder="新闻类别" clearable>
+                   <el-option
+                       v-for="item in newsTypeArr"
+                       :key="item.dictCd"
+                       :label="item.dictCnDesc"
+                       :value="item.dictCd"/>
+                 </el-select>
+               </el-form-item>
+        </el-col>
+
+        <el-col :span="4.8">
             <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: newsQue }">查询</el-button>
             <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: newsMod }">新增</el-button>
         </el-col>
@@ -24,15 +58,21 @@
       <el-table-column
           prop="newsTitle"
           label="新闻标题"
-
           align="center"
           fixed>
       </el-table-column>
 
       <el-table-column
-          prop="newsKeyword"
-          label="新闻关键字"
-          width="200"
+          prop="newsRefType"
+          label="链接类型"
+          align="center"
+          width="100">
+      </el-table-column>
+
+      <el-table-column
+          prop="newsType"
+          label="新闻类别"
+          width="100"
           align="center">
       </el-table-column>
 
@@ -108,6 +148,9 @@ export default {
       newsDel:'none',
       newsMod:'none',
       tempList: [],
+      newsTypeArr:[],
+      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'管理人员'},{cd:'03',desc:'监管/管理人员'}],
+      newsRefTypeArr:[{cd:'01',desc:'一般新闻'},{cd:'02',desc:'图片新闻'}],
       //查询
       tableData:[],
       total:0,
@@ -116,16 +159,34 @@ export default {
       // 绑定搜索数据
       searchForm: {
         one: null,
+        two:null,
+        three:null,
+        four:null
       },
     }
   },
   mounted(){
     this.initTableData();
+    this.getNewsTypeArr();
     this.newsAdd=this.$gloMsg.newsAdd;
     this.newsDel=this.$gloMsg.newsDel;
     this.newsMod=this.$gloMsg.newsMod;
   },
   methods: {
+      //获取新闻类别
+      async getNewsTypeArr(){
+        this.$axios.get('/dict/getSysDict', {
+          params: {
+            dictTypeCd: '1002',
+          }
+        }).then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.newsTypeArr=successResponse.data.resultArr;
+          }else{
+            this.$alert('数据获取失败,请联系管理员！');
+          }
+        })
+      },
       newsForFormat(row, column){
           if (row.newsFor === '01') {
               return '监管人员';
@@ -168,6 +229,9 @@ export default {
           page: this.page,
           size: this.size,
           newsTitle:this.searchForm.one,
+          newsRefType:this.searchForm.two,
+          newsFor:this.searchForm.three,
+          newsType:this.searchForm.four,
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

@@ -40,7 +40,7 @@ export default {
   right: 0px;
 }
 /* #545c64 */
-.navber {
+.navBer {
   position: absolute;
   background-color: #156AA8;
   top: 42px;

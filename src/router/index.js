@@ -27,6 +27,8 @@ import newsAdd from '@/views/news/newsAdd';
 import newsModify from '@/views/news/newsModify';
 import firstPage from '@/mainpage/dialog/FirstPage';
 import deployTask from '@/views/task/deployTask';
+import finishTask from '@/views/task/finishTask';
+import unFinishTask from '@/views/task/unFinishTask';
 
 import sus from '@/views/successView';
 //import managerAdd from '@/views/manager/managerAdd';
@@ -74,7 +76,8 @@ export const constantRouterMap = [
             {path:'/monitorNow',name:'monitorNow',component:monitorNow,meta:{requireAuth:true}},
             {path:'/monitorBack',name:'monitorBack',component:monitorBack,meta:{requireAuth:true}},
             {path:'/deployTask',name:'deployTask',component:deployTask,meta:{requireAuth:true}},
-
+            {path:'/finishTask',name:'finishTask',component:finishTask,meta:{requireAuth:true}},
+            {path:'/unFinishTask',name:'unFinishTask',component:unFinishTask,meta:{requireAuth:true}},
         ],meta:{
           		index:1,
           		showFooter:false
