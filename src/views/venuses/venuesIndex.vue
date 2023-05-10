@@ -3,9 +3,9 @@
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
         <el-col :span="6.1">
-      <el-form-item label="场所名称:">
-        <el-input v-model="searchForm.one" placeholder="场所名称" clearable></el-input>
-      </el-form-item>
+          <el-form-item label="场所名称:">
+            <el-input v-model="searchForm.one" placeholder="场所名称" clearable></el-input>
+          </el-form-item>
         </el-col>
         <el-col :span="6.1">
           <el-form-item label="负责人:">
@@ -42,10 +42,10 @@
       <el-table-column
           prop="venuesName"
           label="场所名称"
-          width="150"
           align="center"
           fixed>
       </el-table-column>
+
       <el-table-column
           prop="religiousSect"
           label="教派类别"
@@ -66,6 +66,7 @@
           align="center"
           width="135">
       </el-table-column>
+
       <el-table-column
           prop="organization"
           label="所属机构"
@@ -76,7 +77,8 @@
       <el-table-column
           prop="venuesAddres"
           label="场所地址"
-          align="center">
+          align="center"
+          fixed>
       </el-table-column>
 
        <el-table-column

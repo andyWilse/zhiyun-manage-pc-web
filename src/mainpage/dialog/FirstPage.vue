@@ -35,54 +35,54 @@
       <el-table-column
           prop="venuesName"
           label="场所名称"
-          width="130"
+          fixed
           align="center">
       </el-table-column>
 
       <el-table-column
           prop="venuesAddres"
           label="场所地址"
-          width="330"
+          fixed
           align="center">
       </el-table-column>
 
       <el-table-column
             prop="launchPerson"
             label="发起者"
-            width="110"
+            fixed
             align="center">
         </el-table-column>
 
       <el-table-column
           prop="taskTime"
           label="发起时间"
-          width="180"
+          fixed
           align="center">
       </el-table-column>
 
       <el-table-column
           prop="emeLevelCn"
           label="紧急程度"
-          width="100"
+          fixed
           align="center">
       </el-table-column>
 
 <!--      <el-table-column
             prop="taskContent"
             label="任务描述"
-            width="180"
+            fixed
             align="center">
       </el-table-column> -->
 
       <el-table-column
             prop="statTask"
             label="任务状态"
-            width="100"
+            fixed
             align="center">
       </el-table-column>
 
 
-      <el-table-column  align="center" label="操作" width="130">
+      <el-table-column  align="center" label="操作" fixed>
         <template slot-scope="scope">
           <el-button @click.native.prevent="handleClick(scope.$index, tableData)" style="padding:5px;" type="primary">
             查看详情

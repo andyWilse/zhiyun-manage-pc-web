@@ -17,12 +17,11 @@
         :data="tableData"
         border
         stripe
-        style="width: 200%"
+        style="width: 100%"
     >
       <el-table-column
           prop="operator"
           label="操作人"
-          width="180"
           align="center"
           fixed>
       </el-table-column>
@@ -30,7 +29,7 @@
       <el-table-column
           prop="operateContent"
           label="操作内容"
-          width="250"
+          fixed
           align="center">
       </el-table-column>
 
@@ -38,14 +37,14 @@
           prop="operateDetail"
           label="详情描述"
           align="center"
-          width="560">
+          fixed>
       </el-table-column>
 
       <el-table-column
           prop="operateTm"
           label="操作时间"
           align="center"
-          >
+          fixed>
       </el-table-column>
 
     </el-table>

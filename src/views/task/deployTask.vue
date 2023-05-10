@@ -2,13 +2,13 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="任务名称:">
             <el-input v-model="searchForm.one" placeholder="任务名称"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="7">
+        <el-col :span="6">
             <el-button class="handClass" icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
             <el-button class="depClass" icon="el-icon-circle-plus-outline" type="primary" @click="deployClick">流程部署</el-button>
         </el-col>
@@ -24,7 +24,6 @@
       <el-table-column
           prop="name"
           label="流程名称"
-          width="190"
           align="center"
           fixed>
       </el-table-column>
@@ -32,7 +31,7 @@
       <el-table-column
           prop="taskKey"
           label="key值"
-          width="200"
+          fixed
           align="center">
       </el-table-column>
 
@@ -40,21 +39,21 @@
           prop="version"
           label="版本"
           align="center"
-          width="100">
+          fixed>
       </el-table-column>
 
       <el-table-column
           prop="resourceName"
           label="配置文件"
           align="center"
-          width="300">
+          fixed>
       </el-table-column>
 
       <el-table-column
             prop="description"
             label="流程描述"
             align="center"
-            width="485">
+            fixed>
         </el-table-column>
 
     </el-table>

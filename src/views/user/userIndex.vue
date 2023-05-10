@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
+    <el-form :inline="true" :model="searchForm" label-width="60px" class="searchForm">
       <el-row>
         <el-col :span="8">
-          <el-form-item label="登录名:">
-            <el-input v-model="searchForm.one" placeholder="登录名" clearable></el-input>
+          <el-form-item label="中文名:">
+            <el-input v-model="searchForm.one" placeholder="中文名" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -31,53 +31,52 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%">
+        style="width: 60%">
 
       <el-table-column
           prop="userNm"
           label="中文名"
-          width="200"
+          fixed
           align="center">
       </el-table-column>
 
-      <el-table-column
+    <!--  <el-table-column
           prop="loginNm"
           label="登录名"
-          width="150"
           align="center"
           fixed>
-      </el-table-column>
+      </el-table-column>-->
 
       <el-table-column
           prop="userMobile"
           label="电话"
           align="center"
-          width="200">
+          fixed>
       </el-table-column>
 
-      <el-table-column
+      <!--<el-table-column
           prop="userEmail"
           label="邮箱"
           align="center"
           width="220">
-      </el-table-column>
+      </el-table-column>-->
 
-      <el-table-column
+     <!-- <el-table-column
           prop="userNbr"
           label="工号"
           align="center"
           width="120">
-      </el-table-column>
+      </el-table-column>-->
 
       <el-table-column
           prop="identity"
           label="角色"
           align="center"
-          width="180">
+          fixed>
       </el-table-column>
 
       <el-table-column
-          fixed="right"
+          fixed
           align="center"
           label="操作">
         <template slot-scope="scope">
@@ -223,7 +222,7 @@ export default {
         params: {
           page: this.page,
           size: this.size,
-          loginNm:this.searchForm.one,
+          userNm:this.searchForm.one,
           identity: this.searchForm.two,
         }
       }).then(successResponse => {

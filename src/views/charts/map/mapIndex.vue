@@ -25,15 +25,15 @@ export default {
 <style >
 
 .mapChartClass{
-	width: 1360px;
-	height: 100px;
+	width: 99.88%;
+	height: 99.66%;
 	background: #eee;
 	border: 1px solid #ccc;
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	margin-left: -50px;
-	margin-top: -50px;
+	margin-left: 0px;
+	margin-top: 0px;
 }
 
 </style>

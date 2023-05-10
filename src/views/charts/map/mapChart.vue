@@ -1,6 +1,6 @@
 <template>
       <div class="mapChartClass">
-            <div id="container" style="height:740px;width: 1380px;"></div>
+            <div id="container" ></div>
       </div>
 </template>
 
@@ -219,8 +219,9 @@ window._AMapSecurityConfig = {
     #container{
         padding:0px;
         margin: 0px;
+        top: 0px;
         width: 100%;
-        height: 800px;
+        height: 100%;
     }
 
 </style>
