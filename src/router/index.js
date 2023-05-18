@@ -39,6 +39,9 @@ export const constantRouterMap = [
     //配置默认的路径，默认显示登录页
     { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true}},
 
+    { path: '/wb',name:'wb', component: () => import('@/test/003/wb002')},
+{ path: '/ve',name:'ve', component: () => import('@/test/003/vedio003')},
+{ path: '/detail',name:'detail', component: () => import('@/views/news/newDetail')},
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
     { path: '/success',name:'success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转

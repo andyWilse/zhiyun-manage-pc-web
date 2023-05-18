@@ -121,7 +121,6 @@ export default {
       isActive: false,
       isActive_modify: false,
       index_modify: 0,
-      isShow: true,
       tableShow:false,
       pagShow:false,
       searchdata: '',
