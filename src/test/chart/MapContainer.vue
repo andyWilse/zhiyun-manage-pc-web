@@ -29,6 +29,7 @@
 				infoWindow: null,
 				markers: [],
 				markersPosition: [],
+				mask: [],
 				// 定义图片
 				styleObjectArr: [],
 				massMarks: null,
@@ -56,9 +57,13 @@
 							"AMap.PlaceSearch",
 							"AMap.InfoWindow",
 							"AMap.MarkerClusterer",
+							"AMap.PolygonEditor",
+							"AMap.PolylineEditor",
+							"AMap.DistrictSearch"
 						], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
 					})
 					.then((AMap) => {
+					this.init1();
 						this.map = new AMap.Map("container", {
 							//设置地图容器id
 							viewMode: "3D", //是否为3D地图模式
@@ -77,13 +82,46 @@
 						// //构造地点查询类
 						// this.auto.on("select", this.select);
 
-						this.getLocation();
-						this.setMarker();
+						//this.getLocation();
+						//this.setMarker();
+
+
 					})
 					.catch((e) => {
 						console.log(e);
 					});
 			},
+			  init1 () {//区域遮盖
+                            var that =this
+                            if( that.polygon ) {
+                                that.map.remove(that.polygon)
+                            }
+                            this.map.plugin('AMap.DistrictSearchDistrictSearch', function () {
+                                new AMap.DistrictSearch({
+                                    extensions: 'all',
+                                    subdistrict: 0
+                                }).search("浙江", function(status, result) {// 外多边形坐标数组和内多边形坐标数组
+                                    var outer = [
+                                        new AMap.LngLat(-360, 90, true),
+                                        new AMap.LngLat(-360, -90, true),
+                                        new AMap.LngLat(360, -90, true),
+                                        new AMap.LngLat(360, 90, true)
+                                    ]
+                                    var holes = result.districtList[0].boundaries
+                                    var pathArray = [outer]
+                                    pathArray.push.apply(pathArray, holes)
+                                    that.polygon = new AMap.Polygon({
+                                        pathL: pathArray,
+                                        strokeColor: 'red',//城市边界颜色
+                                        strokeWeight: 3,
+                                        fillColor: '#5149ce', // 遮罩背景色黑色
+                                        fillOpacity: 1
+                                    })
+                                    that.polygon.setPath(pathArray)
+                                    that.map.add(that.polygon)
+                                })
+                            })
+                        },
 			/**
 			 * 获取当前定位
 			 */
@@ -329,6 +367,7 @@
 		mounted() {
 			//DOM初始化完成进行地图初始化
 			this.initMap();
+			this.init1("浙江");
 		},
 		// 初始化 input搜索框
 		created() {

@@ -18,21 +18,12 @@ import * as echarts from 'echarts';
 import * as utils from './utils/util.js';
 import gloMsg from './utils/global.js' ;  //注意文件路径，实际路径以项目目录结构为准
 
-/*import VueQuillEditor from 'vue-quill-editor';
-import * as Quill from 'quill'; //引入编辑器
-import resizeImage from 'quill-image-resize-module'; // 图片缩放组件。
-Quill.register('modules/resizeImage ', resizeImage);
+import VueQuillEditor from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
-Vue.use(VueQuillEditor);*/
 
-  import VueQuillEditor from 'vue-quill-editor'
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
-  Vue.use(VueQuillEditor);
-
+Vue.use(VueQuillEditor);
 Vue.use(router);
 Vue.use(Plugin);
 Vue.use(VueRouter);

@@ -1,8 +1,9 @@
 import Vue from 'vue' //引入 Vue
 import VueRouter from 'vue-router' //引入 Vue 路由
 
-import loginView from '@/views/loginView';
 import layOut from '@/mainpage/layOut';
+import firstPage from '@/mainpage/dialog/FirstPage';
+import loginView from '@/views/loginView';
 import venuesIndexs from '@/views/venuses/venuesIndex';
 import venusesAdd from '@/views/venuses/venusesAdd';
 import venusesModify from '@/views/venuses/venusesModify';
@@ -11,10 +12,10 @@ import managerIndex from '@/views/manager/managerIndex';
 import managerAdd from '@/views/manager/managerAdd';
 import managerModify from '@/views/manager/managerModify';
 import logIndex from '@/views/syspage/LogIndex';
+import eventIndex from '@/views/syspage/EventIndex';
 import monitorIndex from '@/views/monitor/MonitorIndex';
 import monitorNow from '@/views/monitor/MonitorNow';
 import monitorBack from '@/views/monitor/MonitorBack';
-import eventIndex from '@/views/syspage/EventIndex';
 import userIndex from '@/views/user/userIndex';
 import userAdd from '@/views/user/userAdd';
 import userModify from '@/views/user/userModify';
@@ -25,33 +26,27 @@ import taskChart from '@/views/charts/task/taskChart';
 import newsIndex from '@/views/news/newsIndex';
 import newsAdd from '@/views/news/newsAdd';
 import newsModify from '@/views/news/newsModify';
-import firstPage from '@/mainpage/dialog/FirstPage';
 import deployTask from '@/views/task/deployTask';
 import finishTask from '@/views/task/finishTask';
 import unFinishTask from '@/views/task/unFinishTask';
 
 import sus from '@/views/successView';
-//import managerAdd from '@/views/manager/managerAdd';
 
 Vue.use(VueRouter); //安装插件
 
 export const constantRouterMap = [
+
+{ path: '/ve',name:'ve', component: () => import('@/test/chart/MapContainer')},
+{ path: '/vo',name:'vo', component: () => import('@/test/chart/map001')},
+{ path: '/vv',name:'vv', component: () => import('@/test/chart/mapMap')},
+{ path: '/va',name:'va', component: () => import('@/test/chart/mapOne')},
+
     //配置默认的路径，默认显示登录页
     { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true}},
-
-    { path: '/wb',name:'wb', component: () => import('@/test/003/wb002')},
-{ path: '/ve',name:'ve', component: () => import('@/test/003/vedio003')},
-{ path: '/detail',name:'detail', component: () => import('@/views/news/newDetail')},
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
     { path: '/success',name:'success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转
     { path: '/error', name:'error',component: () => import('@/views/errorView'), hidden: true },
-
-//{ path: '/test',name:'test', component: () => import('@/test/fu'), hidden: true },
-   /* { path: '/test',name:'test', component: () => import('@/test/shiroTest'), hidden: true },
-    { path: '/pass',name:'pass', component: () => import('@/test/updatePassword'), hidden: true },
-*/
-
     //菜单
     {path:'/layOut',name:'layOut',component:layOut,redirect:'firstPage',
         children:[
