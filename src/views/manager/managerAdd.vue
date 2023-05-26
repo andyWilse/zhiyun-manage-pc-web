@@ -116,9 +116,10 @@ export default {
             managerCnNm:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
             certNbr: [{ required: true, message: '请输入有效证件号码', trigger: 'blur' }],
             passwords:[{required: true, message: '请输入密码', trigger: 'blur'}],
+            //pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,
             managerMobile: [{
               required: true,
-              pattern:/^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/,
+              pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
               message: "请输入正确的手机号码",
               trigger: "blur"
             }],

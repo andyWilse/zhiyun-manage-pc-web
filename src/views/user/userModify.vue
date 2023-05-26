@@ -137,8 +137,8 @@ export default {
         isShowOne:false,
         isShowTwo:false,
         rolesList:[],
-        identity:[],
         userMobileOrigin: '',
+        passwordOrigin: '',
         form: {
             userNm: '',
             loginNm: '',
@@ -187,18 +187,20 @@ export default {
                     //原号码
                     this.userMobileOrigin=successResponse.data.result[0].userMobile;
                     this.form.userMobile = successResponse.data.result[0].userMobile;
-                    let identity=successResponse.data.result[0].identity;
-                    this.form.identity = identity;
+                    let ide=successResponse.data.result[0].identityInt;
+                    this.form.identity = ide;
                     this.form.venuesName = successResponse.data.result[0].venuesNm;
                     this.regions.province = successResponse.data.result[0].province;
                     this.regions.city = successResponse.data.result[0].city;
                     this.regions.area = successResponse.data.result[0].area;
                     this.regions.town = successResponse.data.result[0].town;
                     //隐藏处理
-                    this.getList (identity);
+                    this.getList (ide);
                     //图片处理
                     this.form.userPhotoUrl = successResponse.data.result[0].userPhotoUrl;
                     this.fileList=successResponse.data.result[0].fileList;
+
+                    this.passwordOrigin=successResponse.data.result[0].weakPwInd;
 
                 }else{
                     let message=successResponse.data.message;
@@ -230,7 +232,7 @@ export default {
             userMobile: this.form.userMobile,
             userMobileOrigin: this.userMobileOrigin,
             userEmail: this.form.userEmail,
-            identity:this.identity,
+            identity:this.form.identity,
             userPhotoUrl: this.form.userPhotoUrl,
             picturesPathRemove: this.fileRemove,
             province: this.province,
@@ -239,6 +241,7 @@ export default {
             town: this.town,
             relVenuesId:this.venuesIds,
             userId: this.$route.query.userId,
+            weakPwInd:this.passwordOrigin,
 
           }).then(successResponse => {
             if (successResponse.data.code === 200) {
@@ -351,12 +354,6 @@ export default {
         },
         //根据角色显示
         getList (opt) {
-            this.rolesList.map(item => {
-                if(item.roleId == opt){
-                    this.form.identity = item.roleNm;
-                    this.identity=opt;
-                }
-            });
             if(10000002==opt || 10000003==opt){
                 this.isShow =false;
                 this.isShowBut =false;

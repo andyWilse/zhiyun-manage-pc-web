@@ -98,6 +98,7 @@ export default {
         certTypeCdArr:[],
         fileRemove:'',
         fileUpload:'',
+        originMobile:'',
         fileList:[],
         form: {
             managerPhotoPath:'',
@@ -108,6 +109,7 @@ export default {
             managerMobile:'',
             certTypeCd:'',
             certNbr:'',
+            passwordsOrigin:'',
         },
         managerTypeCdList:[{key:'01',value:'负责人'},{key:'02',value:'管理组成员'},{key:'03',value:'工作联络员'}],
         formRules: {
@@ -143,7 +145,8 @@ export default {
                         this.form.certTypeCd = successResponse.data.result[0].certTypeCd ;
                         this.form.certNbr = successResponse.data.result[0].certNbr ;
                         this.form.managerMobile = successResponse.data.result[0].managerMobile ;
-
+                        this.originMobile = successResponse.data.result[0].managerMobile ;
+                        this.form.passwordsOrigin=successResponse.data.result[0].passwordsOrigin;
                         this.fileList=successResponse.data.result[0].fileList;
 
                     }else{
@@ -211,12 +214,14 @@ export default {
                 managerCnNm: this.form.managerCnNm,
                 managerEnNm: this.form.managerEnNm,
                 managerMobile: this.form.managerMobile,
+                originMobile:this.originMobile,
                 managerEmail: this.form.managerEmail,
                 certTypeCd: this.form.certTypeCd,
                 certNbr: this.form.certNbr,
                 managerPhotoPath:this.form.managerPhotoPath,
                 picturesPathRemove: this.fileRemove,
                 passwords:this.form.passwords,
+                passwordsOrigin:this.form.passwordsOrigin,
                 managerTypeCd:this.form.managerTypeCd,
                 managerId:this.$route.query.managerId,
             }).then(successResponse => {
