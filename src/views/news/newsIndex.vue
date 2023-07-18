@@ -197,8 +197,13 @@ export default {
           }
       },
     refClick (index, rows) {
-        let url=this.tableData[index].newsRef;
-        window.open(url, '_blank');
+        let ref=this.tableData[index].newsRef;
+        if('01'===ref){
+            let newsId= this.tableData[index].newsId;
+            this.$router.push({path: '/newDetail',query:{ aid:newsId}});
+        }else{
+            window.open(ref, '_blank');
+        }
     },
     addClick () {
       this.$router.replace({path: '/newsAdd'});

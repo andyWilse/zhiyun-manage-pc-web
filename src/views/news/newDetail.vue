@@ -69,8 +69,8 @@ this.getNewsContent();
 	    //border:1px solid #000;/*虚线：dashed*/
 	    //padding: 100px;
         margin-top: 0px;
-        margin-right: 250px;
-        margin-left: 250px;
+        margin-right: 80px;
+        margin-left: 80px;
 	}
 
 	.title_class{

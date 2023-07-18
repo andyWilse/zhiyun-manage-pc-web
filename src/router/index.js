@@ -26,6 +26,7 @@ import taskChart from '@/views/charts/task/taskChart';
 import newsIndex from '@/views/news/newsIndex';
 import newsAdd from '@/views/news/newsAdd';
 import newsModify from '@/views/news/newsModify';
+import newDetail from '@/views/news/newDetail';
 import deployTask from '@/views/task/deployTask';
 import finishTask from '@/views/task/finishTask';
 import unFinishTask from '@/views/task/unFinishTask';
@@ -35,12 +36,6 @@ import sus from '@/views/successView';
 Vue.use(VueRouter); //安装插件
 
 export const constantRouterMap = [
-
-{ path: '/ve',name:'ve', component: () => import('@/test/chart/MapContainer')},
-{ path: '/vo',name:'vo', component: () => import('@/test/chart/map001')},
-{ path: '/vv',name:'vv', component: () => import('@/test/chart/mapMap')},
-{ path: '/va',name:'va', component: () => import('@/test/chart/mapOne')},
-
     //配置默认的路径，默认显示登录页
     { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true}},
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
@@ -71,6 +66,7 @@ export const constantRouterMap = [
             {path:'/newsIndex',name:'newsIndex',component:newsIndex,meta:{requireAuth:true}},
             {path:'/newsAdd',name:'newsAdd',component:newsAdd,meta:{requireAuth:true}},
             {path:'/newsModify',name:'newsModify',component:newsModify,meta:{requireAuth:true}},
+            {path:'/newDetail',name:'newDetail',component:newDetail,meta:{requireAuth:true}},
             {path:'/monitorNow',name:'monitorNow',component:monitorNow,meta:{requireAuth:true}},
             {path:'/monitorBack',name:'monitorBack',component:monitorBack,meta:{requireAuth:true}},
             {path:'/deployTask',name:'deployTask',component:deployTask,meta:{requireAuth:true}},
