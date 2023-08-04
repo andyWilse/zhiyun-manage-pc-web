@@ -138,11 +138,10 @@ export default {
         isShowTwo:false,
         rolesList:[],
         userMobileOrigin: '',
-        passwordOrigin: '',
+        identityOrigin: '',
         form: {
             userNm: '',
             loginNm: '',
-            passwords: '',
             userMobile: '',
             userEmail:'',
             userNbr:'',
@@ -151,7 +150,6 @@ export default {
         },
         formRules: {
             userNm:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
-            passwords:[{required: true, message: '请输入密码', trigger: 'blur'}],
             identity:[{required: true, message: '请选择角色', trigger: 'blur'}],
             // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             userMobile: [{
@@ -187,20 +185,19 @@ export default {
                     //原号码
                     this.userMobileOrigin=successResponse.data.result[0].userMobile;
                     this.form.userMobile = successResponse.data.result[0].userMobile;
-                    let ide=successResponse.data.result[0].identityInt;
-                    this.form.identity = ide;
+                    let ideOrigin=successResponse.data.result[0].identityInt;
+                    this.form.identity = ideOrigin;
+                    this.identityOrigin=ideOrigin;
                     this.form.venuesName = successResponse.data.result[0].venuesNm;
                     this.regions.province = successResponse.data.result[0].province;
                     this.regions.city = successResponse.data.result[0].city;
                     this.regions.area = successResponse.data.result[0].area;
                     this.regions.town = successResponse.data.result[0].town;
                     //隐藏处理
-                    this.getList (ide);
+                    this.getList (ideOrigin);
                     //图片处理
                     this.form.userPhotoUrl = successResponse.data.result[0].userPhotoUrl;
                     this.fileList=successResponse.data.result[0].fileList;
-
-                    this.passwordOrigin=successResponse.data.result[0].weakPwInd;
 
                 }else{
                     let message=successResponse.data.message;
@@ -241,18 +238,19 @@ export default {
             town: this.town,
             relVenuesId:this.venuesIds,
             userId: this.$route.query.userId,
-            weakPwInd:this.passwordOrigin,
+            identityOrigin:this.identityOrigin,
 
           }).then(successResponse => {
+            let message=successResponse.data.message;
+            let result=successResponse.data.result;
             if (successResponse.data.code === 200) {
-              this.$message({message: '修改用户信息成功！', type: 'success'});
-              this.$router.replace({path: '/userIndex'});
+                 this.$router.replace({path: result});
+                 this.$message({message: '修改用户信息成功！', type: 'success'});
             }else{
-              let message=successResponse.data.message;
               if(''!=message && null!=message){
                 this.$message({message: message, type: 'error'});
               }else{
-                this.$message({message: message, type: 'error'});
+                this.$message({message: '用户信息修改失败！', type: 'error'});
               }
             }
           })
@@ -354,6 +352,7 @@ export default {
         },
         //根据角色显示
         getList (opt) {
+
             if(10000002==opt || 10000003==opt){
                 this.isShow =false;
                 this.isShowBut =false;

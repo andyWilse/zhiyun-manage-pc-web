@@ -158,7 +158,6 @@ export default {
         },
         formRules: {
             userNm:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
-            passwords:[{required: true, message: '请输入密码', trigger: 'blur'}],
             identity:[{required: true, message: '请选择角色', trigger: 'blur'}],
             // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             userMobile: [{
@@ -167,6 +166,31 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
             }],
+            passwords: [
+                  { required: true, message: '请输入密码', transform: value => value, trigger: 'blur' },
+                  {
+                    type: 'string',
+                    message: '请输入不包含空格的字符',
+                    trigger: 'blur',
+                    transform(value) {
+                      if (value && value.indexOf(' ') === -1) {
+                        return value
+                      } else {
+                        return false
+                      }
+                    }
+                  },
+                  {
+                    trigger: 'blur',
+                    validator: (rule, value, callback) => {
+                      var passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}/
+                      if (!passwordreg.test(value)) {
+                        callback(new Error('密码必须由数字、字母、特殊字符组合,请输入8-20位'))
+                      }else{
+                        callback()
+                      }
+                    } }
+                ],
         },
 
     }

@@ -56,9 +56,9 @@ export default {
           {
             trigger: 'blur',
             validator: (rule, value, callback) => {
-              var passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,16}/
+              var passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}/
               if (!passwordreg.test(value)) {
-                callback(new Error('密码必须由数字、字母、特殊字符组合,请输入6-16位'))
+                callback(new Error('密码必须由数字、字母、特殊字符组合,请输入8-20位'))
               }else{
                 callback()
               }
@@ -99,24 +99,40 @@ export default {
       // 对应事件cActive
       this.$emit('cActive_modify')
     },
-    handleSubmit () {
-     /* this.$refs[form].validate((valid) => {
-             if (!valid) {
-               console.log(this.form)
-             }
-           });*/
 
+    //提交数据校验
+    handleSubmit () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+              //密码校验
+              var oldPass=this.form.oldPass;
+              var newPass=this.form.newPass;
+              var surePass=this.form.surePass;
+              if(newPass!==surePass){
+                  this.$message({message: '确认密码与原密码输入不一致，请重新输入！', type: 'warning'});
+              }else if(oldPass===surePass){
+                  this.$message({message: '新密码与原密码相同，请重新输入！', type: 'warning'});
+              }else{
+                  this.handleSubmitPost();
+              }
+        }else{
+          this.$alert('填写信息有误，请重新填写后提交！');
+        }
+      });
+    },
+    handleSubmitPost () {
       this.$axios.post('/user/update/password', {
         oldPass: this.form.oldPass,
         newPass: this.form.newPass,
         surePass: this.form.surePass,
 
       }).then(successResponse => {
+            let messages=successResponse.data.message;
             if (successResponse.data.code=== 200) {
-              this.$message.info('密码修改成功！');
+              this.$message({message: messages, type: 'success'});
               this.$router.replace({path: '/'});
             }else{
-              alert(successResponse.data.result);
+              this.$message({message: messages, type: 'error'});
             }
           })
     },

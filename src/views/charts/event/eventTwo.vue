@@ -81,14 +81,16 @@ import * as echarts from 'echarts'
       initChart(result){
           var XData = [];
           var SDataFire = [];
-          var SDataFace = [];
-          var SDataCrowd = [];
+          var SDataSuper = [];
+          var SDataImportant = [];
+          var SDataPart = [];
           for (var i = 0; i < result.length; i++) {
               var item = result[i];
               XData.push(item.date);
-              SDataFire.push(item.fire);//01-火灾预警
-              SDataFace.push(item.face);//02-人脸识别
-              SDataCrowd.push(item.crowd);//04-人流聚集
+              SDataFire.push(item.fire);//01-明火
+              SDataSuper.push(item.super);//02-超限
+              SDataImportant.push(item.important);//03-重点
+              SDataPart.push(item.part);//04-聚集
           }
         this.lineChart = echarts.init(this.$refs.lineChart);
         this.lineChart.setOption({
@@ -108,7 +110,7 @@ import * as echarts from 'echarts'
                     icon: '',
                       left: 'right',
                       top: 0,
-                      data: ['人脸', '人流', '火灾'],
+                      data: ['集聚', '超限', '重点','明火'],
                       "textStyle": {
                           "fontSize": 8
                 },
@@ -134,25 +136,30 @@ import * as echarts from 'echarts'
             yAxis: {
                 type: 'value',
                 min:0,
-                max:60,
-                interval:20,
-                data: ['0', '20', '40', '60', '80']
+                max:5,
+                interval:1,
+                data: ['0', '1', '2', '3', '4', '5']
             },
             series: [
                 {
-                    name: '人脸',
+                    name: '超限',
                     type: 'line',
                     // smooth: true, // 平滑曲线显示
-                    data:SDataFace
+                    data:SDataSuper
                 },
                 {
-                    name: '人流',
+                    name: '重点',
                     type: 'line',
                     // smooth: true,
-                    data: SDataCrowd
+                    data: SDataImportant
                 },
                 {
-                    name: '火灾',
+                    name: '集聚',
+                    type: 'line',
+                    data: SDataPart
+                },
+                {
+                    name: '明火',
                     type: 'line',
                     stack: '总量',
                     // smooth: true,

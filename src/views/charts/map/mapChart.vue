@@ -1,6 +1,8 @@
 <template>
       <div class="mapChartClass">
-            <div id="container" ></div>
+            <div id="container" >
+                <map-container ref="map" @clickMarker="clickMarker" @setPosition="setPosition" />
+            </div>
       </div>
 </template>
 
@@ -211,7 +213,25 @@ window._AMapSecurityConfig = {
             })
         },
         searchByHand(){},
-}
+        clickMarker() {
+            this.$axios.get('/venues/map/getVenues',{
+                       params: {
+                         search: this.search,
+                         religiousSect: this.religiousSect,
+                         type:this.type,
+                       }
+                    }).then(successResponse => {
+                        if (successResponse.data.code === 200) {
+                          this.churchList=successResponse.data.result;
+                          this.initMap();
+                        }else{
+
+                        }
+                    })
+        },
+
+
+    }
  }
 </script>
 
