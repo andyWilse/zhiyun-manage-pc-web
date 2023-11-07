@@ -2,6 +2,7 @@ const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
   transpileDependencies: true,
+  //productionSourceMap:false,  // 设置上线后是否加载webpack文件
   lintOnSave:false,
   devServer: {
     host: '0.0.0.0',
@@ -14,7 +15,7 @@ module.exports = defineConfig({
       port: 8092*/
       //192.168.1.15
       '/api': { // 匹配所有以 '/api'开头的请求路径
-        target: 'http://localhost:8089/', // 代理目标的基础路径
+        target: 'http://127.0.0.1:8085/', // 代理目标的基础路径
         // secure: false,  // 如果是https接口，需要配置这个参数
         changeOrigin: true, // 支持跨域
         pathRewrite: { // 重写路径: 去掉路径中开头的'/api'
@@ -22,6 +23,7 @@ module.exports = defineConfig({
         }
       },
     },
-    port: 8088 // 此处修改你想要的端口号
-  }
+    port: 8081 // 此处修改你想要的端口号
+  },
+
 })

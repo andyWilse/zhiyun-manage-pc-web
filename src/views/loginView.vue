@@ -10,7 +10,7 @@
 <!--        <div style="text-align: center">
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>-->
-        <h2 class="login-title color-main:" style="color: #2d3a6b;">欢迎登录智云科技</h2>
+        <h2 class="login-title color-main:" style="color: #2d3a6b;">瓯海宗教智治管理端</h2>
         <el-form-item prop="username">
           <el-input
             name="username"
