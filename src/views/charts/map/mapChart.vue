@@ -1,19 +1,25 @@
 <template>
       <div class="mapChartClass">
             <div id="container" >
-                <map-container ref="map" @clickMarker="clickMarker" @setPosition="setPosition" />
+                <map-container ref="map" @clickMarker="clickMarker(extData)" @setPosition="setPosition" />
             </div>
+            <venues-detail :dialog-visible-venues-detail="isActive" @cActive="changeActive" @cDetail="handleDetail"></venues-detail>
       </div>
+
 </template>
 
 <script>
 import AMapLoader from '@amap/amap-jsapi-loader';
 import bus from "@/utils/bus";
+import venuesDetail from './venuesDetail';
 
 window._AMapSecurityConfig = {
     securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
 };
  export default {
+    components:{
+           'venues-detail': venuesDetail
+       },
     data(){
           return{
             //此处不声明 map 对象，可以直接使用 this.map赋值或者采用非响应式的普通对象来存储。
@@ -21,6 +27,7 @@ window._AMapSecurityConfig = {
             churchList:[],
             religiousSect:'',
             type:'',
+            isActive: false,
          }
      },
      	// 初始化 input搜索框
@@ -184,8 +191,8 @@ window._AMapSecurityConfig = {
 							zoomStyleMapping: zoomStyleMapping,
 						});
 
-						marker.on("click", this.clickMarker);
 						this.markers.push(marker);
+						marker.on("click", this.clickMarker);
 					});
 
 					this.map.add(this.markers);
@@ -212,24 +219,18 @@ window._AMapSecurityConfig = {
                 }
             })
         },
-        searchByHand(){},
-        clickMarker() {
-            this.$axios.get('/venues/map/getVenues',{
-                       params: {
-                         search: this.search,
-                         religiousSect: this.religiousSect,
-                         type:this.type,
-                       }
-                    }).then(successResponse => {
-                        if (successResponse.data.code === 200) {
-                          this.churchList=successResponse.data.result;
-                          this.initMap();
-                        }else{
 
-                        }
-                    })
+        setPosition(){},
+
+        clickMarker(data) {
+            this.isActive = true // 显示弹窗
         },
-
+        changeActive () { // 用于只改变isActive的值来取消显示弹窗
+            this.isActive = false
+        },
+        handleDetail (form) {
+            this.isActive = false // 关闭显示弹窗
+        },
 
     }
  }
