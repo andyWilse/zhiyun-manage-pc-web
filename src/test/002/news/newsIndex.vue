@@ -38,7 +38,7 @@
 
       <el-table-column
           prop="newsFor"
-          label="面向群体"
+          label="发布平台"
           align="center"
           :formatter="newsForFormat"
           width="130">
@@ -162,11 +162,11 @@ export default {
   methods: {
       newsForFormat(row, column){
           if (row.newsFor === '01') {
-              return '监管人员';
+              return '监管端';
           } else if(row.newsFor === '02'){
-              return '管理人员';
+              return '服务端';
           } else if(row.newsFor === '03'){
-              return '监管/管理人员';
+              return '监管+服务';
           }
       },
     refClick (index, rows) {

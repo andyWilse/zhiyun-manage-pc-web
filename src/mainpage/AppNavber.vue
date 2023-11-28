@@ -116,6 +116,7 @@ export default {
               this.$gloMsg.userMod= "none";
               this.$gloMsg.userDel= "none";
               this.$gloMsg.userGra= "none";
+              this.$gloMsg.userPass= "none";
 
               for(var i=0;i<buttonArr.length;i++){
                 let but=buttonArr[i].menuId;
@@ -125,9 +126,9 @@ export default {
                     this.$gloMsg.veMod='';
                 }else if(1001000103===but){
                     this.$gloMsg.veDel='';
-                }else if(1001000201===but){
-                    this.$gloMsg.staffQue='';
                 }else if(1001000202===but){
+                    this.$gloMsg.staffQue='';
+                }else if(1001000201===but){
                     this.$gloMsg.staffDel='';
                 }else if(1001000301===but){
                     this.$gloMsg.manaAdd='';
@@ -148,7 +149,7 @@ export default {
                 }else if(1002000103===but){
                     this.$gloMsg.userDel='';
                 }else if(1002000104===but){
-                    this.$gloMsg.userQue='';
+                    this.$gloMsg.userPass='';
                 }else if(1002000105===but){
                     this.$gloMsg.userGra='';
                 }

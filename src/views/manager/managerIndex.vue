@@ -2,13 +2,18 @@
   <div v-show="true">
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm" >
       <el-row>
-        <el-col :span="10">
-        </el-col>
         <el-col :span="6.2">
           <el-form-item label="人员名称:">
             <el-input v-model="searchForm.one" placeholder="中文名称" clearable></el-input>
           </el-form-item>
         </el-col>
+
+        <el-col :span="6.2">
+          <el-form-item label="手机号码:">
+            <el-input v-model="searchForm.two" placeholder="手机号码" clearable></el-input>
+          </el-form-item>
+        </el-col>
+
         <el-col :span="6.8">
             <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: manaQue }">查询</el-button>
             <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: manaAdd }">新增</el-button>
@@ -32,7 +37,7 @@
 
       <el-table-column
           prop="managerMobile"
-          label="电话"
+          label="手机号码"
           align="center">
       </el-table-column>
 
@@ -110,6 +115,7 @@ export default {
             page: this.page,
             size: this.size,
             managerCnNm:this.searchForm.one,
+            managerMobile:this.searchForm.two,
           }
         }).then(successResponse => {
           if (successResponse.data.code === 200) {

@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="4.8">
              <el-form-item>
-               <el-select v-model="searchForm.three"  placeholder="面向群体" clearable>
+               <el-select v-model="searchForm.three"  placeholder="发布平台" clearable>
                  <el-option
                      v-for="item in newsForArr"
                      :key="item.cd"
@@ -78,7 +78,7 @@
 
       <el-table-column
           prop="newsFor"
-          label="面向群体"
+          label="发布平台"
           align="center"
           :formatter="newsForFormat"
           width="130">
@@ -110,7 +110,7 @@
           label="操作">
         <template slot-scope="scope">
             <el-button @click.native.prevent="refClick(scope.$index, tableData)" type="primary" class="refCLass">
-                新闻链接
+                详情展示
             </el-button>
 
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" style="padding:5px;" type="primary" :style="{ display: newsMod }">
@@ -149,7 +149,7 @@ export default {
       newsMod:'none',
       tempList: [],
       newsTypeArr:[],
-      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'管理人员'},{cd:'03',desc:'监管/管理人员'}],
+      newsForArr:[{cd:'01',desc:'监管端'},{cd:'02',desc:'服务端'},{cd:'03',desc:'监管+服务'}],
       newsRefTypeArr:[{cd:'01',desc:'一般新闻'},{cd:'02',desc:'图片新闻'}],
       //查询
       tableData:[],
@@ -189,11 +189,11 @@ export default {
       },
       newsForFormat(row, column){
           if (row.newsFor === '01') {
-              return '监管人员';
+              return '监管端';
           } else if(row.newsFor === '02'){
-              return '管理人员';
+              return '服务端';
           } else if(row.newsFor === '03'){
-              return '监管/管理人员';
+              return '监管+服务';
           }
       },
     refClick (index, rows) {

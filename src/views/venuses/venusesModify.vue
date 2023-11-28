@@ -56,6 +56,19 @@
 
         <el-row :gutter="24">
             <el-col :span="7">
+                <el-form-item label="经度"  prop="longitude">
+                  <el-input v-model="form.longitude" clearable></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+              <el-form-item label="维度" prop="latitudes">
+                  <el-input v-model="form.latitudes" clearable></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="24">
+            <el-col :span="7">
                 <el-form-item label="登记证号"  prop="registerNbr">
                   <el-input v-model="form.registerNbr" clearable></el-input>
                 </el-form-item>
@@ -197,9 +210,13 @@ export default {
         liaisonMan : '',
         briefIntroduction :'',
         picturesPath:'',
+        longitude:'',
+        latitudes:''
       },
       formRules: {
         venuesName:[{required: true, message: '请输入场所名称', trigger: 'blur'}],
+        longitude:[{required: true, message: '请输入经度', trigger: 'blur'}],
+        latitudes:[{required: true, message: '请输入维度', trigger: 'blur'}],
         //organization: [{ required: true, message: '请输入所属机构', trigger: 'blur' }],
         religiousSect: [{ required: true, message: '请选择宗教类别', trigger: 'change' }],
         registerNbr: [{ required: true, message: '请输入等级证号', trigger: 'change' }],
@@ -246,6 +263,8 @@ methods: {
                 this.form.venuesStaff = successResponse.data.result[0].venuesStaff ;
                 this.form.venuesId = successResponse.data.result[0].venuesId ;
                 this.form.venuesStaffId = successResponse.data.result[0].venuesStaffId ;
+                this.form.latitudes = successResponse.data.result[0].latitudes ;
+                this.form.longitude = successResponse.data.result[0].longitude ;
                 this.fileList=successResponse.data.result[0].fileList
           }else{
             let message=successResponse.data.message;
@@ -332,8 +351,9 @@ methods: {
           venuesStaff:this.staffIds,
           venuesId:this.form.venuesId,
           picturesPath: this.form.picturesPath,
-          picturesPathRemove: this.fileRemove
-
+          picturesPathRemove: this.fileRemove,
+          latitudes:this.form.latitudes,
+          longitude:this.form.longitude
         }).then(successResponse => {
            let message=successResponse.data.result;
           if (successResponse.data.code === 200) {

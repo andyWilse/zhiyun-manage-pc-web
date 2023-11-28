@@ -20,7 +20,7 @@
                  </el-form-item>
              </el-col>
              <el-col :span="6">
-                 <el-form-item label="面向群体:" prop="newsFor">
+                 <el-form-item label="发布平台:" prop="newsFor">
                    <el-select v-model="form.newsFor"  placeholder="请选择">
                      <el-option
                          v-for="item in newsForArr"
@@ -118,7 +118,7 @@ export default {
       fileRemove:'',
       fileList:[],
       newsTypeArr:[],
-      newsForArr:[{cd:'01',desc:'监管人员'},{cd:'02',desc:'教职人员'},{cd:'03',desc:'监管/管理人员'}],
+      newsForArr:[{cd:'01',desc:'监管端'},{cd:'02',desc:'服务端'},{cd:'03',desc:'监管+服务'}],
       newsRefTypeArr:[{cd:'01',desc:'一般新闻'},{cd:'02',desc:'图片新闻'}],
       form: {
         newsTitle: '',
@@ -134,7 +134,7 @@ export default {
       rules: {
         newsRefType:[{required: true, message: '请选择链接类型', trigger: 'blur'}],
         newsTitle:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
-        newsFor:[{required: true, message: '请选择面向群体', trigger: 'blur'}],
+        newsFor:[{required: true, message: '请选择发布平台', trigger: 'blur'}],
       },
     }
   },

@@ -1,24 +1,28 @@
 <template>
       <div class="mapChartClass">
             <div id="container" >
-                <map-container ref="map" @clickMarker="clickMarker(extData)" @setPosition="setPosition" />
             </div>
-            <venues-detail :dialog-visible-venues-detail="isActive" @cActive="changeActive" @cDetail="handleDetail"></venues-detail>
+          <div id="app">
+          	  <my-dialog
+          		title=""
+          		message=""
+          		:showDialog="isShowDialog"
+          		@closeDialog="isShowDialog=false"></my-dialog>
+            </div>
       </div>
-
 </template>
 
 <script>
 import AMapLoader from '@amap/amap-jsapi-loader';
 import bus from "@/utils/bus";
-import venuesDetail from './venuesDetail';
+import MyDialog from "./mdialog.vue"
 
 window._AMapSecurityConfig = {
     securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
 };
  export default {
     components:{
-           'venues-detail': venuesDetail
+           MyDialog
        },
     data(){
           return{
@@ -27,7 +31,7 @@ window._AMapSecurityConfig = {
             churchList:[],
             religiousSect:'',
             type:'',
-            isActive: false,
+            isShowDialog: false,
          }
      },
      	// 初始化 input搜索框
@@ -81,6 +85,9 @@ window._AMapSecurityConfig = {
         this.getChurchList();
     },
     methods:{
+    showDialog: function(){
+    			this.isShowDialog = true;
+    		},
      initMap(){
          AMapLoader.load({
              key:"021090ed7f49fe6a940aaef5b0fbedb6",             // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -191,8 +198,8 @@ window._AMapSecurityConfig = {
 							zoomStyleMapping: zoomStyleMapping,
 						});
 
+                        marker.on("click", this.clickMarker);
 						this.markers.push(marker);
-						marker.on("click", this.clickMarker);
 					});
 
 					this.map.add(this.markers);
@@ -222,16 +229,12 @@ window._AMapSecurityConfig = {
 
         setPosition(){},
 
-        clickMarker(data) {
-            this.isActive = true // 显示弹窗
-        },
-        changeActive () { // 用于只改变isActive的值来取消显示弹窗
-            this.isActive = false
-        },
-        handleDetail (form) {
-            this.isActive = false // 关闭显示弹窗
-        },
+        clickMarker(e) {
+            this.isShowDialog = true;
+            console.log('标记-点击事件' , e.target.getExtData());
+            let data=e.target.getExtData();
 
+        },
     }
  }
 </script>
@@ -243,6 +246,16 @@ window._AMapSecurityConfig = {
         top: 0px;
         width: 100%;
         height: 100%;
-    }
+    };
+
+    #app {
+      font-family: Avenir, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      color: #2c3e50;
+      margin-top: 60px;
+      width: 100%;
+    };
 
 </style>

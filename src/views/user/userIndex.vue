@@ -31,7 +31,7 @@
         :data="tableData"
         border
         stripe
-        style="width: 60%">
+        style="width: 100%">
 
       <el-table-column
           prop="userNm"
@@ -58,7 +58,7 @@
           prop="userEmail"
           label="邮箱"
           align="center"
-          width="220">
+          >
       </el-table-column>-->
 
      <!-- <el-table-column
@@ -86,6 +86,9 @@
           <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{ display: userDel }">
             删除
           </el-button>
+          <el-button @click.native.prevent="passClick(scope.$index, tableData)" style="padding:5px;" type="primary" :style="{ display: userPass }">
+            密码修改
+         </el-button>
           <el-button @click.native.prevent="grandClick(scope.$index, tableData)" style="padding:5px;" type="primary" :style="{ display: userGra }">
               权限管理
            </el-button>
@@ -95,6 +98,10 @@
       <grand-item :dialog-visible-user-grand="isActive_grand" :index_from_parent="index_grand"
               @cActive_grand="changeActive_grand" @cGrand="handleGrand" ref="myGrandChild">
       </grand-item>
+
+      <pass-item :dialog-pass-modify="isActive_pass" :index_from_parent="index_pass"
+            @cActive_pass="changeActive_pass" @cPass="handlePass" ref="myPassChild">
+      </pass-item>
 
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
@@ -110,10 +117,12 @@
 
 <script>
 import userGrand from './limit/grandAdd'
+import userPassword from './limit/passwordModify'
 
 export default {
   components: {
     'grand-item': userGrand,
+    'pass-item': userPassword,
   },
   data () {
     return {
@@ -122,9 +131,12 @@ export default {
       userMod:'none',
       userDel:'none',
       userGra:'none',
+      userPass:'none',
       userQue:'',
       isActive_grand: false,
       index_grand: 0,
+      isActive_pass: false,
+      index_pass: 0,
       isShow: true,
       tempList: [],
       roleslist: [],
@@ -148,6 +160,7 @@ export default {
         this.userMod=this.$gloMsg.userMod;
         this.userDel=this.$gloMsg.userDel;
         this.userGra=this.$gloMsg.userGra;
+        this.userPass=this.$gloMsg.userPass;
     },
   //方法
   methods: {
@@ -178,6 +191,14 @@ export default {
         let user=this.tableData[this.index_grand].userId;
         this.$refs.myGrandChild.showMenu(user);
     },
+     //修改密码
+    passClick (index, rows) {
+        this.isActive_pass = true;
+        this.index_pass = index;
+        this.$refs.myPassChild.userId = this.tableData[this.index_pass].userId;
+        this.$refs.myPassChild.userNbr = this.tableData[this.index_pass].userNbr;
+
+    },
     handleDelete (index, rows) {
       console.log(index)
       this.$confirm('此操作将永久删除用户信息, 是否继续?', '提示', {
@@ -196,6 +217,10 @@ export default {
     handleGrand (data) {
       this.isActive_grand = false ;
     },
+    //密码修改
+    handlePass (data) {
+      this.isActive_pass = false ;
+    },
 
     handleSearch () {
       this.page =1;
@@ -206,6 +231,9 @@ export default {
     },
     changeActive_grand () {
       this.isActive_grand= false
+    },
+    changeActive_pass () {
+      this.isActive_pass= false
     },
     sizeChange(pageSize){
       this.size=pageSize;

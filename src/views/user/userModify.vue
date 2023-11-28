@@ -7,11 +7,13 @@
                     <el-input v-model="form.userNm" clearable></el-input>
                   </el-form-item>
                 </el-col>
+<!--
                 <el-col :span="12">
                   <el-form-item label="登录名:" prop="loginNm">
                     <el-input v-model="form.loginNm" clearable></el-input>
                   </el-form-item>
                 </el-col>
+-->
               </el-row>
 
               <el-row>
@@ -20,13 +22,14 @@
                       <el-input v-model="form.userMobile" clearable></el-input>
                     </el-form-item>
                </el-col>
+<!--
                <el-col :span="12">
                   <el-form-item label="邮箱:" prop="userEmail">
                     <el-input v-model="form.userEmail" clearable></el-input>
                   </el-form-item>
                </el-col>
+-->
               </el-row>
-
               <el-row>
                   <el-col :span="12">
                       <el-form-item label="角色:" prop="identity">
@@ -69,7 +72,7 @@
                         />
                    </el-form-item>
               </el-row>
-
+<!--
               <el-form-item label="照片" v-show="false">
                 <el-input v-model="form.userPhotoUrl"></el-input>
               </el-form-item>
@@ -90,6 +93,8 @@
                   </el-col>
                 </el-row>
               </el-form-item>
+-->
+
             </el-form>
             <div style="position:absolute;right:100px;">
                 <el-button @click="handleCancel" type="warning">取消</el-button>

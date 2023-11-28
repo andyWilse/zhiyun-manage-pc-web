@@ -2,17 +2,19 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="6.1">
+        <el-col :span="8">
           <el-form-item label="场所名称:">
             <el-input v-model="searchForm.one" placeholder="场所名称" clearable></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6.1">
+        <el-col :span="8">
           <el-form-item label="负责人:">
             <el-input v-model="searchForm.three" placeholder="负责人" clearable></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6.2">
+        </el-row>
+        <el-row>
+        <el-col :span="8">
           <el-form-item label="教派类别：">
             <el-select v-model="searchForm.four" clearable >
               <el-option
@@ -24,8 +26,13 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="场所电话:">
+            <el-input v-model="searchForm.two" placeholder="场所电话" clearable></el-input>
+          </el-form-item>
+        </el-col>
 
-        <el-col :span="6.8">
+        <el-col :span="8">
             <el-button class="veQueryClass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: veQue }">查询</el-button>
             <el-button class="veAddClass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: veAdd }">新增</el-button>
         </el-col>
@@ -85,8 +92,22 @@
            prop="registerNbr"
            label="登记证号"
            align="center"
-           width="205">
+           width="120">
        </el-table-column>
+
+       <el-table-column
+             prop="longitude"
+             label="经度"
+             align="center"
+             width="100">
+         </el-table-column>
+
+       <el-table-column
+             prop="latitudes"
+             label="维度"
+             align="center"
+             width="100">
+         </el-table-column>
 
       <el-table-column
           fixed="right"
@@ -274,6 +295,7 @@ export default {
           venuesName:this.searchForm.one,
           responsiblePerson: this.searchForm.three,
           religiousSect: this.searchForm.four,
+          venuesPhone: this.searchForm.two,
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

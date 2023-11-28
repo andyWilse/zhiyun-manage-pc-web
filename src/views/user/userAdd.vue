@@ -7,17 +7,12 @@
                     <el-input v-model="form.userNm" clearable></el-input>
                   </el-form-item>
                 </el-col>
+              </el-row>
+<!--
+              <el-row>
                 <el-col :span="12">
                   <el-form-item label="登录名:" prop="loginNm">
                     <el-input v-model="form.loginNm" clearable></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="12">
-                  <el-form-item label="密码:" prop="passwords">
-                    <el-input v-model="form.passwords" clearable></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -26,7 +21,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-
+-->
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="电话号码:" prop="userMobile">
@@ -34,7 +29,13 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-
+             <el-row>
+                <el-col :span="12">
+                  <el-form-item label="密码:" prop="passwords">
+                    <el-input v-model="form.passwords" clearable></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
               <el-row>
                   <el-col :span="12">
                       <el-form-item label="角色:" prop="identity">
@@ -78,7 +79,7 @@
                    </el-form-item>
               </el-row>
 
-              <el-form-item label="照片" v-show="false">
+ <!--             <el-form-item label="照片" v-show="false">
                 <el-input v-model="form.userPhotoUrl"></el-input>
               </el-form-item>
 
@@ -98,6 +99,7 @@
                   </el-col>
                 </el-row>
               </el-form-item>
+-->
             </el-form>
             <div style="position:absolute;right:100px;">
                 <el-button @click="handleCancel" type="warning">取消</el-button>
@@ -204,13 +206,14 @@ export default {
         handleSubmit () {
           this.$refs.form.validate(valid => {
             if (valid) {
+                this.handleSubmitPost();
                   //图片校验
-                  var pictures=this.form.userPhotoUrl;
-                  if(''===pictures || typeof(pictures) == "undefined"){
-                      this.$message.error('图片信息为空，请上传图片！');
-                  }else{
-                      this.handleSubmitPost();
-                  }
+                  //var pictures=this.form.userPhotoUrl;
+                  //if(''===pictures || typeof(pictures) == "undefined"){
+                     // this.$message.error('图片信息为空，请上传图片！');
+                  //}else{
+                      //this.handleSubmitPost();
+                  //}
             }else{
               this.$alert('填写信息有误，请重新填写后提交！');
             }

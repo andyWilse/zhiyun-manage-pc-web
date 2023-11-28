@@ -9,7 +9,7 @@
 
         <el-row>
              <el-col :span="6">
-                 <el-form-item label="面向群体:" prop="newsFor">
+                 <el-form-item label="发布平台:" prop="newsFor">
                    <el-select v-model="form.newsFor"  placeholder="请选择">
                      <el-option
                          v-for="item in newsForArr"
@@ -107,7 +107,7 @@ export default {
       },
       rules: {
         newsTitle:[{required: true, message: '请输入中文名称', trigger: 'blur'}],
-        newsFor:[{required: true, message: '请选择面向群体', trigger: 'blur'}],
+        newsFor:[{required: true, message: '请选择发布平台', trigger: 'blur'}],
         newsRef:[{required: true, message: '请输入新闻链接', trigger: 'blur'}],
       },
     }
