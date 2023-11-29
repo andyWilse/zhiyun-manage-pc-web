@@ -93,10 +93,15 @@ import * as echarts from 'echarts'
             },
             yAxis: {
                 type: 'value',
-                min:0,
-                max:60,
-                interval:20,
-                data: ['0', '5', '10', '15', '20']
+                min: (value) => {
+                   return value.min
+                },
+                max: (value) => {
+                   return value.max
+                },
+
+                //interval:20,
+                //data: ['0', '5', '10', '15', '20']
             },
             series: [
                 {

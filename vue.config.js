@@ -5,8 +5,8 @@ module.exports = defineConfig({
   //productionSourceMap:false,  // 设置上线后是否加载webpack文件
   lintOnSave:false,
   devServer: {
-    host: '0.0.0.0',
-    open: true, // 自动打开浏览器
+    //host: '0.0.0.0',
+    //open: true, // 自动打开浏览器
     // 代理配置表，在这里可以配置特定的请求代理到对应的API接口
     // 例如将'localhost:8080/api/xxx'代理到'www.example.com/api/xxx'
     proxy: {

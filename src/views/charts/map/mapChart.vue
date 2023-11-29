@@ -1,40 +1,42 @@
 <template>
       <div class="mapChartClass">
-            <div id="container" >
-            </div>
-          <div id="app">
-          	  <my-dialog
-          		title=""
-          		message=""
-          		:showDialog="isShowDialog"
-          		@closeDialog="isShowDialog=false"></my-dialog>
-            </div>
+        <div id="container" ></div>
+
+        <div id="app">
+                  	  <my-dialog
+                  		title=""
+                  		message=""
+                  		:showDialog="isShowDialog"
+                  		@closeDialog="isShowDialog=false"></my-dialog>
+                    </div>
       </div>
+
 </template>
 
 <script>
 import AMapLoader from '@amap/amap-jsapi-loader';
 import bus from "@/utils/bus";
-import MyDialog from "./mdialog.vue"
-
+import churchDetail from "./churchDetail.vue";
+	import MyDialog from "./mdialog.vue"
 window._AMapSecurityConfig = {
     securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
 };
  export default {
-    components:{
-           MyDialog
-       },
-    data(){
-          return{
-            //此处不声明 map 对象，可以直接使用 this.map赋值或者采用非响应式的普通对象来存储。
-            //map:null,
-            churchList:[],
-            religiousSect:'',
-            type:'',
-            isShowDialog: false,
-         }
-     },
-     	// 初始化 input搜索框
+            components:{
+                churchDetail:churchDetail,
+                MyDialog
+            },
+            data(){
+                  return{
+                    //此处不声明 map 对象，可以直接使用 this.map赋值或者采用非响应式的普通对象来存储。
+                    //map:null,
+                    churchList:[],
+                    religiousSect:'',
+                    type:'',
+                    isShowDialog: false,
+                 }
+             },
+     	    // 初始化 input搜索框
      		created() {
      			bus.$on("shareUserInput", (val) => {
      				this.searchPlaceInput = val.userInput;
@@ -85,9 +87,7 @@ window._AMapSecurityConfig = {
         this.getChurchList();
     },
     methods:{
-    showDialog: function(){
-    			this.isShowDialog = true;
-    		},
+
      initMap(){
          AMapLoader.load({
              key:"021090ed7f49fe6a940aaef5b0fbedb6",             // 申请好的Web端开发者Key，首次调用 load 时必填
@@ -229,6 +229,7 @@ window._AMapSecurityConfig = {
 
         setPosition(){},
 
+handleFn(){},
         clickMarker(e) {
             this.isShowDialog = true;
             console.log('标记-点击事件' , e.target.getExtData());
@@ -239,7 +240,7 @@ window._AMapSecurityConfig = {
  }
 </script>
 
-<style  scoped>
+<style lang="scss" scoped>
     #container{
         padding:0px;
         margin: 0px;
@@ -252,10 +253,18 @@ window._AMapSecurityConfig = {
       font-family: Avenir, Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      text-align: center;
+      //text-align: center;
       color: #2c3e50;
       margin-top: 60px;
       width: 100%;
     };
+
+    ::v-deep .amap-logo {
+        display: none;
+        opacity: 0 !important;
+    }
+    ::v-deep .amap-copyright {
+        opacity: 0;
+    }
 
 </style>

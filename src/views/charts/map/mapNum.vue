@@ -160,7 +160,7 @@
 	}
 
 	.church {
-		width: 130px;
+		width: 150px;
 		display: flex;
 		background-color: #ffffff;
 		padding: 7px 10px;

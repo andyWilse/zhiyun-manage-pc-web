@@ -16,15 +16,29 @@ import Plugin from 'v-fit-columns';
 import * as echarts from 'echarts';
 //import * as echarts from 'echarts/lib/echarts';
 import * as utils from './utils/util.js';
+
 //注意文件路径，实际路径以项目目录结构为准
 import gloMsg from './utils/global.js' ;
-
 import VueQuillEditor from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
-
 import VueWechatTitle from 'vue-wechat-title'
+//import VLayer from './components/vlayer';
+//Vue.use(VLayer);
+//import layer from 'vue-layer'
+//Vue.prototype.$layer = layer(Vue);
+
+import { Collapse, CollapseItem } from 'vant';
+Vue.use(Collapse);
+Vue.use(CollapseItem);
+
+import layer from 'vue-layer'
+import 'vue-layer/lib/vue-layer.css'
+//import lay from './libs/layer.js' ;
+Vue.prototype.layer = layer(Vue)
+
+
 
 Vue.use(VueWechatTitle)
 Vue.use(VueQuillEditor);
@@ -34,6 +48,7 @@ Vue.use(VueRouter);
 Vue.use(VueSimpleAlert);
 Vue.use(Region);
 Vue.use(VueCookies);
+
 Vue.prototype.$store = store;
 Vue.prototype.$message = Message;
 Vue.prototype.$gloMsg = gloMsg;
