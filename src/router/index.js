@@ -39,7 +39,7 @@ export const constantRouterMap = [
     //配置默认的路径，默认显示登录页
     { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true,title:'智云科技'}},
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
-    { path: '/vv',name:'vv', component: () => import('@/views/charts/map/churchDetail')},
+    { path: '/success',name:'success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转
     { path: '/error', name:'error',component: () => import('@/views/errorView'), hidden: true },
     //菜单

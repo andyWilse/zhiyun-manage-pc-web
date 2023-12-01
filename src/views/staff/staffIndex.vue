@@ -2,7 +2,7 @@
   <div v-show="true">
     <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm" >
       <el-row>
-        <el-col :span="10">
+        <el-col :span="6.2">
         <el-form-item label="场所名称:">
             <el-select
                v-model="searchForm.two"
@@ -23,13 +23,13 @@
         </el-form-item>
         </el-col>
         <el-col :span="6.2">
-          <el-form-item label="人员名称:" v-show="false">
+          <el-form-item label="姓名:">
             <el-input v-model="searchForm.one" placeholder="中文名称" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
-          <el-form-item label="职位:" v-show="false">
-            <el-input v-model="searchForm.three" placeholder="职位" clearable></el-input>
+          <el-form-item label="手机号:">
+            <el-input v-model="searchForm.three" placeholder="手机号" clearable></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6.2">
@@ -44,7 +44,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6.8">
+        <el-col :span="6.2">
             <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: staffQue }">查询</el-button>
             <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="false">新增</el-button>
         </el-col>
@@ -68,7 +68,7 @@
 
       <el-table-column
           prop="staffTelphone"
-          label="电话"
+          label="手机号码"
           align="center">
       </el-table-column>
 
@@ -121,8 +121,8 @@ export default {
       isActive: false,
       isActive_modify: false,
       index_modify: 0,
-      tableShow:false,
-      pagShow:false,
+      tableShow:true,
+      pagShow:true,
       searchdata: '',
       searchList: [],
       tempList: [],
@@ -148,17 +148,20 @@ export default {
     }
   },
   mounted(){
-    this.getTableData();
+     let venuesId=this.$route.query.venuesId;
+    this.getTableData(venuesId);
   },
   //加载
   created(){
     this.getreligiousSect();
     let venuesNm=this.$route.query.venuesNm;
+    let venuesId=this.$route.query.venuesId;
+    this.searchForm.two=venuesNm;
+    this.getTableData(venuesId);
+
     if(''!==venuesNm && typeof(venuesNm) != "undefined" && venuesNm!==null){
-        this.searchForm.two=venuesNm;
-        this.getTableData(venuesNm);
-        this.tableShow=true;
-        this.pagShow=true;
+       //this.tableShow=true;
+       //this.pagShow=true;
     };
     this.getVenuesList();
 
@@ -200,17 +203,21 @@ export default {
       this.getPictures(this.tableData[this.index_modify].staffPicture);
     },
     handleDelete (index, rows) {
-      console.log(index)
-      this.$confirm('此操作将把教职人员在该场所除名, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.deleteData(index, rows)
-      }).catch(() => {
-        this.$message.info('已取消删除');
-      });
-
+        let tt=this.searchForm.two;
+        if(tt === undefined || tt===''){
+            this.$alert('请先选择场所！');
+        }else{
+              //console.log(index);
+              this.$confirm('此操作将把教职人员在该场所除名, 是否继续?', '警告', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.deleteData(index, rows)
+              }).catch(() => {
+                this.$message.info('已取消删除');
+              });
+        }
     },
     handleRewrite (form) {
       this.isActive_modify = false // 显示修改弹窗
@@ -241,21 +248,23 @@ export default {
     handleSearch () {
       this.page =1;
       let search=this.searchForm.two;
-      if(typeof(search) != "undefined" && ''!==search && null!=search){
-            this.getTableData(search);
-            this.tableShow=true;
-            this.pagShow=true;
-      }else{
-        this.$alert('请先选择场所名称！');
-      }
+      this.getTableData(search);
+      //if(typeof(search) != "undefined" && ''!==search && null!=search){
+            //this.tableShow=true;
+            //this.pagShow=true;
+      //}else{
+        //this.$alert('请先选择场所名称！');
+      //}
     },
     //列表数据
     getTableData(search){
-      this.$axios.get('/staff/find', {
+      this.$axios.get('/staff/getStaff', {
         params: {
           page: this.page,
           size: this.size,
-          staffName:this.searchForm.one,
+          staffName:this.searchForm.two,
+          one:this.searchForm.one,
+          three:this.searchForm.three,
           staffVenues: search,
         }
       }).then(successResponse => {

@@ -31,6 +31,7 @@ export default {
       treeOptionsMenu:[],
       userMenu:[],
       userId:'',
+      userNm:'',
       menus:'',
       defaultProps: {
           children: 'children',
@@ -92,6 +93,7 @@ export default {
       this.$axios.post('/menu/userGrand',
           {
               userId:this.userId,
+              userNm:this.userNm,
               menus:toMenu
             }
     ).then(successResponse => {

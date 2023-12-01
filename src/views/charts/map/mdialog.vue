@@ -1,29 +1,38 @@
 <template>
-<transition class="tran-class" name="dialog">
+    <transition class="tran-class" name="dialog">
 	<div
 		v-if="showDialog"
 		id="dialog-bg"
 		@touchmove.prevent
 		@scroll.prevent >
+
 		<div id="dialog" >
             <div class="title-left">
-
-                <div style="border:none;margin-left:10px;">
-                    <el-button class="dialog-button" @click="close" >关闭</el-button>
-                    <div class="titlt-left-top" style="display: flex;">
-                        <div style="font-weight:700;font-size:25px;text-align:center;margin-right: 10px;">
-                            {{ data.venuesName }}
-                        </div>
-                        <div class="text-one">
-                            <img class="church-icon" src="@/assets/region/T.png" alt width="15px" />
-                            {{ data.reSectNm }}
-                        </div>
-                    </div>
-                    <div class="text-two">所属机构：{{ data.organization }}</div>
-                    <div class="text-two">场所地址： {{ data.venuesAddres }}</div>
-                </div>
+                <el-button class="dialog-button" @click="close" >关闭</el-button>
                 <div style="margin-top:20px;">
-                     <el-collapse v-model="activeNames" style="border:none;margin-left:10px;">
+                     <el-scrollbar style="height: 500px">
+                      <div style="border:none;margin-left:25px;margin-right:25px;">
+                         <div class="titlt-left-top" style="display: flex;">
+                             <div style="font-weight:700;font-size:20px;text-align:center;margin-right: 10px;">
+                                 {{ data.venuesName }}
+                             </div>
+                             <div class="church" style="display: flex;">
+                                 <img class="church-icon" :src="$utils.getReligionLog(data.religiousSect)" width="15" height="15" />
+                                 <div class="text-one">{{ data.reSectNm }}</div>
+                             </div>
+
+                         </div>
+                         <div class="text-two">所属机构：{{ data.organization }}</div>
+                         <div class="text-two">场所地址： {{ data.venuesAddres }}</div>
+                         <div class="text-t" style="padding-top: 13px;">
+
+                         <div class="text-tw" v-for="(item, index) in data.images" :key="index"
+                           style="display: inline;padding-left: 8px;">
+                                <img :key="index" draggable="false" :src="(`${item.filePath}`)" width="200px" height="113" >
+                           </div>
+                         </div>
+                     </div>
+                     <el-collapse v-model="activeNames" style="border:none;margin-left:25px;margin-right:25px;">
                           <el-collapse-item name="1">
                               <template slot="title">
                                 <p class="title">基本信息</p>
@@ -31,8 +40,13 @@
                               <div class="rows">
                                 <div class="block-line-left">所属机构：{{ data.organization }}</div>
                                 <div class="block-line-left">登记证号：{{ data.registerNbr }}</div>
-                                <div class="block-line-left">负责人：{{ data.oneDirector.name }} {{ data.oneDirector.phone }} </div>
-                                <div class="block-line-left">场所电话：{{ data.venuesPhone }}</div>
+                                <div class="block-line-left">
+                                    负责人：{{ oneDirector.name.replace(/^(.{1}).+(.)/,"$1**$2") }}
+                                    {{oneDirector.phone.replace(/^(.{3})(?:\d+)(.{4})$/, "$1****$2") }}
+                                 </div>
+                                <div class="block-line-left">
+                                    场所电话：{{data.venuesPhone}}
+                                </div>
                               </div>
                           </el-collapse-item>
                           <el-collapse-item name="2">
@@ -50,26 +64,33 @@
                               <template slot="title">
                                 <p class="title">教职人员</p>
                               </template>
-                              <div class="block-line-left">{{ data.veStaffStr }}</div>
+                              <div class="block-line" v-for="(staff, index) in data.venuesStaff" :key="index" style="overflow: hidden;">
+                                  <div class="block-line-left" style="float: left;">
+                                        姓名：{{ staff.name }}
+                                  </div>
+                                  <div class="block-line-right" style="float: right;">
+                                          {{staff.phone.replace(/^(.{3})(?:\d+)(.{4})$/, "$1****$2") }}
+                                  </div>
+                              </div>
                           </el-collapse-item>
 
                           <el-collapse-item name="4">
                               <template slot="title">
                                 <p class="title">三人驻堂</p>
                               </template>
-                              <div class="block-line" v-for="(item, index) in data.garrison" :key="index">
-                                    <div class="block-line-left">
+                              <div class="block-line" v-for="(item, index) in data.garrison" :key="index" style="overflow: hidden;">
+                                    <div class="block-line-left" style="float: left;">
                                         {{ item.type == "10000006" ? "组长" : "组员" }}：{{ item.name }}
+                                    </div>
+                                    <div class="block-line-right" style="float: right;">
+                                          {{item.phone.replace(/^(.{3})(?:\d+)(.{4})$/, "$1****$2") }}
                                     </div>
                               </div>
                           </el-collapse-item>
-
                      </el-collapse>
+                     </el-scrollbar>
                 </div>
 
-                <div style="margin-bottom:50px;bottom:0px">
-
-                </div>
             </div>
 		</div>
 	</div>
@@ -85,27 +106,27 @@
 			title: String,
 		},
 		data () {
-
             return {
-              message: '来自子组件的消息',
-              data:[],
-              activeNames: ['1'],
+                message: '来自子组件的消息',
+                data:[],
+                oneDirector:[],
+                activeNames: ['1'],
             }
 
         },
         created(){
-            this.initTableData();
         },
 
 		methods: {
-            initTableData(){
+            getVenuesDetail(venuesId){
                this.$axios.get('/venues/map/venuesDetail', {
                     params: {
-                      venuesId: '10000001',
+                      venuesId: venuesId,
                     }
                }).then(successResponse => {
                     if (successResponse.data.code === 200) {
-                      this.data=successResponse.data.result;
+                        this.data=successResponse.data.result;
+                        this.oneDirector=this.data.oneDirector;
                     }else{
                           let message=successResponse.data.message;
                           if(''!=message && null!=message){
@@ -130,7 +151,7 @@
 	}
 </script>
 
-<style >
+<style lang="scss">
 	* {
 		box-sizing: border-box;
 	}
@@ -167,12 +188,12 @@
 
 	.dialog-button{
 	    position: relative;
-		width: 5%;
-		left:90%;
+		width: 8%;
+		left:92%;
 		background-color: #6367D5;
 		border-width: 0;
 		border-radius: 360px;
-		padding: 5px;
+		padding: 7px;
 		outline: none;
 		color: white;
 		margin-bottom: 0px;
@@ -186,7 +207,6 @@
 		background-color: #585dbe;
 		border-color: #585dbe;
 	}
-
 
 	.dialog-enter-active, .dialog-leave-active {
 	  transition: all .5s ease;
@@ -203,56 +223,77 @@
       margin-top: 5px;
     }
 
-.tran-class{
-position: absolute;
-}
+    .tran-class{
+    position: absolute;
+    }
 
-.titlt-left-top {
-    display: flex;
-    align-items: center;
-
-    .title-type {
+    .titlt-left-top {
         display: flex;
         align-items: center;
-        margin-left: 10px;
 
-        .van-image {
-            margin-right: 5px;
+        .title-type {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+
+            .van-image {
+                margin-right: 5px;
+            }
         }
     }
-}
 
+    .text-one{
+        font-size:12px;
+        text-align:center;
+        margin-right: 6px;
+    }
 
-.text-one{
-    font-size:12px;
-    text-align:center;
-    margin-right: 6px;
-}
+    .text-two{
+        font-size:12px;
+        padding-top: 5px;
+    }
 
-.text-two{
-    font-size:12px;
-}
+    .title {
+      font-size: 15px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #303133;
+      padding-bottom: 17px;
+      padding-top: 17px;
+    }
+    ::v-deep .el-collapse-item__header.is-active {
+      border-bottom: 1px dashed  #c8c8c8;
+    }
+    ::v-deep .el-collapse-item__wrap {
+      border: none;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
 
-.title {
-  font-size: 15px;
-  font-family: Microsoft YaHei;
-  font-weight: bold;
-  color: #303133;
-  padding-bottom: 17px;
-  padding-top: 17px;
-}
-::v-deep .el-collapse-item__header.is-active {
-  border-bottom: 1px dashed  #c8c8c8;
-}
-::v-deep .el-collapse-item__wrap {
-  border: none;
-}
-p {
-  margin: 0;
-  padding: 0;
-}
+    .block-con {
+        padding: 10px 0px;
 
+        .block-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
 
+            .see {
+                background-color: #fcefee;
+                border: 1px solid #9b2e25;
+                border-radius: 40px;
+                padding: 2px 10px;
+            }
+        }
+    }
+
+::-webkit-scrollbar {
+  /* 隐藏滚动条 */
+  display: none;
+}
 
 </style>
 

@@ -31,6 +31,7 @@ export default {
       surePass:'',
       userId:'',
       userNbr:'',
+      userNm:'',
       form: {
         newPass:'',
         surePass:'',
@@ -120,6 +121,7 @@ export default {
         surePass: this.form.surePass,
         userId:this.userId,
         userNbr:this.userNbr,
+        userNm:this.userNm,
       }).then(successResponse => {
             let messages=successResponse.data.message;
             if (successResponse.data.code=== 200) {

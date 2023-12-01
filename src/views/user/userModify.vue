@@ -214,13 +214,14 @@ export default {
         handleSubmit () {
           this.$refs.form.validate(valid => {
             if (valid) {
+                    this.handleSubmitPost();
                   //图片校验
-                  var pictures=this.form.userPhotoUrl;
-                  if(''===pictures || typeof(pictures) == "undefined"){
-                      this.$message.error('图片信息为空，请上传图片！');
-                  }else{
-                      this.handleSubmitPost();
-                  }
+                  //var pictures=this.form.userPhotoUrl;
+                  //if(''===pictures || typeof(pictures) == "undefined"){
+                     // this.$message.error('图片信息为空，请上传图片！');
+                  //}else{
+                    //  this.handleSubmitPost();
+                  //}
             }else{
               this.$alert('填写信息有误，请重新填写后提交！');
             }

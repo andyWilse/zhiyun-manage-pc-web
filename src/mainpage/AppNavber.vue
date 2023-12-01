@@ -136,11 +136,11 @@ export default {
                     this.$gloMsg.manaMod='';
                 }else if(1001000303===but){
                     this.$gloMsg.manaDel='';
-                }else if(1001000401===but){
+                }else if(1007000101===but){
                     this.$gloMsg.newsAdd='';
-                }else if(1001000402===but){
+                }else if(1007000102===but){
                     this.$gloMsg.newsMod='';
-                }else if(1001000403===but){
+                }else if(1007000103===but){
                     this.$gloMsg.newsDel='';
                 }else if(1002000101===but){
                     this.$gloMsg.userAdd='';

@@ -188,6 +188,7 @@ export default {
         this.isActive_grand = true;
         this.index_grand = index;
         this.$refs.myGrandChild.userId = this.tableData[this.index_grand].userId;
+        this.$refs.myGrandChild.userNm = this.tableData[this.index_grand].userNm;
         let user=this.tableData[this.index_grand].userId;
         this.$refs.myGrandChild.showMenu(user);
     },
@@ -197,7 +198,7 @@ export default {
         this.index_pass = index;
         this.$refs.myPassChild.userId = this.tableData[this.index_pass].userId;
         this.$refs.myPassChild.userNbr = this.tableData[this.index_pass].userNbr;
-
+        this.$refs.myPassChild.userNm = this.tableData[this.index_pass].userNm;
     },
     handleDelete (index, rows) {
       console.log(index)

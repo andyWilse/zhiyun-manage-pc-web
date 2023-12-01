@@ -3,12 +3,13 @@
         <div id="container" ></div>
 
         <div id="app">
-                  	  <my-dialog
-                  		title=""
-                  		message=""
-                  		:showDialog="isShowDialog"
-                  		@closeDialog="isShowDialog=false"></my-dialog>
-                    </div>
+          <my-dialog
+            title=""
+            ref="MyDialog"
+            message=""
+            :showDialog="isShowDialog"
+            @closeDialog="isShowDialog=false"></my-dialog>
+        </div>
       </div>
 
 </template>
@@ -16,14 +17,13 @@
 <script>
 import AMapLoader from '@amap/amap-jsapi-loader';
 import bus from "@/utils/bus";
-import churchDetail from "./churchDetail.vue";
-	import MyDialog from "./mdialog.vue"
-window._AMapSecurityConfig = {
-    securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
-};
- export default {
+import MyDialog from "./mdialog.vue"
+
+    window._AMapSecurityConfig = {
+        securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
+    };
+    export default {
             components:{
-                churchDetail:churchDetail,
                 MyDialog
             },
             data(){
@@ -229,12 +229,11 @@ window._AMapSecurityConfig = {
 
         setPosition(){},
 
-handleFn(){},
         clickMarker(e) {
-            this.isShowDialog = true;
-            console.log('标记-点击事件' , e.target.getExtData());
             let data=e.target.getExtData();
-
+            this.$refs.MyDialog.getVenuesDetail(data.id);
+            this.isShowDialog = true;
+            //console.log('标记-点击事件' , e.target.getExtData());
         },
     }
  }

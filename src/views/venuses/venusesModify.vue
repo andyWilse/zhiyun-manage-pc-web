@@ -261,6 +261,7 @@ methods: {
                 this.form.liaisonMan= successResponse.data.result[0].liaisonMan ;
                 this.form.briefIntroduction= successResponse.data.result[0].briefIntroduction ;
                 this.form.venuesStaff = successResponse.data.result[0].venuesStaff ;
+                this.staffIds = successResponse.data.result[0].venuesStaffId ;
                 this.form.venuesId = successResponse.data.result[0].venuesId ;
                 this.form.venuesStaffId = successResponse.data.result[0].venuesStaffId ;
                 this.form.latitudes = successResponse.data.result[0].latitudes ;

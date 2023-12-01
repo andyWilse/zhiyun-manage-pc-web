@@ -161,6 +161,7 @@ export default {
         newsRefType:[{required: true, message: '请选择链接类型', trigger: 'blur'}],
         newsType:[{required: true, message: '请输入新闻类别', trigger: 'blur'}],
         newsFor:[{required: true, message: '请选择发布平台', trigger: 'blur'}],
+        newsTitle:[{required: true, message: '请选择发布平台', trigger: 'blur'}],
       },
     }
 
