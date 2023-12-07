@@ -3,6 +3,8 @@ import VueRouter from 'vue-router' //引入 Vue 路由
 
 import layOut from '@/mainpage/layOut';
 import firstPage from '@/mainpage/dialog/FirstPage';
+import taskDetail from '@/mainpage/dialog/taskDetail';
+
 import loginView from '@/views/loginView';
 import venuesIndexs from '@/views/venuses/venuesIndex';
 import venusesAdd from '@/views/venuses/venusesAdd';
@@ -46,6 +48,7 @@ export const constantRouterMap = [
     {path:'/layOut',name:'layOut',component:layOut,redirect:'firstPage',
         children:[
             {path:'/firstPage',name:'firstPage',component:firstPage, meta: {title: "智云科技",show: true}},
+            {path:'/taskDetail',name:'taskDetail',component:taskDetail, meta: {title: "智云科技",show: true}},
             {path:'/venuesIndex',name:'venuesIndexss- ',component:venuesIndexs,meta:{title: "智云科技",requireAuth:true}},
             {path:'/venusesAdd',name:'venusesAdd',component:venusesAdd,meta:{title: "智云科技",requireAuth:true}},
             {path:'/venusesModify',name:'venusesModify',component:venusesModify,meta:{title: "智云科技",requireAuth:true}},

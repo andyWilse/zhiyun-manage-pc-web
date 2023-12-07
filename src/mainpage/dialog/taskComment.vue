@@ -1,7 +1,19 @@
 <template>
 <!--1.首先，弹窗页面中要有el-dialog组件即弹窗组件，我们把弹窗中的内容放在el-dialog组件中-->
 <!--2.设置:visible.sync属性，动态绑定一个布尔值，通过这个属性来控制弹窗是否弹出-->
-  <el-dialog title="流转意见" :visible="detailVisible" :before-close="handleClose" width="65%">
+  <el-dialog title="任务详情" :visible="detailVisible" :before-close="handleClose" width="65%">
+  <div>
+  <div  class="baseClass">
+     <el-row :gutter="25">
+            <el-col :span="4.8">
+             <el-input v-model="newsId">jjjj</el-input>
+            </el-col>
+
+     </el-row>
+
+
+ </div>
+ <div style="margin-top:10px;">
     <el-table
             :data="tableData"
             border
@@ -26,6 +38,9 @@
               align="left">
           </el-table-column>
         </el-table>
+       </div>
+
+          </div>
   </el-dialog>
 </template>
 
@@ -36,6 +51,7 @@
         data(){
           return{
             tableData:[],
+            newsId:1002,
           }
         },
       methods:{
@@ -61,3 +77,42 @@
       }
     }
 </script>
+<style>
+
+
+	.baseClass {
+		background: #faf1ed;
+		border: 1px solid #9b2e25;
+		border-radius: 10px;
+		padding: 0px 15px;
+		margin-top: 20px;
+
+		.top {
+			padding: 10px 0px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px dashed #9b2e25;
+
+			.right {
+				.btn {
+					border: 1px solid #9b2e25;
+					background-color: #fcefee;
+					padding: 2px 10px;
+					border-radius: 20px;
+				}
+
+				.info {
+					border-color: #135097;
+					background-color: #e9f2f8;
+				}
+
+				.danger {
+					border-color: #9a7a19;
+					background-color: #faf1ed;
+				}
+			}
+		}
+
+	}
+</style>

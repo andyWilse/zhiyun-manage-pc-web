@@ -174,9 +174,10 @@ export default {
     searchData() {},
 
     handleClick(index, rows){
-      this.isActive=true;
-      let procInstId=this.tableData[index].procInstId
-      this.$refs.myCommentChild.getComment(procInstId);
+      //this.isActive=true;
+      let procInstId=this.tableData[index].procInstId;
+      this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
+      //this.$refs.myCommentChild.getComment(procInstId);
     },
     handleComment (data) {
         this.isActive= false;

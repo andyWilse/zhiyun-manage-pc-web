@@ -6,10 +6,10 @@
     </a>
 
     <router-link to="/firstPage">
-      <img class="firstLogo" src="@/assets/first.png" alt width="80px" />
+      <img class="firstLogos" src="@/assets/first.png" alt width="80px" style="position:absolute;margin-left:13%;padding-top:8px;"/>
     </router-link>
     <a class="userClass">
-         <span class="conClass" style="display:inline-block;width:220px;font-weight:bold;">{{userName}}</span>
+         <span class="conClass" style="position:absolute;display:inline-block;font-weight:bold;">{{userName}}</span>
     </a>
     <!-- 出发时间   -->
     <el-dropdown  @command="handleCommand">
@@ -84,18 +84,20 @@ export default {
 </script>
 
 
-<style scoped>
+<style scoped >
 .logo {
   vertical-align: middle;
-  padding: 0px 10px 0 40px;
+  margin-left:15px;
+  //padding: 0px 10px 0 40px;
 }
 .firstLogo {
-  vertical-align: middle;
-  padding: 0px 10px 0 150px;
+  //vertical-align: middle;
+  //padding: 0px 10px 0 150px;
+  //margin-left:65px;
 }
 .initLogo{
   vertical-align: middle;
-  padding: 0px 10px 0 10px;
+  //padding: 0px 10px 0 10px;
 }
 /* aliceblue */
 .company {
@@ -122,10 +124,9 @@ export default {
 
 }
 */
-
-
 .userClass{
     padding: 0px 10px 0 860px;
 
 }
+
 </style>

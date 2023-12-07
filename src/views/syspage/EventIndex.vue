@@ -50,20 +50,21 @@
         :data="tableData"
         border
         stripe
-        style="width: 100%"
+        style="width: 95%"
     >
 
       <el-table-column
           prop="eventType"
           label="预警类型"
           align="center"
-          fixed>
+          width="100"
+          >
       </el-table-column>
 
       <el-table-column
           prop="accessNumber"
           label="设备编号"
-          width="200"
+          auto
           align="center">
       </el-table-column>
 
@@ -71,22 +72,22 @@
            prop="warnTime"
            label="预警时间"
            align="center"
-           width="160">
+           width="180">
       </el-table-column>
 
       <el-table-column
           prop="venuesName"
           label="场所名称"
           align="center"
-          width="100">
+          width="150">
       </el-table-column>
 
-      <el-table-column
+   <!--   <el-table-column
           prop="venuesAddres"
           label="场所地址"
           align="center"
           width="330">
-      </el-table-column>
+      </el-table-column> -->
 
        <el-table-column
           prop="eventState"
@@ -98,16 +99,23 @@
       <el-table-column
           prop="handlePerson"
           label="处理人"
-           width="100"
+           width="130"
           align="center">
       </el-table-column>
 
       <el-table-column
           prop="handleTime"
           label="处理时间"
-          width="160"
+          width="180"
           align="center">
+      </el-table-column>
 
+      <el-table-column  align="center" label="操作" width="130">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="handleClick(scope.$index, tableData)" style="padding:5px;" type="primary">
+              查看详情
+           </el-button>
+          </template>
       </el-table-column>
     </el-table>
     <div style="display:flex;justify-content:flex-start">
@@ -209,6 +217,13 @@ created(){
     // 时间确认触发
     dateChange(val) {
       this.search.startTime = val
+    },
+
+    handleClick(index, rows){
+      //this.isActive=true;
+      let procInstId=this.tableData[index].procInstId;
+      this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
+      //this.$refs.myCommentChild.getComment(procInstId);
     },
 
   }

@@ -25,16 +25,13 @@ import 'quill/dist/quill.bubble.css';
 import VueWechatTitle from 'vue-wechat-title'
 
 import { Collapse, CollapseItem } from 'vant';
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
+
+Vue.use(VueViewer);
+
 Vue.use(Collapse);
 Vue.use(CollapseItem);
-
-import layer from 'vue-layer'
-import 'vue-layer/lib/vue-layer.css'
-//import lay from './libs/layer.js' ;
-Vue.prototype.layer = layer(Vue)
-
-
-
 Vue.use(VueWechatTitle)
 Vue.use(VueQuillEditor);
 Vue.use(router);
@@ -77,6 +74,26 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+VueViewer.setDefaults({
+  Options: {
+    inline: true,
+    button: true,
+    navbar: true,
+    title: true,
+    toolbar: true,
+    tooltip: true,
+    movable: true,
+    zoomable: true,
+    rotatable: true,
+    // "scalable": true,
+    transition: true,
+    fullscreen: true,
+    keyboard: true,
+    url: 'data-source'
+  }
+});
+
 new Vue({
     render: h => h(App),
     router, //使用路由配置

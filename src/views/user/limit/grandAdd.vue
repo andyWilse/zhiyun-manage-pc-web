@@ -126,4 +126,6 @@ export default {
   margin-right: 0px;
   padding: 10px;
 }
+
+
 </style>
