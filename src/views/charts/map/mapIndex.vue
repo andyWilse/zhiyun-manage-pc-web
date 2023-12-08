@@ -27,7 +27,7 @@ export default {
 .mapChartClass{
 	width: 99.88%;
 	height: 99.66%;
-	background: #eee;
+	background: #FFFFFF;
 	border: 1px solid #ccc;
 	position: absolute;
 	left: 0px;

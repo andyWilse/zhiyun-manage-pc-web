@@ -83,7 +83,7 @@
           <el-row>
             <el-col>
              <el-upload
-                action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                :action="imageUrl"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-success="imgSuccess"
@@ -112,6 +112,8 @@
 <script>
     import { RegionSelects } from 'v-region';
     import VenuesSelect from './VenuesSelect';
+    import global from '../global.vue';
+
 export default {
   props: ['isactive', 'dialogVisibleUserModify', 'index_from_parent'],
   components: {
@@ -121,6 +123,7 @@ export default {
   data () {
     return {
       message: '来自子组件的消息',
+      imageUrl: global.httpUrl,
       regions: {
           province: '330000',
           city: '330300',

@@ -8,7 +8,7 @@
             <el-row>
               <el-col>
                		<el-upload
-                           action="http://zszjadmin.860577.net:8808/api/file/pc/imagesUpload"
+                           :action="imageUrlPc"
                            list-type="picture-card"
                            :on-preview="handlePictureCardPreview"
                            :on-success="imgSuccess1"
@@ -28,15 +28,17 @@
 </template>
 <script>
 //这是我封装的axios的方法，各位自己写即可
+import global from '../global.vue';
 
 export default {
   name: "Login",
   data(){
     return{
-      loginForm: {
-        code:'',
-        username:''
-      },
+        imageUrlPc: global.imageUrlPc,
+        loginForm: {
+            code:'',
+            username:''
+        },
 fileList2:[{name: '2023013122461811.png', url: 'http://zypc.860577.net:8808/super/20230317/2023031720575011.png'}],
 fileRemove:'',
 fileUpload:'',

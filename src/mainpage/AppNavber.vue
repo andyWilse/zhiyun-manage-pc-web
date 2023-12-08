@@ -69,17 +69,16 @@ export default {
   methods: {
     handleOpen(key, keyPath) {
       this.activeDefault = keyPath;
-      console.log(key, keyPath);
+      //console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      //console.log(key, keyPath);
     },
     // 访问api获取左侧菜单栏数据，把数据添加到menuList中
     async getMenuList() {
       this.$axios.get('/menu/find', {
           }).then(successResponse => {
             if (successResponse.data.code === 200) {
-              console.log(successResponse.data.data)
               this.menuList=successResponse.data.data.parent;
               this.menuListChild=successResponse.data.data.children;
               //按钮权限

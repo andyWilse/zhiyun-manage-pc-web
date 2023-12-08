@@ -141,7 +141,7 @@
             <el-row>
               <el-col>
                <el-upload
-                  action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                  :action="imageUrl"
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
                   :on-success="imgSuccess"
@@ -170,6 +170,7 @@
 import { RegionSelects } from 'v-region';
 import managerAdd from './managerAdd'
 import staffSelect from './StaffSelect'
+import global from '../global.vue'
 
 export default {
   components: {
@@ -180,6 +181,7 @@ export default {
   data () {
     return {
       message: '来自子组件的消息',
+      imageUrl: global.httpUrl,
       veId:'',
       isActive_staff: false,
       isActive: false,
@@ -363,7 +365,7 @@ methods: {
             this.liaShow=false;
             this.groShow=false;
             this.$router.replace({path: '/venuesIndex'});
-            this.$refs.elUpload.clearFiles()
+            this.$refs.elUpload.clearFiles();
           }else if(successResponse.data.code === 404){
             this.$alert(message);
             this.fzShow=true;
@@ -469,6 +471,7 @@ methods: {
         this.imageUrl = URL.createObjectURL(file.raw);
         //重点  得到上传图片的名字
         //this.ruleForm.userHeaderPicture = res.result;
+      
         this.form.picturesPath=this.form.picturesPath+res.result+',';
         this.fileList1 = fileList;
     },

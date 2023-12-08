@@ -28,7 +28,7 @@
       <el-upload
 
         class="avatar-uploader"
-        action="http://localhost:8081/api/file/uploadVideo"
+        :action="videoUrl"
         multiple
         :show-file-list="false"
         :on-preview="handlePreview"
@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import global from '../global.vue';
+
 export default {
   name: 'UploadVideo',
   components: {},
@@ -86,6 +88,7 @@ export default {
   },
   data() {
     return {
+      videoUrl: global.httpVideoUrl,
       loading: false,
       dialogVisible: false,
       videoUrl:'',

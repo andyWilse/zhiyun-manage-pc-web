@@ -76,7 +76,7 @@
           <el-row>
             <el-col>
                <el-upload
-                 action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                 :action="imageUrl"
                  list-type="picture-card"
                  :on-preview="handlePictureCardPreview"
                  :on-success="imgSuccess"
@@ -98,12 +98,15 @@
 </template>
 
 <script>
+import global from '../global.vue'
+
 export default {
   components: {
   },
   data () {
     return {
         message: '来自子组件的消息',
+        imageUrl: global.httpUrl,
         certTypeCdArr:[],
         fileRemove:'',
         fileUpload:'',

@@ -101,7 +101,7 @@
             <el-row>
               <el-col>
                 <el-upload
-                   action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                   :action="imageUrl"
                    list-type="picture-card"
                    :limit="1"
                    :on-exceed="handleExceed"
@@ -122,7 +122,8 @@
 </template>
 
 <script>
-import newsAutoAdd from './newsAutoAdd'
+import newsAutoAdd from './newsAutoAdd';
+import global from '../global.vue';
 
 export default {
   name: "newsAdd",
@@ -133,6 +134,7 @@ export default {
   data () {
     return {
       message: '来自子组件的消息',
+      imageUrl: global.httpUrl,
       isActive: false,
       picturesPathShow:false,
       newsContentShow:false,

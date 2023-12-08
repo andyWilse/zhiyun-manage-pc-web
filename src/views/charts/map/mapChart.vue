@@ -1,15 +1,35 @@
 <template>
       <div class="mapChartClass">
-        <div id="container" ></div>
+            <div class="search-box">
+                 <el-select
+                               v-model="searchContent"
+                               clearable
+                               filterable
+                               placeholder="请输入关键词"
+                               class="tipOption"
+                               @blur="productSelect"
+                               allow-create
+                            >
+                               <el-option
+                                   v-for="item in venuesList"
+                                   :key="item.venuesId"
+                                   :label="item.venuesName"
+                                   :value="item.venuesName"
+                               />
+                            </el-select>
+                <el-button class="btnMapClass" icon="el-icon-search" type="primary" @click="handleSearch()"">查询</el-button>
+            </div>
 
-        <div id="app">
-          <my-dialog
-            title=""
-            ref="MyDialog"
-            message=""
-            :showDialog="isShowDialog"
-            @closeDialog="isShowDialog=false"></my-dialog>
-        </div>
+            <div id="container" ></div>
+
+            <div id="app">
+              <my-dialog
+                title=""
+                ref="MyDialog"
+                message=""
+                :showDialog="isShowDialog"
+                @closeDialog="isShowDialog=false"></my-dialog>
+            </div>
       </div>
 
 </template>
@@ -31,6 +51,9 @@ import MyDialog from "./mdialog.vue"
                     //此处不声明 map 对象，可以直接使用 this.map赋值或者采用非响应式的普通对象来存储。
                     //map:null,
                     churchList:[],
+                    searchList:[],
+                    venuesList:[],
+                    searchContent:'',
                     religiousSect:'',
                     type:'',
                     isShowDialog: false,
@@ -42,7 +65,8 @@ import MyDialog from "./mdialog.vue"
      				this.searchPlaceInput = val.userInput;
      			});
      			bus.$on("updateSearch", (val) => {
-     				this.searchPlaceInput = val.userInput;
+     				//this.churchList = this.searchList;
+     				//this.setMarker();
      			});
      			bus.$on("shareHeatMapShow", (val) => {
      				this.showHeatOrNot = val;
@@ -62,6 +86,7 @@ import MyDialog from "./mdialog.vue"
      				this.type = val.type;
      				this.getChurchList();
      			});
+     			this.getVenuesList('');
      		},
      		// 监听 input输入框
      		watch: {
@@ -167,7 +192,6 @@ import MyDialog from "./mdialog.vue"
 					this.markers = [];
 
 					// 获取地图场所列表
-
 					let churchList = this.churchList;
 
 					churchList.forEach((item) => {
@@ -235,6 +259,35 @@ import MyDialog from "./mdialog.vue"
             this.isShowDialog = true;
             //console.log('标记-点击事件' , e.target.getExtData());
         },
+
+        //查询
+        productSelect(e) {
+             let value = e.target.value;
+              if(value) {
+                  this.searchContent = value
+              }
+              this.getVenuesList(this.searchContent);
+          },
+           //获取场所
+          getVenuesList(query) {
+              this.$axios.get('/venues/getStaffVenues', {
+                  params: {
+                      search: query
+                  }
+                }).then(successResponse => {
+                  if (successResponse.data.code === 200) {
+                    this.venuesList=successResponse.data.result;
+                  }else{
+                      let message=successResponse.data.message;
+                      this.$message({message: message,type: 'warning'});
+                }
+              });
+          },
+          handleSearch(){
+                this.search=this.searchContent;
+                this.getChurchList();
+                this.setMarker();
+          },
     }
  }
 </script>
@@ -264,6 +317,30 @@ import MyDialog from "./mdialog.vue"
     }
     ::v-deep .amap-copyright {
         opacity: 0;
+    }
+
+    .search-box{
+        width: 100%;
+        position: absolute;
+        z-index: 10;
+        //display: flex;
+        //height: 100px;
+    }
+
+
+    .tipOption{
+        width: 30%;
+    	//height: 10px;
+    	border: 1px solid #000000;
+    	left:30%;
+    	top:10px;
+    }
+
+    .btnMapClass{
+        position: absolute;
+        top:10px;
+        left:60%;
+        background-color:#156AA8;
     }
 
 </style>

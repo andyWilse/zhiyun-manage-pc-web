@@ -120,7 +120,7 @@
                                  <i class="el-icon-plus"></i>
                                </el-upload>  -->
                 <el-upload
-                   action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                   :action="imageUrl"
                    list-type="picture-card"
                    :on-preview="handlePictureCardPreview"
                    :on-success="imgSuccess"
@@ -149,6 +149,7 @@
 import { RegionSelects } from 'v-region';
 import managerAdd from './managerAdd'
 import staffSelect from './StaffSelect'
+import global from '../global.vue'
 
 export default {
   components: {
@@ -159,6 +160,7 @@ export default {
   data () {
     return {
       message: '来自子组件的消息',
+      imageUrl: global.httpUrl,
       isActive_staff: false,
       isActive: false,
       fzShow : false,

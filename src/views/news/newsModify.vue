@@ -83,7 +83,7 @@
             <el-row>
               <el-col>
                 <el-upload
-                   action="http://zszjadmin.860577.net:8808/api/file/images/upload"
+                   :action="imageUrl"
                    list-type="picture-card"
                    :limit="1"
                    :on-exceed="handleExceed"
@@ -107,12 +107,16 @@
 </template>
 
 <script>
+import global from '../global.vue'
+
+
 export default {
   name: "newsModify",
   props: [],
   data () {
     return {
       message: '来自子组件的消息',
+      imageUrl: global.httpUrl,
       picturesPathShow:false,
       newsContentShow:false,
       fileRemove:'',
