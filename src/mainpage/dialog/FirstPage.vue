@@ -134,6 +134,14 @@ export default {
   mounted(){
     this.initTableData();
   },
+  created(){
+      this.$alert("首页是需要处理的任务，请去“手机端”处理！", "", {
+           confirmButtonText: "确定",
+           callback: action => {
+              //this.$router.go(0);
+           }
+      });
+    },
   methods: {
     handleSearch () {
       this.initTableData()

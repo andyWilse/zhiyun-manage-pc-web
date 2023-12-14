@@ -24,15 +24,15 @@
 -->
               <el-row>
                 <el-col :span="12">
-                  <el-form-item label="电话号码:" prop="userMobile">
-                    <el-input v-model="form.userMobile" clearable></el-input>
+                  <el-form-item label="登录账号:" prop="userMobile">
+                    <el-input v-model="form.userMobile" clearable placeholder="手机号码"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
              <el-row>
                 <el-col :span="12">
                   <el-form-item label="密码:" prop="passwords">
-                    <el-input v-model="form.passwords" clearable></el-input>
+                    <el-input v-model="form.passwords" clearable placeholder="密码必须由数字、字母、特殊字符组合,请输入8-20位"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>

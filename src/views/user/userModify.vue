@@ -18,8 +18,8 @@
 
               <el-row>
                <el-col :span="12">
-                    <el-form-item label="电话号码:" prop="userMobile">
-                      <el-input v-model="form.userMobile" clearable></el-input>
+                    <el-form-item label="登录账号:" prop="userMobile">
+                      <el-input v-model="form.userMobile" clearable placeholder="手机号码"></el-input>
                     </el-form-item>
                </el-col>
 <!--
@@ -144,8 +144,11 @@ export default {
         isShowOne:false,
         isShowTwo:false,
         rolesList:[],
+        venuesSelects:[],
         userMobileOrigin: '',
         identityOrigin: '',
+        svName:'',
+        svId:'',
         form: {
             userNm: '',
             loginNm: '',
@@ -205,7 +208,10 @@ export default {
                     //图片处理
                     this.form.userPhotoUrl = successResponse.data.result[0].userPhotoUrl;
                     this.fileList=successResponse.data.result[0].fileList;
+                    this.venuesSelects=successResponse.data.result[0].selectVenues;
 
+                    this.svName=successResponse.data.result[0].venuesNm;
+                    this.svId=successResponse.data.result[0].relVenuesId;
                 }else{
                     let message=successResponse.data.message;
                     this.$message({message: message,type: 'warning'});
@@ -290,8 +296,14 @@ export default {
           if(''===town || typeof(town) == "undefined" || null===town){
               this.$alert("请先选择所在街镇");
           }else{
-              this.isActive_modify = true;
+
               this.$refs.mymodifychild.venuesList = this.venuesList;
+              this.$refs.mymodifychild.selects = this.venuesSelects;
+              this.$refs.mymodifychild.venuesIds=this.svId;
+              this.$refs.mymodifychild.venuesNms=this.svName;
+              this.venuesIds =this.svId;
+              this.form.venuesName=this.svName;
+              this.isActive_modify = true;
           }
         },
         handleRewrite () {
@@ -300,6 +312,8 @@ export default {
             this.isActive_modify = false;
         },
         changeActive_modify () {
+            this.venuesIds =this.svId;
+            this.form.venuesName=this.svName;
             this.isActive_modify = false;
         },
 

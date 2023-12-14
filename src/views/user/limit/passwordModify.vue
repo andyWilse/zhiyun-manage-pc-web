@@ -4,10 +4,10 @@
 
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="新密码:" prop="newPass">
-          <el-input v-model="form.newPass"></el-input>
+          <el-input v-model="form.newPass" placeholder="密码必须由数字、字母、特殊字符组合,请输入8-20位"></el-input>
         </el-form-item>
         <el-form-item label="确认密码:" prop="surePass">
-          <el-input v-model="form.surePass"></el-input>
+          <el-input v-model="form.surePass" placeholder="密码必须由数字、字母、特殊字符组合,请输入8-20位"></el-input>
         </el-form-item>
       </el-form>
 

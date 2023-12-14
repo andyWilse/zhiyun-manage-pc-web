@@ -1,12 +1,17 @@
 <template>
   <div>
-      <el-dialog title="选择场所" :visible="dialogVisibleVenuesSelect" :before-close="handleClose" width="60%">
+      <el-dialog
+          title="选择场所"
+          :visible="dialogVisibleVenuesSelect"
+          :before-close="handleClose"
+          width="60%"
+          @open="show"
+      >
       <el-table
-              :data="venuesList"
-              border
-              stripe
-              style="width: 100%"
               ref="checkTable"
+              :data="venuesList"
+              tooltip-effect="dark"
+              style="width: 100%"
               @select="checkSelect"
           >
         <el-table-column
@@ -46,6 +51,7 @@ export default {
     return {
       message: '来自子组件的消息',
       venuesList:[],
+      selects:[],
       venuesIds:'',
       venuesNms:'',
     }
@@ -55,6 +61,26 @@ export default {
   methods: {
         //获取id值
         checkSelect(data){
+
+        },
+        //回显
+        show(){
+            setTimeout(() => {
+                //console.log(this.$refs);
+                if(this.selects !== undefined && this.selects !==''){
+                    if(this.selects.length>0){
+                        for(let k=0;k<this.selects.length;k++){
+                            let kv=this.selects[k].venuesId;
+                            for(let i=0;i<this.venuesList.length;i++){
+                                let hv=this.venuesList[i].venuesId;
+                                if(kv==hv){
+                                    this.$refs.checkTable.toggleRowSelection(this.venuesList[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+              }, 0)
         },
         //确认
         handleSubmit () {
@@ -80,8 +106,8 @@ export default {
         handleCancel () {
             // 清除选中的数据
             this.$refs.checkTable.clearSelection();
-            this.venuesIds='';
-            this.venuesNms='';
+            //this.venuesIds='';
+            //this.venuesNms='';
             this.$emit('cActive_modify');
         },
 
@@ -89,10 +115,11 @@ export default {
         },
         //关闭
         handleClose (done) {
-            this.$refs.checkTable.clearSelection();
-            this.venuesIds='';
-            this.venuesNms='';
+
+            //this.venuesIds='';
+            //this.venuesNms='';
             this.$confirm('确认关闭？').then(_ => {
+                this.$refs.checkTable.clearSelection();
                 this.$emit('cActive_modify') // 如果确认,就取消弹窗,
                 done()
             }).catch(_ => {})
