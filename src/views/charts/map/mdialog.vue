@@ -17,7 +17,7 @@
                                  {{ data.venuesName }}
                              </div>
                              <div class="church" style="display: flex;">
-                                 <img class="church-icon" :src="$utils.getReligionLog(data.religiousSect)" width="15" height="15" />
+                                 <img class="church-icon" :src="$utils.getReligionImg(data.religiousSect)" width="15" height="15" />
                                  <div class="text-one">{{ data.reSectNm }}</div>
                              </div>
 

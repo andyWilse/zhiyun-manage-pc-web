@@ -205,7 +205,7 @@ import MyDialog from "./mdialog.vue"
 							styles: [{
 								icon: {
 									img: icon,
-									size: [30, 36], //可见区域的大小
+									size: [28, 30], //可见区域的大小
 									anchor: "bottom-center", //锚点
 									fitZoom: 14, //最合适的级别
 									scaleFactor: 2, //地图放大一级的缩放比例系数

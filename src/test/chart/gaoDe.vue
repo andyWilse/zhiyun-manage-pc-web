@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import location from '../assets/region/D.png'
+import location from '../assets/region/daoJiao.png'
 
 export default {
     data(){

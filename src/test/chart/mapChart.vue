@@ -68,9 +68,9 @@
                           this.markers=arr;
                             for (var i = 0; i < arr.length; i++) {
                                //var item = arr[i];
-                               //item.put("icon",'require("../../assets/region/F.png")');
+                               //item.put("icon",'require("../../assets/region/foJiao.png")');
                                let position=[120.68309, 27.974069];
-                               let icon="../../assets/region/F.png";
+                               let icon="../../assets/region/foJiao.png";
                         let marker = new AMap.Marker({
 							position: position, // 基点位置
 							// position: [item.longitude , item.Latitude], // 基点位置
@@ -130,7 +130,7 @@
 
 
 .el-icon-fo{
-    background: url('~@/assets/region/F.png') center no-repeat;
+    background: url('~@/assets/region/foJiao.png') center no-repeat;
     background-size: cover;
     font-size: 19px;
 }
@@ -140,7 +140,7 @@
     visibility: hidden;
 }
 .el-icon-dao{
-    background: url('~@/assets/region/D.png') center no-repeat;
+    background: url('~@/assets/region/daoJiao.png') center no-repeat;
     background-size: cover;
     font-size: 19px;
 }
@@ -150,7 +150,7 @@
     visibility: hidden;
 }
 .el-icon-tian{
-    background: url('~@/assets/region/T.png') center no-repeat;
+    background: url('~@/assets/region/tianZhu.png') center no-repeat;
     background-size: cover;
     font-size: 19px;
 }
@@ -160,7 +160,7 @@
     visibility: hidden;
 }
 .el-icon-ji{
-    background: url('~@/assets/region/J.png') center no-repeat;
+    background: url('~@/assets/region/jiDu.png') center no-repeat;
     background-size: cover;
     font-size: 19px;
 }

@@ -297,28 +297,28 @@ export function openLocation(myPosition, toLng, toLat, endpoint = '') {
  */
 export function getReligionLog(name , type = 1) {
 	switch (name) {
-		case "道教":
-			return type == 1 ? "/region/D.png" : "/region/D_sign.png";
-		case "100100000001":
-			return type == 1 ? "/region/D.png" : "/region/D_sign.png";
 		case "佛教":
-			return type == 1 ? "/region/F.png" : "/region/F_sign.png";
+			return type == 1 ? "/region/foJiao.png" : "/region/foJiao.png";
+		case "100100000001":
+			return type == 1 ? "/region/foJiao.png" : "/region/foJiao.png";
+		case "道教":
+			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
 		case "100100000002":
-			return type == 1 ? "/region/F.png" : "/region/F_sign.png";
+			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
 		case "基督教":
-			return type == 1 ? "/region/J.png" : "/region/J_sign.png";
+			return type == 1 ? "/region/jiDu.png" : "/region/jiDu.png";
 		case "100100000003":
-			return type == 1 ? "/region/J.png" : "/region/J_sign.png";
+			return type == 1 ? "/region/jiDu.png" : "/region/jiDu.png";
 		case "天主教":
-			return type == 1 ? "/region/T.png" : "/region/T_sign.png";
+			return type == 1 ? "/region/tianZhu.png" : "/region/tianZhu.png";
 		case "100100000004":
-			return type == 1 ? "/region/T.png" : "/region/T_sign.png";
+			return type == 1 ? "/region/tianZhu.png" : "/region/tianZhu.png";
 		case "伊斯兰教":
-			return type == 1 ? "/region/Y.png" : "/region/Y_sign.png";
+			return type == 1 ? "/region/yiSiLan.png" : "/region/yiSiLan.png";
 		case "100100000005":
-			return type == 1 ? "/region/Y.png" : "/region/Y_sign.png";
+			return type == 1 ? "/region/yiSiLan.png" : "/region/yiSiLan.png";
 		default:
-			return type == 1 ? "/region/D.png" : "/region/D_sign.png";
+			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
 	}
 }
 
@@ -329,22 +329,22 @@ export function getReligionLog(name , type = 1) {
  */
 export function getReligionImg(name) {
 	switch (name) {
-		case "道教":
-			return "/region/dj.jpg";
-		case "100100000001":
-			return "/region/dj.jpg";
 		case "佛教":
-			return "/region/fj.jpg";
-		case "100100000002":
-			return "/region/fj.jpg";
+			return "/region/foJiao.png";
+		case "100100000001":
+			return "/region/foJiao.png";
+        case "道教":
+            return "/region/daoJiao.png";
+        case "100100000002":
+            return "/region/daoJiao.png";
 		case "基督教":
-			return "/region/jdj.jpg";
+			return "/region/jiDu.png";
 		case "100100000003":
-			return "/region/jdj.jpg";
+			return "/region/jiDu.png";
 		case "天主教":
-			return "/region/tzj.jpg";
+			return "/region/tianZhu.png";
 		case "100100000004":
-			return "/region/tzj.jpg";
+			return "/region/tianZhu.png";
 		default:
 			return "";
 	}
