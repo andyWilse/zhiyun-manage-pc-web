@@ -140,8 +140,8 @@
           <el-form-item  prop="fileList">
             <el-row>
               <el-col>
-               <el-upload
-                  :action="imageUrl"
+               <el-upload ref="elUpload"
+                  action="http://183.246.59.33:8081/api/file/images/upload"
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
                   :on-success="imgSuccess"

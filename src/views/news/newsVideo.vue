@@ -26,9 +26,8 @@
 
       <!-- 方框样式 -->
       <el-upload
-
         class="avatar-uploader"
-        :action="videoUrl"
+        action="http://183.246.59.33:8081/api/file/uploadVideo"
         multiple
         :show-file-list="false"
         :on-preview="handlePreview"
@@ -91,7 +90,6 @@ export default {
       videoUrl: global.httpVideoUrl,
       loading: false,
       dialogVisible: false,
-      videoUrl:'',
       videoList: [],
       videoSrc: '',
       actionUrl: ''

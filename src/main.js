@@ -49,30 +49,52 @@ Vue.config.productionTip = false;
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
- if (to.matched.some(m => m.meta.requireAuth)) {    // 需要登录
-    if(window.localStorage.token && window.localStorage.isLogin === '1'){
-      next()
-    } else if (to.path !== '/firstPage' && to.path !== '/') {
-      let token = window.localStorage.token;
-      if (token === 'null' || token === '' || token === undefined){
-          next({path: '/'})
-          //Toast({ message: '检测到您还未登录,请登录后操作！', duration: 1500 })
-      }else{
-        next();
-      }
-    } else {
-        if (to.meta.title) {
-            document.title = to.meta.title
-        };
-        next();
+    let currentTime = new Date().getTime();	//当前时间
+    //页面跳转
+    if (to.matched.some(m => m.meta.requireAuth)) { // 需要登录
+        if(store.state.token && store.state.isLogin === '1'){
+            //超时30分钟退出
+            let lastTm=sessionStorage.getItem('last-use-time');
+            let lastTime = (lastTm==null || lastTm=='') ? currentTime:lastTm;
+            if (currentTime - lastTime > 1800000) { //判断是否超时 30 * 60 * 1000 (设置超时时间: 30分钟)
+                store.commit('$_removeStorage', '');
+                sessionStorage.removeItem('last-use-time');
+                next({path: '/'});
+                Message({message: '登录超时，请重新登录！',type: 'warning'});
+            }else{
+                sessionStorage.setItem('last-use-time', currentTime);
+            }
 
+            // 清除登录信息
+            if(to.path === '/'){
+                store.commit('$_removeStorage', '');
+                sessionStorage.removeItem('last-use-time');
+            }
+            next();
+        }else{
+            if(from.path==='/' && to.path==='/firstPage'){
+                sessionStorage.setItem('last-use-time', currentTime);
+                next();
+            }else {
+                store.commit('$_removeStorage', '');
+                sessionStorage.removeItem('last-use-time');
+                next({path: '/'});
+            }
+        }
+    } else { // 不需要登录
+        if (to.meta.title) {
+            document.title = to.meta.title;
+        }
+        // 清除登录信息
+        if(to.path === '/'){
+            store.commit('$_removeStorage', '');
+            sessionStorage.removeItem('last-use-time');
+        }else{
+            sessionStorage.setItem('last-use-time', currentTime);
+        }
+        next();
     }
-  } else {
-    if (to.meta.title) {
-            document.title = to.meta.title
-        };// 不需要登录
-    next();
-  }
+
 });
 
 VueViewer.setDefaults({

@@ -4,16 +4,18 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {     // 全局管理的数据存储
-	 isLogin:'0',
+	 isLogin:sessionStorage.getItem('isLogin') ? sessionStorage.getItem('isLogin'):'',
 	 ser:null,
-	 token:localStorage.getItem('token') ? localStorage.getItem('token'):'',   // token
+	 token:sessionStorage.getItem('token') ? sessionStorage.getItem('token'):'',
+	 //token:localStorage.getItem('token') ? localStorage.getItem('token'):'',   // token
 };
 export default new Vuex.Store({
 	state,
 	getters:{    // 监听数据变化的
 		getStorage(state){   // 获取本地存储的登录信息
 	      if(!state.token){
-	        state.token =JSON.parse(localStorage.getItem(key))
+	        //state.token =JSON.parse(localStorage.getItem(key))
+	        state.token =JSON.parse(sessionStorage.getItem(key))
 	      }
 	      return state.token
 	    }
@@ -21,10 +23,17 @@ export default new Vuex.Store({
 	mutations:{
 		$_setToken(state, value) { // 设置存储token
 	        state.token = value;
-	        localStorage.setItem('token', value);
+	        state.isLogin='1';
+	        //localStorage.setItem('token', value);
+	        sessionStorage.setItem('token', value) ;
+	        sessionStorage.setItem('isLogin', '1') ;
 	    },
 	    $_removeStorage(state, value){  // 删除token
-		      localStorage.removeItem('token');
+		     //localStorage.removeItem('token');
+		     state.token = value;
+		     state.isLogin='0';
+		     sessionStorage.removeItem('isLogin');
+		     sessionStorage.removeItem('token') ;
 	    },
 	}
 })

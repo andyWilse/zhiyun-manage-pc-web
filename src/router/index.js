@@ -39,7 +39,7 @@ Vue.use(VueRouter); //安装插件
 
 export const constantRouterMap = [
     //配置默认的路径，默认显示登录页
-    { path: '/',name:'loginView', component: loginView,meta:{requireAuth:true,title:'瓯海宗教智治管理端'}},
+    { path: '/',name:'loginView', component: loginView,meta:{title:'瓯海宗教智治管理端'}},
     //配置登录成功页面，使用时需要使用 path 路径来实现跳转
     { path: '/success',name:'success', component: () => import('@/views/successView')},
     //配置登录失败页面，使用时需要使用 path 路径来实现跳转
@@ -47,8 +47,8 @@ export const constantRouterMap = [
     //菜单
     {path:'/layOut',name:'layOut',component:layOut,redirect:'firstPage',
         children:[
-            {path:'/firstPage',name:'firstPage',component:firstPage, meta: {title: "瓯海宗教智治管理端",show: true}},
-            {path:'/taskDetail',name:'taskDetail',component:taskDetail, meta: {title: "瓯海宗教智治管理端",show: true}},
+            {path:'/firstPage',name:'firstPage',component:firstPage, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
+            {path:'/taskDetail',name:'taskDetail',component:taskDetail, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
             {path:'/venuesIndex',name:'venuesIndexss- ',component:venuesIndexs,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/venusesAdd',name:'venusesAdd',component:venusesAdd,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/venusesModify',name:'venusesModify',component:venusesModify,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},

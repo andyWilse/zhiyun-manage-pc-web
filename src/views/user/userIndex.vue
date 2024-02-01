@@ -201,8 +201,9 @@ export default {
         this.$refs.myPassChild.userNm = this.tableData[this.index_pass].userNm;
     },
     handleDelete (index, rows) {
-      console.log(index)
-      this.$confirm('此操作将永久删除用户信息, 是否继续?', '提示', {
+      //console.log(index);
+      let userNm=rows[index].userNm;
+      this.$confirm('此操作将永久删除用户( '+userNm+' ), 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

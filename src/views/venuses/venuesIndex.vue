@@ -209,8 +209,8 @@ export default {
         this.$router.push({path: '/venusesModify',query:{ venuesId:vid}});
     },
     handleDelete (index, rows) {
-      console.log(index)
-      this.$confirm('此操作将永久删除场所信息, 是否继续?', '提示', {
+      let venuesName=rows[index].venuesName;
+      this.$confirm('此操作将永久删除( '+venuesName+' )场所信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -318,14 +318,15 @@ export default {
 
       this.$axios.post('/venues/delete/'+venuesId)
           .then(successResponse => {
-                if (successResponse.status === 200) {
+                if (successResponse.data.code === 200) {
                   /*for (var i = 0; i < this.tempList.length; i++) { // 因为后来要实现一个搜索功能,但搜索出来的结果也要实现删除功能,所以tempList和tableData要实现同步删除
                     if (this.tempList[i].name === rows[index].name) {
                       this.tempList.splice(i, 1)
                     }
                   }
                   rows.splice(index, 1)*/
-                  this.initTableData()
+                  this.$message({message: '删除场所成功！', type: 'success'});
+                  this.initTableData();
                 }else{
                   this.$router.replace({path: '/error'})
                 }

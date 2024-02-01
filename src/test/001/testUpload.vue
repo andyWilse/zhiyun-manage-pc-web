@@ -7,7 +7,7 @@
                    accept="image/*"
                    :auto-upload="false"
                    :multiple="false"
-                   :limit="1">
+>
           <i class="el-icon-plus"></i>
         </el-upload>
   		</template>

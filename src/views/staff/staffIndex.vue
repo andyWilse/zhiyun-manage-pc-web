@@ -205,15 +205,15 @@ export default {
     handleDelete (index, rows) {
         let tt=this.searchForm.two;
         if(tt === undefined || tt===''){
-            this.$alert("请先选择场所", "", {
-                 confirmButtonText: "确定",
-                 callback: action => {
-                    this.$router.go(0);
-                 }
-            });
+            this.$fire({
+                text:'请在‘场所名称’下拉选择场所！',
+                timer: 10000
+              })
+
         }else{
               //console.log(index);
-              this.$confirm('此操作将把教职人员在该场所除名, 是否继续?', '警告', {
+              let staffName=rows[index].staffName;
+              this.$confirm('此操作将把教职人员( '+staffName+' )在场所内除名, 是否继续?', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

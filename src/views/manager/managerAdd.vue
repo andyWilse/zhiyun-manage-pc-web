@@ -76,7 +76,7 @@
           <el-row>
             <el-col>
                <el-upload
-                 :action="imageUrl"
+                 action="http://183.246.59.33:8081/api/file/images/upload"
                  list-type="picture-card"
                  :on-preview="handlePictureCardPreview"
                  :on-success="imgSuccess"
@@ -173,9 +173,15 @@ export default {
         },
         //新增提交校验
         handleSubmit () {
+            var managerTypeCd=this.form.managerTypeCd;
+            var certTypeCd=this.form.certTypeCd;
             this.$refs.form.validate(valid => {
-                if (valid) {
-                    this.handleSubmitPost();
+                if(''===managerTypeCd ||  typeof(managerTypeCd) == "undefined"){
+                    this.$message.error('身份类型不能为空，请选择身份类型！');
+                }else if(''===certTypeCd ||  typeof(certTypeCd) == "undefined"){
+                    this.$message.error('证件类型不能为空，请选择证件类型！');
+                }else if (valid) {
+                     this.handleSubmitPost();
                 }else{
                     this.$alert('填写信息有误，请重新填写后提交！');
                 }
@@ -196,7 +202,7 @@ export default {
                 managerTypeCd:this.form.managerTypeCd,
             }).then(successResponse => {
                 if (successResponse.data.code === 200) {
-                    this.$message({message: '新增场所管理人员成功！', type: 'success'});
+                    this.$message({message: '新增场所负责人成功！', type: 'success'});
                     this.$router.replace({path: '/managerIndex'});
                 }else{
                     let message=successResponse.data.message;

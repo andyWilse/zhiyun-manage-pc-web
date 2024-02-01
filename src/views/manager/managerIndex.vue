@@ -148,8 +148,9 @@ export default {
     },
     //删除
     handleDelete (index, rows) {
-      console.log(index)
-      this.$confirm('此操作将把教职人员在该场所除名, 是否继续?', '提示', {
+      //console.log(index);
+      let managerCnNm=rows[index].managerCnNm;
+      this.$confirm('此操作将把场所负责人( '+managerCnNm+' )除名, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -166,6 +167,7 @@ export default {
         .then(successResponse => {
               if (successResponse.data.code === 200) {
                  this.handleSearch();
+                 this.$message({message: '场所负责人删除成功！', type: 'success'});
               }else{
                 let message=successResponse.data.message;
                 this.$message({message: message,type: 'warning'});

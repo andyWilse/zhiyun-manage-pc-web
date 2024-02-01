@@ -9,7 +9,6 @@
             action="http://localhost:9999/chairman/uploadimg"
             :show-file-list="false"
             multiple
-            :limit="1"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
             <!-- 构建虚拟路径 -->

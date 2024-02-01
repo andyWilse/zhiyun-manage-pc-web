@@ -127,8 +127,11 @@ export default {
         if (valid) {
             //图片校验
             var pictures=this.form.managerPhotoPath;
+            var managerTypeCd=this.form.managerTypeCd;
             if(''===pictures ||  typeof(pictures) == "undefined"){
                 this.$message.error('图片信息为空，请上传图片！');
+            }else if(''===managerTypeCd ||  typeof(managerTypeCd) == "undefined"){
+                this.$message.error('身份类型不能为空，请选择身份类型！');
             }else{
                 this.handleSubmitPost();
             }
