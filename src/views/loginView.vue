@@ -50,7 +50,7 @@
               </el-input>
             </el-form-item>
         </el-row>
-        <el-row>
+       <!-- <el-row>
             <el-form-item style="margin-bottom: 20px">
                 <el-col :span="15">
                     <el-input
@@ -72,7 +72,7 @@
                       </el-button>
                 </el-col>
             </el-form-item>
-        </el-row>
+        </el-row>  -->
         <el-row>
             <el-form-item style="margin-bottom: 30px">
               <el-button

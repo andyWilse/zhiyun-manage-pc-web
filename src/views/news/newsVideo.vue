@@ -34,17 +34,17 @@
         :on-success="handleVideoSuccess"
         :on-progress="uploadVideoProcess"
         :on-change="handleAvatarChange"
-        v-show="uploadShow"
-      >
+        v-show="uploadShow">
+
         <span
           element-loading-background="rgba(0, 0, 0, 0.8)"
           element-loading-spinner="el-icon-loading"
           element-loading-text="上传中"
           style="display:block;"
-          v-loading="loading"
-        >
+          v-loading="loading">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </span>
+
       </el-upload>
 
       <!-- 上传提示文字样式 -->
