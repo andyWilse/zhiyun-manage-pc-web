@@ -7,8 +7,9 @@
 	import AMapLoader from "@amap/amap-jsapi-loader";
 	import bus from "@/utils/bus";
 
+//eaff27aa124cfae67ff0d2f7493f2bb6
 	window._AMapSecurityConfig = {
-		securityJsCode: "eaff27aa124cfae67ff0d2f7493f2bb6",
+		securityJsCode: "fc264c47816f9c5a91fd5225f8f15562",
 	};
 
 	export default {
@@ -45,7 +46,7 @@
 			 */
 			initMap() {
 				AMapLoader.load({
-						key: "021090ed7f49fe6a940aaef5b0fbedb6", // 申请好的Web端开发者Key，首次调用 load 时必填
+						key: "2b04286f12dfda2abea7b6d1015874b6", // 申请好的Web端开发者Key，首次调用 load 时必填 021090ed7f49fe6a940aaef5b0fbedb6
 						version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
 						plugins: [
 							"AMap.ToolBar",
