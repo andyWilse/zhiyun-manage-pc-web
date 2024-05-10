@@ -40,7 +40,7 @@ import bus from "@/utils/bus";
 import MyDialog from "./mdialog.vue"
 //eaff27aa124cfae67ff0d2f7493f2bb6
     window._AMapSecurityConfig = {
-        securityJsCode: "fc264c47816f9c5a91fd5225f8f15562",
+        securityJsCode: "89ba3121dc887dd8a4ff221f42b32079",
     };
     export default {
             components:{
@@ -115,7 +115,7 @@ import MyDialog from "./mdialog.vue"
 
      initMap(){
          AMapLoader.load({
-             key:"2b04286f12dfda2abea7b6d1015874b6",             // 申请好的Web端开发者Key，首次调用 load 时必填021090ed7f49fe6a940aaef5b0fbedb6
+             key:"a7ee8ebcc0edfa70e0277c545b6637c9",             // 申请好的Web端开发者Key，首次调用 load 时必填021090ed7f49fe6a940aaef5b0fbedb6
              version:"2.0",      // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
              plugins:["AMap.ToolBar",   // 需要使用的的插件列表，如比例尺'AMap.Scale'等
                         "AMap.Scale",
