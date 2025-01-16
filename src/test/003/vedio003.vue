@@ -28,7 +28,7 @@
       <el-upload
 
         class="avatar-uploader"
-        action="http://localhost:8081/api/file/uploadVideo"
+        action="http://localhost:7081/api/file/uploadVideo"
         multiple
         :show-file-list="false"
         :on-preview="handlePreview"

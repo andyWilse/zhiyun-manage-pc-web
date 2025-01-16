@@ -141,7 +141,7 @@
             <el-row>
               <el-col>
                <el-upload ref="elUpload"
-                  action="http://183.246.59.33:8081/api/file/images/upload"
+                  action="http://183.246.59.33:7081/api/file/images/upload"
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
                   :on-success="imgSuccess"

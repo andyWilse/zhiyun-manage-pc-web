@@ -27,7 +27,7 @@
       <!-- 方框样式 -->
       <el-upload
         class="avatar-uploader"
-        action="http://183.246.59.33:8081/api/file/uploadVideo"
+        action="http://183.246.59.33:7081/api/file/uploadVideo"
         multiple
         :show-file-list="false"
         :on-preview="handlePreview"

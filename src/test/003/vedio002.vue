@@ -8,7 +8,7 @@
        <div class="pic_img_box">
          <el-upload
            class="avatar-uploader"
-           action="http://localhost:8081/api/file/uploadVideo"
+           action="http://localhost:7081/api/file/uploadVideo"
            v-bind:data="{FoldPath:'上传目录',SecretKey:'安全验证'}"
            v-bind:on-progress="uploadVideoProcess"
            v-bind:on-success="handleVideoSuccess"
