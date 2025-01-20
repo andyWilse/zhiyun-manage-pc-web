@@ -117,6 +117,9 @@ export default {
               this.$gloMsg.userGra= "none";
               this.$gloMsg.userPass= "none";
 
+              this.$gloMsg.eventDel= "none";
+
+
               for(var i=0;i<buttonArr.length;i++){
                 let but=buttonArr[i].menuId;
                 if(1001000101===but){
@@ -151,6 +154,8 @@ export default {
                     this.$gloMsg.userPass='';
                 }else if(1002000105===but){
                     this.$gloMsg.userGra='';
+                }else if(1004000101===but){
+                    this.$gloMsg.eventDel='';
                 }
               }
     },

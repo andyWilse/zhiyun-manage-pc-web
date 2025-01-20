@@ -110,11 +110,14 @@
           align="center">
       </el-table-column>
 
-      <el-table-column  align="center" label="操作" width="130">
+      <el-table-column  align="center" label="操作" width="180">
           <template slot-scope="scope">
             <el-button @click.native.prevent="handleClick(scope.$index, tableData)" style="padding:5px;" type="primary">
               查看详情
            </el-button>
+            <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{display: eventDel}">
+                       删除
+                     </el-button>
           </template>
       </el-table-column>
     </el-table>
@@ -138,6 +141,7 @@ export default {
     return {
       message: '',
       isShow: true,
+      eventDel:'none',
       tempList: [],
       //查询
       tableData:[],
@@ -161,6 +165,7 @@ export default {
   },
 created(){
     this.getEventSelect();
+    this.eventDel=this.$gloMsg.eventDel;
   },
   methods: {
     handleSearch () {
@@ -225,7 +230,47 @@ created(){
       this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
       //this.$refs.myCommentChild.getComment(procInstId);
     },
+    //删除
+    handleDelete (index, rows) {
+      let venuesAddres=rows[index].venuesAddres;
+      let venuesName=rows[index].venuesName;
+      let warnTime=rows[index].warnTime;
+      let eventType=rows[index].eventType;
+      let year=warnTime.slice(0,4);
+      let month=warnTime.slice(5,7);
+      let day=warnTime.slice(8,10);
+      let time=warnTime.slice(11,16);
+      let date=year+"年"+month+"月"+day+"日"+time;
 
+      const h = this.$createElement;
+      this.$confirm('', {
+          title:"提示",
+          type:'warnig',
+          message:h('p', null, [
+              h('span', "  "+venuesAddres+"("+venuesName+"),"+date+","+eventType+"事件。", ''),
+              h('p', { style: 'color: red;font-weight:bold;position:absolute;' }, "删除后无法恢复，请谨慎操作！")
+          ]),
+          // iconClass:"el-icon-question colorYellow",
+      	}).then(() => {
+                  this.deleteData(index, rows)
+                }).catch(() => {
+                  this.$message.info('已取消删除');
+                });
+    },
+    //删除
+    deleteData(index, rows){
+      let eventId=rows[index].eventId;
+      this.$axios.post('/event/deleteEvent/' + eventId)
+        .then(successResponse => {
+              if (successResponse.data.code === 200) {
+                 this.handleSearch();
+                 this.$message({message: '预警信息删除成功！', type: 'success'});
+              }else{
+                let message=successResponse.data.message;
+                this.$message({message: message,type: 'warning'});
+              }
+        })
+    },
   }
 }
 </script>
