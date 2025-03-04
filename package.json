@@ -18,6 +18,7 @@
     "echarts": "^5.4.1",
     "element-china-area-data": "^5.0.2",
     "element-ui": "^2.15.12",
+    "file-saver": "^2.0.5",
     "flv.js": "^1.6.2",
     "js-cookie": "^3.0.1",
     "kurento-utils": "^6.18.0",
@@ -35,14 +36,17 @@
     "videojs-contrib-hls": "^5.15.0",
     "vue": "^2.6.14",
     "vue-amap": "^0.5.10",
+    "vue-cli-service": "^5.0.10",
     "vue-cookies": "^1.8.2",
+    "vue-json-excel": "^0.3.0",
     "vue-layer": "^1.2.5",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.6",
     "vue-simple-alert": "^1.1.1",
     "vue-video-player": "^6.0.0",
     "vue-wechat-title": "^2.0.7",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
