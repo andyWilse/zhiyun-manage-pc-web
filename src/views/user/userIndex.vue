@@ -2,12 +2,12 @@
   <div>
     <el-form :inline="true" :model="searchForm" label-width="60px" class="searchForm">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="5.5">
           <el-form-item label="中文名:">
             <el-input v-model="searchForm.one" placeholder="中文名" clearable></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="5.5">
           <el-form-item label="角色：">
             <el-select v-model="searchForm.two"  clearable>
               <el-option
@@ -19,12 +19,43 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
-            <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: userQue }">查询</el-button>
-            <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: userAdd }">新增</el-button>
-        </el-col>
-      </el-row>
+            <el-col :span="5.5">
+                <el-form-item label="场所:">
+                    <el-select
+                       v-model="searchForm.three"
+                       clearable
+                       filterable
+                       placeholder="请输入关键词"
+                       class="product-input"
+                       @blur="productSelect"
+                       allow-create
+                    >
+                       <el-option
+                           v-for="item in venuesList"
+                           :key="item.venuesId"
+                           :label="item.venuesName"
+                           :value="item.venuesId"
+                       />
+                    </el-select>
+                </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                    <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: userQue }">
+                        查询
+                    </el-button>
+                </el-col>
+                <el-col :span="2">
+                    <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: userAdd }">
+                        新增
+                    </el-button>
+                </el-col>
+                <el-col :span="2">
+                   <el-button class="sclass" icon="el-icon-upload2" type="success" @click="excelClick" :style="{ display: excelImport }">
+                        三人驻堂excel导入
+                   </el-button>
+                </el-col>
 
+      </el-row>
     </el-form>
 
     <el-table
@@ -103,6 +134,9 @@
             @cActive_pass="changeActive_pass" @cPass="handlePass" ref="myPassChild">
       </pass-item>
 
+      <excel-Dialog :dialog-visible-excel="isActive_excel" @cActive_excel="changeActive_excel" ref="myExcelChild">
+      </excel-Dialog>
+
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
           background
@@ -118,22 +152,26 @@
 <script>
 import userGrand from './limit/grandAdd'
 import userPassword from './limit/passwordModify'
+import excelDialog from './limit/excelImport'
 
 export default {
   components: {
     'grand-item': userGrand,
     'pass-item': userPassword,
+    'excel-Dialog': excelDialog,
   },
   data () {
     return {
       message: '',
       userAdd:'none',
+      excelImport:'none',
       userMod:'none',
       userDel:'none',
       userGra:'none',
       userPass:'none',
       userQue:'',
       isActive_grand: false,
+      isActive_excel: false,
       index_grand: 0,
       isActive_pass: false,
       index_pass: 0,
@@ -141,6 +179,8 @@ export default {
       tempList: [],
       roleslist: [],
       fileList: [],
+      //场所下拉
+      venuesList:[],
       //查询
       tableData:[],
       total:0,
@@ -161,6 +201,8 @@ export default {
         this.userDel=this.$gloMsg.userDel;
         this.userGra=this.$gloMsg.userGra;
         this.userPass=this.$gloMsg.userPass;
+        this.excelImport=this.$gloMsg.excelImport;
+        this.getVenuesList();
     },
   //方法
   methods: {
@@ -176,6 +218,14 @@ export default {
     //新增
     addClick () {
       this.$router.replace({path: 'userAdd/'});
+    },
+    //excel导入
+    excelClick () {
+    //this.$alert("ddddddd");
+      //this.$router.replace({path: 'excelImport/'});
+      //this.isActive_excel = true;
+              this.isActive_excel = true;
+
     },
     //修改
     modifyClick (index, rows) {
@@ -226,17 +276,20 @@ export default {
 
     handleSearch () {
       this.page =1;
-      this.initTableData()
+      this.initTableData();
     },
     handleClear () {
-      this.tableData = this.tempList
+      this.tableData = this.tempList;
     },
     changeActive_grand () {
-      this.isActive_grand= false
+      this.isActive_grand= false;
     },
     changeActive_pass () {
-      this.isActive_pass= false
+      this.isActive_pass= false;
     },
+     changeActive_excel () {
+          this.isActive_excel= false;
+        },
     sizeChange(pageSize){
       this.size=pageSize;
       this.initTableData();
@@ -254,6 +307,7 @@ export default {
           size: this.size,
           userNm:this.searchForm.one,
           identity: this.searchForm.two,
+          venue: this.searchForm.three
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {
@@ -307,7 +361,29 @@ export default {
               }
           })
       },
-
+ //获取场所
+    getVenuesList(query) {
+        this.$axios.get('/venues/getStaffVenues', {
+            params: {
+                search: query
+            }
+          }).then(successResponse => {
+            if (successResponse.data.code === 200) {
+              this.venuesList=successResponse.data.result;
+            }else{
+                let message=successResponse.data.message;
+                this.$message({message: message,type: 'warning'});
+          }
+        });
+    },
+    //查询
+    productSelect(e) {
+         let value = e.target.value;
+          if(value) {
+              this.searchForm.two = value
+          }
+          this.getVenuesList(this.searchForm.two);
+      },
   }
 }
 </script>

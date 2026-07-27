@@ -61,7 +61,7 @@
                              :before-finish="finishDownload"
                              :fields="fields"
                              :name="excelName">
-                  <el-button type="primary" icon="el-icon-top" >导出excel</el-button>
+                  <el-button type="primary" icon="el-icon-download" >导出excel</el-button>
              </download-excel>
             </el-col>
         </el-row>

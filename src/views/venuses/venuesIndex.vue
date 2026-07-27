@@ -47,6 +47,14 @@
         style="width: 200%"
     >
       <el-table-column
+          prop="venuesId"
+          label="场所编号"
+          width="90"
+          align="center"
+          fixed>
+      </el-table-column>
+
+      <el-table-column
           prop="venuesName"
           label="场所名称"
           align="center"
