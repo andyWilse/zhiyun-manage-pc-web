@@ -46,6 +46,7 @@
         stripe
         style="width: 200%"
     >
+ <!--
       <el-table-column
           prop="venuesId"
           label="场所编号"
@@ -53,10 +54,11 @@
           align="center"
           fixed>
       </el-table-column>
-
+-->
       <el-table-column
           prop="venuesName"
           label="场所名称"
+          width="150"
           align="center"
           fixed>
       </el-table-column>
@@ -72,23 +74,23 @@
             prop="responsiblePerson"
             label="负责人"
             align="center"
-            width="100">
+            width="150">
         </el-table-column>
 
       <el-table-column
           prop="venuesPhone"
           label="场所电话"
           align="center"
-          width="135">
+          width="160">
       </el-table-column>
 
-      <el-table-column
+ <!--     <el-table-column
           prop="organization"
           label="所属机构"
           align="center"
           width="140">
       </el-table-column>
-
+-->
       <el-table-column
           prop="venuesAddres"
           label="场所地址"
@@ -96,7 +98,14 @@
           fixed>
       </el-table-column>
 
-       <el-table-column
+      <el-table-column
+         prop="userSr"
+         label="三人驻堂"
+         align="center"
+         width="180">
+      </el-table-column>
+
+<!--       <el-table-column
            prop="registerNbr"
            label="登记证号"
            align="center"
@@ -116,13 +125,16 @@
              align="center"
              width="100">
          </el-table-column>
-
+-->
       <el-table-column
           fixed="right"
           align="center"
-          width="120"
+          width="180"
           label="操作">
         <template slot-scope="scope">
+          <el-button @click.native.prevent="getDetails(scope.$index, tableData)" type="primary" style="padding:5px;">
+            详情
+          </el-button>
           <el-button @click.native.prevent="modifyClick(scope.$index, tableData)" type="primary" class="veModifyClass" :style="{ display: veMod }">
               修改
           </el-button>
@@ -132,6 +144,11 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <detail-dialog :dialog-venues-detail="isActive_detail" @cActive_detail="changeActive_detail" :index_from_parent="index_detail"
+                   ref="venuesDetail">
+    </detail-dialog>
+
     <div style="display:flex;justify-content:flex-start">
       <el-pagination
           background
@@ -145,8 +162,12 @@
 </template>
 
 <script>
+import detail from './dialog/venuesDetail'
 
 export default {
+ components: {
+    'detail-dialog': detail
+  },
   data () {
     return {
       message: '',
@@ -178,6 +199,8 @@ export default {
         time: '',
         startTime: ''
       },
+      isActive_detail: false,
+      index_detail: 0,
     }
   },
   mounted(){
@@ -214,7 +237,7 @@ export default {
         //this.$router.push({name: 'Test',params:{ index:'1'}});
         this.index_modify = index;
         let vid= this.tableData[this.index_modify].venuesId;
-        this.$router.push({path: '/venusesModify',query:{ venuesId:vid}});
+        this.$router.push({path: '/venusesModify',query:{ venues:this.tableData[this.index_modify]}});
     },
     handleDelete (index, rows) {
       let venuesName=rows[index].venuesName;
@@ -360,7 +383,15 @@ export default {
         }
       })
     },
-
+    //详情
+    getDetails (index, rows) {
+      this.isActive_detail = true;
+      this.index_detail = index;
+      this.$refs.venuesDetail.showDetail(this.tableData[this.index_detail]);
+    },
+    changeActive_detail () {
+        this.isActive_detail= false;
+    },
 
   }
 }

@@ -65,14 +65,14 @@
                   <el-input v-model="form.latitudes" clearable></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-
-        <el-row :gutter="24">
             <el-col :span="7">
                 <el-form-item label="登记证号"  prop="registerNbr">
                   <el-input v-model="form.registerNbr" clearable></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+
+        <el-row :gutter="24">
             <el-col :span="7">
               <el-form-item label="管理组成员" prop="groupMembers">
                   <el-input v-model="form.groupMembers" clearable></el-input>
@@ -81,25 +81,36 @@
             <el-col :span="3">
                 <el-button class="groClass" icon="el-icon-circle-plus-outline" type="primary" @click="addGroClick" v-show="groShow">添加管理组成员</el-button>
             </el-col>
-        </el-row>
-
-        <el-row :gutter="24">
-          <el-col :span="7">
-            <el-form-item label="负责人" prop="responsiblePerson">
-              <el-input v-model="form.responsiblePerson" clearable></el-input>
-            </el-form-item>
+            <el-col :span="7">
+                <el-form-item label="负责人" prop="responsiblePerson">
+                  <el-input v-model="form.responsiblePerson" clearable></el-input>
+                </el-form-item>
           </el-col>
           <el-col :span="3">
               <el-button class="fzClass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" v-show="fzShow">添加负责人</el-button>
           </el-col>
-           <el-col :span="7">
-              <el-form-item label="工作联络员" prop="liaisonMan">
-                  <el-input v-model="form.liaisonMan" clearable></el-input>
+        </el-row>
+
+        <el-row :gutter="24">
+            <el-col :span="7">
+                <el-form-item label="工作联络员" prop="liaisonMan">
+                    <el-input v-model="form.liaisonMan" clearable></el-input>
                 </el-form-item>
-          </el-col>
-           <el-col :span="3">
-              <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="addLiaClick" v-show="liaShow">添加工作联络员</el-button>
-           </el-col>
+            </el-col>
+            <el-col :span="3">
+                <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="addLiaClick" v-show="liaShow">添加工作联络员</el-button>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="三人驻堂" prop="userSr">
+                    <el-input v-model="form.userSr" clearable></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="3">
+                <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="modifySrClick" v-show="srShow">修改三人驻堂</el-button>
+            </el-col>
+
+             <sr-dialog :dialog-venues-sr="isActive_sr" @cActive_sr="changeActive_sr"ref="venuesUserSr"></sr-dialog>
+
         </el-row>
         <el-row :gutter="24">
               <el-col :span="17">
@@ -171,12 +182,14 @@ import { RegionSelects } from 'v-region';
 import managerAdd from './managerAdd'
 import staffSelect from './StaffSelect'
 import global from '../global.vue'
+import sr from './dialog/venuesSr'
 
 export default {
   components: {
       RegionSelects,
       'add-item': managerAdd,
       'staff-item': staffSelect,
+      'sr-dialog': sr,
   },
   data () {
     return {
@@ -187,6 +200,7 @@ export default {
       isActive: false,
       fzShow : false,
       liaShow : false,
+      srShow : true,
       groShow : false,
       selectedOptions: [],
       religiousSects:[],
@@ -210,6 +224,7 @@ export default {
         responsiblePerson:'',
         groupMembers:'',
         liaisonMan : '',
+        userSr: '',
         briefIntroduction :'',
         picturesPath:'',
         longitude:'',
@@ -228,6 +243,7 @@ export default {
         // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
 
     },
+    isActive_sr: false,
     }
   },
   created(){
@@ -240,7 +256,8 @@ methods: {
     async getVenue(){
 
         //let veId=this.$route.params.venuesId;
-        this.veId=this.$route.query.venuesId;
+        var venueDetail=this.$route.query.venues;
+        this.veId=venueDetail.venuesId;
         this.$axios.get('/venues/getVenueByID', {
           params: {
             venuesId: this.veId,
@@ -261,6 +278,7 @@ methods: {
                 this.form.responsiblePerson= successResponse.data.result[0].responsiblePerson ;
                 this.form.groupMembers= successResponse.data.result[0].groupMembers ;
                 this.form.liaisonMan= successResponse.data.result[0].liaisonMan ;
+                this.form.userSr= venueDetail.userSr;
                 this.form.briefIntroduction= successResponse.data.result[0].briefIntroduction ;
                 this.form.venuesStaff = successResponse.data.result[0].venuesStaff ;
                 this.staffIds = successResponse.data.result[0].venuesStaffId ;
@@ -475,6 +493,28 @@ methods: {
         this.form.picturesPath=this.form.picturesPath+res.result+',';
         this.fileList1 = fileList;
     },
+     //详情
+    getDetails (index, rows) {
+      this.isActive_detail = true;
+      this.index_detail = index;
+
+      //this.$refs.myGrandChild.userId = this.tableData[this.index_grand].userId;
+        //let user=this.tableData[this.index_grand].userId;
+
+      this.$refs.venuesDetail.showDetail(this.tableData[this.index_detail]);
+    },
+    //修改三人驻堂
+    modifySrClick(){
+        this.isActive_sr= true;
+        var data=[];
+        data[0]=this.veId;
+        data[1]=this.form.venuesName;
+        this.$refs.venuesUserSr.getVenuesSr(data);
+    },
+    changeActive_sr() {
+       this.isActive_sr= false;
+    },
+
   },
 
 }

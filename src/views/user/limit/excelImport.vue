@@ -61,6 +61,7 @@ export default {
         // 下载模板
         downloadExcel(){
             let a = document.createElement("a");
+            //public下
             a.href = "./static/srzt.xlsx";
             a.download = "三人驻堂模板.xlsx";
             a.style.display = "none";

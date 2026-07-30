@@ -221,11 +221,7 @@ export default {
     },
     //excel导入
     excelClick () {
-    //this.$alert("ddddddd");
-      //this.$router.replace({path: 'excelImport/'});
-      //this.isActive_excel = true;
-              this.isActive_excel = true;
-
+        this.isActive_excel = true;
     },
     //修改
     modifyClick (index, rows) {
