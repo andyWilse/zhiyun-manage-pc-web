@@ -56,12 +56,13 @@
             </el-row>
 
             <el-row>
-                <el-button class="llClass" icon="el-icon-circle-plus-outline" type="primary" @click="modifyClick" v-show="isShowBut">选择场所</el-button>
                 <el-col :span="20">
                   <el-form-item label="场所名称:" prop="venuesName" v-show="isShow">
                     <el-input v-model="form.venuesName" clearable></el-input>
                   </el-form-item>
                 </el-col>
+                <el-button class="vuClass" icon="el-icon-circle-plus-outline" type="primary" @click="modifyClick" v-show="isShowBut">修改场所</el-button>
+                <venues-dialog :dialog-user-sr="isActive_user" @cActive_user="changeActive_user" ref="userVenuesSr"></venues-dialog>
             </el-row>
 
             <el-row>
@@ -100,27 +101,22 @@
                 <el-button @click="handleCancel" type="warning">取消</el-button>
                 <el-button @click="handleSubmit()" type="primary">确定</el-button>
             </div>
-
-          <venues-select :dialog-visible-venues-select="isActive_modify" @cActive_modify="changeActive_modify" @cmodify="handleRewrite" ref="mymodifychild"></venues-select>
 </div>
 </template>
 
 <script>
-
 import { RegionSelects } from 'v-region';
-import VenuesSelect from './VenuesSelect';
 import global from '../global.vue';
-
+import userSr from './limit/userSr'
 export default {
   components: {
       RegionSelects,
-      'venues-select': VenuesSelect
+      'venues-dialog': userSr,
   },
   data () {
     return {
         message: '来自子组件的消息',
         imageUrl: global.httpUrl,
-        isActive_modify:false,
         fileRemove:'',
         fileUpload:'',
         fileList:[],
@@ -149,6 +145,8 @@ export default {
         identityOrigin: '',
         svName:'',
         svId:'',
+        isActive_user: false,
+        userId:'',
         form: {
             userNm: '',
             loginNm: '',
@@ -177,13 +175,14 @@ export default {
         this.getRolesList();
         //获取修改信息
         let userId=this.$route.query.userId;
+        this.userId=userId;
         this.getModifyUser(userId);
     },
     //方法
     methods: {
         //获取用户信息
         getModifyUser(userId){
-            this.$axios.get('/user/getMoUser', {
+            this.$axios.get('/user/getModify', {
                 params: {
                     userId: userId,
                 }
@@ -208,10 +207,10 @@ export default {
                     //图片处理
                     this.form.userPhotoUrl = successResponse.data.result[0].userPhotoUrl;
                     this.fileList=successResponse.data.result[0].fileList;
-                    this.venuesSelects=successResponse.data.result[0].selectVenues;
+                   //this.venuesSelects=successResponse.data.result[0].selectVenues;
 
-                    this.svName=successResponse.data.result[0].venuesNm;
-                    this.svId=successResponse.data.result[0].relVenuesId;
+                    //this.svName=successResponse.data.result[0].venuesNm;
+                    //this.svId=successResponse.data.result[0].relVenuesId;
                 }else{
                     let message=successResponse.data.message;
                     this.$message({message: message,type: 'warning'});
@@ -250,7 +249,7 @@ export default {
             city: this.city,
             area: this.area,
             town: this.town,
-            relVenuesId:this.venuesIds,
+            //relVenuesId:this.venuesIds,
             userId: this.$route.query.userId,
             identityOrigin:this.identityOrigin,
 
@@ -296,26 +295,19 @@ export default {
           if(''===town || typeof(town) == "undefined" || null===town){
               this.$alert("请先选择所在街镇");
           }else{
-
-              this.$refs.mymodifychild.venuesList = this.venuesList;
-              this.$refs.mymodifychild.selects = this.venuesSelects;
-              this.$refs.mymodifychild.venuesIds=this.svId;
-              this.$refs.mymodifychild.venuesNms=this.svName;
-              this.venuesIds =this.svId;
-              this.form.venuesName=this.svName;
-              this.isActive_modify = true;
+                this.isActive_user= true;
+                var dataUser=[];
+                dataUser[0]=this.userId;
+                dataUser[1]=this.form.userNm;
+                dataUser[2]=this.venuesList;
+                this.$refs.userVenuesSr.getSrVenues(dataUser);
           }
         },
-        handleRewrite () {
-            this.venuesIds = this.$refs.mymodifychild.venuesIds;
-            this.form.venuesName= this.$refs.mymodifychild.venuesNms;
-            this.isActive_modify = false;
+       changeActive_user() {
+           this.isActive_user= false;
+           this.getModifyUser(this.userId);
         },
-        changeActive_modify () {
-            this.venuesIds =this.svId;
-            this.form.venuesName=this.svName;
-            this.isActive_modify = false;
-        },
+
 
         //区域
         regionChange (data) {
@@ -336,8 +328,8 @@ export default {
               this.area=areaKey;
         },
         regionChangeTown (data) {
-               this.venuesIds = '';
-               this.form.venuesName= '';
+               //this.venuesIds = '';
+               //this.form.venuesName= '';
                var provinceKey='';
                var cityKey='';
                var areaKey='';
@@ -353,7 +345,7 @@ export default {
                }
                if(''!==data.town && typeof(data.town) != "undefined"){
                    townKey=data.town.key;
-                   this. getVenuesList('');
+                   this.getVenuesList('');
                }
                 this.province=provinceKey;
                 this.city=cityKey;
@@ -362,8 +354,8 @@ export default {
         },
         //角色
         getRolesList(){
-            this.venuesIds = '';
-            this.form.venuesName= '';
+            //this.venuesIds = '';
+            //this.form.venuesName= '';
             this.$axios.get('/role/getRoles').then(successResponse => {
                 if (successResponse.status === 200) {
                     this.rolesList=successResponse.data;
@@ -395,7 +387,6 @@ export default {
                 this.isShowBut =false;
                 this.isShowOne =false;
                 this.isShowTwo =false;
-
             }
         },
         // 删除图片

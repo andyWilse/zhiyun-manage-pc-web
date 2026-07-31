@@ -159,7 +159,8 @@ export default {
                        this.$emit('cActive_add');
 
                    }else{
-                       this.$router.replace({path: '/'});
+                       let mes= successResponse.data.message;
+                       this.$message({type: "error", message: mes,});
                    }
            })
 

@@ -278,7 +278,7 @@ methods: {
                 this.form.responsiblePerson= successResponse.data.result[0].responsiblePerson ;
                 this.form.groupMembers= successResponse.data.result[0].groupMembers ;
                 this.form.liaisonMan= successResponse.data.result[0].liaisonMan ;
-                this.form.userSr= venueDetail.userSr;
+                this.form.userSr= successResponse.data.result[0].userSr;
                 this.form.briefIntroduction= successResponse.data.result[0].briefIntroduction ;
                 this.form.venuesStaff = successResponse.data.result[0].venuesStaff ;
                 this.staffIds = successResponse.data.result[0].venuesStaffId ;
@@ -513,6 +513,7 @@ methods: {
     },
     changeActive_sr() {
        this.isActive_sr= false;
+       this.getVenue();
     },
 
   },

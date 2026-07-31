@@ -75,6 +75,7 @@ export default {
       venuesName:'',
       srData:[],
       veAddData:[],
+      uvId:0,
       cActive_add: false,
     }
   },
@@ -112,14 +113,14 @@ export default {
     //删除1
     srDelete (index, rows) {
         let us=rows[index];
-        let uvId=us.uvId;
+        this.uvId=us.uvId;
         let ope='将( '+us.userNm+' )从场所('+this.venuesName+')删除';
         this.$confirm('此操作会'+ope+', 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.deleteData(uvId,ope);
+            this.deleteData(this.uvId,ope);
         }).catch(() => {
             this.$message.info('已取消删除');
         });
@@ -131,8 +132,10 @@ export default {
             operation: ope,
             }).then(successResponse => {
                 if (successResponse.data.code === 200) {
+                    this.$message({message: ope+'成功', type: 'success'});
                     this.getVenuesSr(this.srData);
                 }else{
+                     this.$message({type: "error", message: successResponse.data.message,});
                     this.$router.replace({path: '/'});
                 }
         })
