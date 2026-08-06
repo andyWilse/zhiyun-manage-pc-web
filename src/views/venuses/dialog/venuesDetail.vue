@@ -5,33 +5,33 @@
             <el-row :gutter="24">
                 <el-col :span="20">
                     <el-form-item label="所属机构"  prop="organization">
-                        <el-input v-model="form.organization" clearable></el-input>
+                        <el-input v-model="form.organization" :readonly="true" clearable></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="20">
                     <el-form-item label="登记证号" prop="registerNbr">
-                        <el-input v-model="form.registerNbr" clearable></el-input>
+                        <el-input v-model="form.registerNbr" readonly clearable></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="经度"  prop="longitude">
-                        <el-input v-model="form.longitude" clearable></el-input>
+                        <el-input v-model="form.longitude" readonly clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="维度" prop="latitudes">
-                        <el-input v-model="form.latitudes" clearable></el-input>
+                        <el-input v-model="form.latitudes" readonly clearable></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
 
         <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">关闭</el-button>
+        <el-button @click="handleCancel" type="warning">关闭</el-button>
         </span>
     </el-dialog>
   </div>

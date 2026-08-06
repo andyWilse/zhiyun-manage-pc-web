@@ -51,17 +51,17 @@
               </el-form-item>
            </el-col>
 
-           <el-col :span="6">
+           <el-col :span="3">
               <el-button icon="el-icon-search" type="primary" @click="handleSearch">查询</el-button>
            </el-col>
 
-           <el-col :span="6">
+           <el-col :span="3">
              <download-excel :before-generate="startDownload"
                              :fetch="fetchData"
                              :before-finish="finishDownload"
                              :fields="fields"
                              :name="excelName">
-                  <el-button type="primary" icon="el-icon-download" >导出excel</el-button>
+                  <el-button type="success" icon="el-icon-download" >导出excel</el-button>
              </download-excel>
             </el-col>
         </el-row>
@@ -93,7 +93,7 @@
            prop="warnTime"
            label="预警时间"
            align="center"
-           width="180">
+           width="165">
       </el-table-column>
 
       <el-table-column
@@ -127,18 +127,27 @@
       <el-table-column
           prop="handleTime"
           label="处理时间"
-          width="180"
+          width="165"
           align="center">
       </el-table-column>
 
-      <el-table-column  align="center" label="操作" width="180">
+      <el-table-column  align="center" label="操作" width="220">
           <template slot-scope="scope">
+            <div align="left">
             <el-button @click.native.prevent="handleClick(scope.$index, tableData)" style="padding:5px;" type="primary">
               查看详情
            </el-button>
             <el-button @click.native.prevent="handleDelete(scope.$index, tableData)" style="padding:5px;" type="danger" :style="{display: eventDel}">
-                       删除
-                     </el-button>
+               删除
+             </el-button>
+              <el-button @click.native.prevent="modifyClick(scope.$index, tableData)"
+                 v-if="tableData[scope.$index].eventState=='已完成'"
+                type="primary"
+                style="padding:5px;"
+                :style="{ display: eventMod }">
+                修改
+             </el-button>
+             </div>
           </template>
       </el-table-column>
     </el-table>
@@ -166,6 +175,7 @@ export default {
       message: '',
       isShow: true,
       eventDel:'none',
+      eventMod:'none',
       tempList: [],
       //查询
       tableData:[],
@@ -202,6 +212,7 @@ export default {
 created(){
     this.getEventSelect();
     this.eventDel=this.$gloMsg.eventDel;
+    this.eventMod=this.$gloMsg.eventMod;
   },
   methods: {
     handleSearch () {
@@ -313,7 +324,12 @@ created(){
     handleClick(index, rows){
       //this.isActive=true;
       let procInstId=this.tableData[index].procInstId;
-      this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
+      let warnTime=this.tableData[index].warnTime;
+      if(warnTime<'2026-06-29'){
+            this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
+      }else{
+            this.$router.push({path: '/aiTaskDetail',query:{ procInstId:procInstId}});
+      }
       //this.$refs.myCommentChild.getComment(procInstId);
     },
     //删除
@@ -356,6 +372,13 @@ created(){
                 this.$message({message: message,type: 'warning'});
               }
         })
+    },
+
+    //修改
+    modifyClick (index, rows) {
+      this.index_modify = index;
+      let procInstId= this.tableData[this.index_modify].procInstId;
+      this.$router.push({path: '/aiTaskModify',query:{ procInstId:procInstId}});
     },
 
   }

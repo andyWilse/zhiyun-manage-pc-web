@@ -13,8 +13,8 @@
               node-key="id"/>
         </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button @click="handleSubmit">确定</el-button>
+        <el-button @click="handleCancel" type="warning">取消</el-button>
+        <el-button @click="handleSubmit" type="primary">确定</el-button>
       </span>
 
     </el-dialog>

@@ -51,7 +51,7 @@
       </add-dialog>
 
         <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">关闭</el-button>
+        <el-button @click="handleCancel" type="warning">关闭</el-button>
         </span>
     </el-dialog>
   </div>

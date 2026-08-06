@@ -46,8 +46,8 @@
 
           
       <span slot="footer" class="dialog-footer">
-          <el-button @click="handleCancel">取消</el-button>
-          <el-button @click="handleSubmit()">保存</el-button>
+          <el-button @click="handleSubmit()" type="primary">保存</el-button>
+          <el-button @click="handleCancel" type="warning">取消</el-button>
         </span>
 
         <div style="display:flex;justify-content:flex-start">

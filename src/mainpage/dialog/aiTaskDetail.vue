@@ -51,13 +51,13 @@
                <el-step  v-for="(item , index) in data.taskComment" :id="index" class="stepClass">
                     <template slot="description" >
 	                    <div class="contentClass" :style="{color: data.handleResults == '1' ? '#282828' : ''}">
-                            <h3 :class="uiStyle + '_fontSize14'" v-if="item.sendNames" class="oneClass">推送：{{ item.sendNames }}</h3>
-                            <h3 :class="uiStyle + '_fontSize14'" v-if="item.handlePerson" class="oneClass">
-                                {{ index == 0 ? '发起：' : (index == data.taskComment.length - 1 ? '处置人：' : '上报：') }}{{ item.handlePerson }}
-                            </h3>
-                            <p :class="uiStyle + '_fontSize12'" v-if="item.handleTime">{{ item.handleTime }}</span></p>
-                            <p :class="uiStyle + '_fontSize12'" v-if="item.sendTime">{{ item.sendTime }}</span></p>
-                            <p :class="uiStyle + '_fontSize12'" v-if="item.hasOwnProperty('feedBack') && item.feedBack">{{ item.feedBack }}</p>
+                            <h3 :class="uiStyle + '_fontSize14'" v-if="" class="oneClass">{{item.actNode}}：{{item.actReceiver}}</h3>
+                            <p :class="uiStyle + '_fontSize12'" v-if="item.actCode===20010003 || item.actCode===20010006">
+                              {{ item.actHandleTime }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   处置人：{{item.actHandNm}}
+                            </span></p>
+                            <p :class="uiStyle + '_fontSize12'" v-if="item.hasOwnProperty('actComment') && item.actComment">
+                            反馈：{{ item.actComment }}
+                            </p>
                             <div v-if="item.picture !==undefined && item.picture != null  && item.picture.length > 0">
                                 <VViewer
                                     :options="item.picture"
@@ -98,28 +98,19 @@ import VViewer from './imageUtil';
 			getTaskDetail() {
 
 			    let id=this.$route.query.procInstId;
-                this.$axios.get('/task/pc/getTaskDetail', {
+                this.$axios.get('/task/pc/getAiTaskDetail', {
                       params: {
                         procInstId:id,
                       }
                     }).then(successResponse => {
                       if (successResponse.data.code === 200) {
-                      this.data=successResponse.data.result[0];
+                        this.data=successResponse.data.result[0];
                         this.tableData=successResponse.data.result[0].taskComment;
                       }else{
                         this.$alert('任务信息获取失败,请联系管理员！');
                       }
                     })
 			},
-
-			 aaa(item) {
-
-                  var viewer = new Viewer(document.getElementById(item.url), {
-
-                      url: item.url,
-
-               });
-            },
         }
 	}
 </script>

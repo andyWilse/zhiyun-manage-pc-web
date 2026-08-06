@@ -50,7 +50,7 @@
           prop="operateType"
           label="操作类型"
           align="center"
-          width="150">
+          width="200">
       </el-table-column>
 
       <el-table-column

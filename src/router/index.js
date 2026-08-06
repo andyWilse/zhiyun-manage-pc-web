@@ -4,6 +4,7 @@ import VueRouter from 'vue-router' //引入 Vue 路由
 import layOut from '@/mainpage/layOut';
 import firstPage from '@/mainpage/dialog/FirstPage';
 import taskDetail from '@/mainpage/dialog/taskDetail';
+import aiTaskDetail from '@/mainpage/dialog/aiTaskDetail';
 
 import loginView from '@/views/loginView';
 import venuesIndexs from '@/views/venuses/venuesIndex';
@@ -15,6 +16,7 @@ import managerAdd from '@/views/manager/managerAdd';
 import managerModify from '@/views/manager/managerModify';
 import logIndex from '@/views/syspage/LogIndex';
 import eventIndex from '@/views/syspage/EventIndex';
+import aiTaskModify from '@/views/syspage/detail/aiTaskModify';
 import monitorIndex from '@/views/monitor/MonitorIndex';
 import monitorNow from '@/views/monitor/MonitorNow';
 import monitorBack from '@/views/monitor/MonitorBack';
@@ -49,6 +51,7 @@ export const constantRouterMap = [
         children:[
             {path:'/firstPage',name:'firstPage',component:firstPage, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
             {path:'/taskDetail',name:'taskDetail',component:taskDetail, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
+            {path:'/aiTaskDetail',name:'aiTaskDetail',component:aiTaskDetail, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
             {path:'/venuesIndex',name:'venuesIndexss- ',component:venuesIndexs,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/venusesAdd',name:'venusesAdd',component:venusesAdd,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/venusesModify',name:'venusesModify',component:venusesModify,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
@@ -59,6 +62,7 @@ export const constantRouterMap = [
             {path:'/logIndex',name:'logIndex',component:logIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/monitorIndex',name:'monitorIndex',component:monitorIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/eventIndex',name:'eventIndex',component:eventIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
+            {path:'/aiTaskModify',name:'aiTaskModify',component:aiTaskModify,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/userIndex',name:'userIndex',component:userIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/userAdd',name:'userAdd',component:userAdd,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/userModify',name:'userModify',component:userModify,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
