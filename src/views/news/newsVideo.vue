@@ -204,12 +204,12 @@ export default {
         reader.onload = e => {
                 bas = e.target.result;
                 // 此处可对该base64进行获取赋值传入后端
-                this.$axios.post('/file/uploadVi',{
+                this.$axios.post('/file/uploadVideo',{
                     fileContent:bas,
                     fileName:file.file.name
                 }).then(successResponse => {
                     if (successResponse.status === 200) {
-
+                        this.$message({message: '视频上传成功！', type: 'success'});
                     }else{
                         this.$router.replace({path: '/error'})
                     }
