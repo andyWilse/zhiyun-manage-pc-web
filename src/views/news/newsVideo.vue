@@ -27,8 +27,10 @@
       <!-- 方框样式 -->
       <el-upload
         class="avatar-uploader"
-        action="http://183.246.59.33:7081/api/file/uploadVideo"
         multiple
+        ref="upload"
+        action="#"
+        :http-request="customUpload"
         :show-file-list="false"
         :on-preview="handlePreview"
         :on-success="handleVideoSuccess"
@@ -195,6 +197,25 @@ export default {
     handlePreview(file) {
        console.log(file);
     },
+    customUpload(file) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file.file);
+        let bas ='';
+        reader.onload = e => {
+                bas = e.target.result;
+                // 此处可对该base64进行获取赋值传入后端
+                this.$axios.post('/file/uploadVi',{
+                    fileContent:bas,
+                    fileName:file.file.name
+                }).then(successResponse => {
+                    if (successResponse.status === 200) {
+
+                    }else{
+                        this.$router.replace({path: '/error'})
+                    }
+                })
+           }
+       },
   }
 }
 </script>
