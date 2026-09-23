@@ -46,14 +46,14 @@
                 </template>
             </el-table-column>
         </el-table>
-
-      <add-dialog :dialog-sr-user-add="cActive_add" @cActive_add="changeActive_add"  ref="srUser">
-      </add-dialog>
-
         <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel" type="warning">关闭</el-button>
         </span>
     </el-dialog>
+
+
+      <add-dialog :dialog-sr-user-add="cActive_add" @cActive_add="changeActive_add"  ref="srUser">
+      </add-dialog>
   </div>
 </template>
 
@@ -84,24 +84,32 @@ export default {
     this.veDel=this.$gloMsg.veDel;
   },
   methods: {
-    /*三人驻堂反显*/
+    /*三人驻堂反显(场所新增)*/
     getVenuesSr(data){
-        this.srData=data;
-        this.venuesId=data[0];
-        this.venuesName=data[1];
-        this.$axios.get('/user/getSr', {
-            params: {
-                venuesId: this.venuesId,
-            }
-        }).then(successResponse => {
-            if (successResponse.data.code=== 200) {
-                this.tableData=successResponse.data.result;
-            }else{
-                this.$router.replace({path: '/error'})
-            }
-        })
 
     },
+
+    /*三人驻堂反显(修改)*/
+        getVenuesSr(data){
+            this.srData=data;
+            this.venuesId=data[0];
+            this.venuesName=data[1];
+            if(null!=this.venuesId){
+                this.$axios.get('/user/getSr', {
+                    params: {
+                        venuesId: this.venuesId,
+                    }
+                }).then(successResponse => {
+                    if (successResponse.data.code=== 200) {
+                        this.tableData=successResponse.data.result;
+                    }else{
+                        this.$router.replace({path: '/error'})
+                    }
+                })
+            }else{
+                this.tableData=this.$refs.srUser.redisSr;
+            }
+        },
     handleCancel () {
       // 对应事件cActive
       this.$emit('cActive_sr');

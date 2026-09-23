@@ -2,8 +2,6 @@
 	<div class="page padding15">
 		<div class="head">
 			<div class="title weight900 blackColor" :class="uiStyle + '_fontSize14'">我的任务</div>
-			<div class="btns">
-			</div>
 		</div>
 		<!-- 任务 -->
 		<div class="task">
@@ -98,6 +96,7 @@ import VViewer from './imageUtil';
 			getTaskDetail() {
 
 			    let id=this.$route.query.procInstId;
+			    this.procInstId=id;
                 this.$axios.get('/task/pc/getAiTaskDetail', {
                       params: {
                         procInstId:id,

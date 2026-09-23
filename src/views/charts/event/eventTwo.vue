@@ -84,6 +84,7 @@ import * as echarts from 'echarts'
           var SDataSuper = [];
           var SDataImportant = [];
           var SDataPart = [];
+          var SDataUnusual = [];
           for (var i = 0; i < result.length; i++) {
               var item = result[i];
               XData.push(item.date);
@@ -91,6 +92,7 @@ import * as echarts from 'echarts'
               SDataSuper.push(item.super);//02-超限
               SDataImportant.push(item.important);//03-重点
               SDataPart.push(item.part);//04-聚集
+              SDataUnusual.push(item.unusual);//06-画面异常
           }
         this.lineChart = echarts.init(this.$refs.lineChart);
         this.lineChart.setOption({
@@ -110,7 +112,7 @@ import * as echarts from 'echarts'
                     icon: '',
                       left: 'right',
                       top: 0,
-                      data: ['集聚', '超限', '重点','明火'],
+                      data: ['集聚', '超限', '重点','明火','画面异常'],
                       "textStyle": {
                           "fontSize": 8
                 },
@@ -163,6 +165,12 @@ import * as echarts from 'echarts'
                     name: '集聚',
                     type: 'line',
                     data: SDataPart
+                },
+                {
+                    name: '画面异常',
+                    type: 'line',
+                    // smooth: true, // 平滑曲线显示
+                    data:SDataUnusual
                 },
                 {
                     name: '明火',

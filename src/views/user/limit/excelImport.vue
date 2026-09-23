@@ -33,7 +33,6 @@
                             3.上传文件只能是xls、xlsx格式;<br/>
                          </span>
                     </div>
-                    </el-upload>
                 </el-form-item>
 
            </el-form>

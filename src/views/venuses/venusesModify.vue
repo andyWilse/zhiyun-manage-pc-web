@@ -108,9 +108,6 @@
             <el-col :span="3">
                 <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="modifySrClick" v-show="srShow">修改三人驻堂</el-button>
             </el-col>
-
-             <sr-dialog :dialog-venues-sr="isActive_sr" @cActive_sr="changeActive_sr"ref="venuesUserSr"></sr-dialog>
-
         </el-row>
         <el-row :gutter="24">
               <el-col :span="17">
@@ -174,6 +171,8 @@
         <add-item :dialog-visible-manager-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
         <staff-item :dialog-visible-staff="isActive_staff" @cActive_staff="changeActive_staff" @cStaff="handleStaff" ref="myStaffChild">
         </staff-item>
+        <sr-dialog :dialog-venues-sr="isActive_sr" @cActive_sr="changeActive_sr"ref="venuesUserSr"></sr-dialog>
+
     </div>
 </template>
 
@@ -198,6 +197,7 @@ export default {
       veId:'',
       isActive_staff: false,
       isActive: false,
+      isActive_sr: false,
       fzShow : false,
       liaShow : false,
       srShow : true,
@@ -243,7 +243,6 @@ export default {
         // 验证手机号 pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
 
     },
-    isActive_sr: false,
     }
   },
   created(){

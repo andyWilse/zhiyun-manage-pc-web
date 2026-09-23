@@ -1,5 +1,9 @@
 <template>
-    <div>
+<div>
+      <el-button class="veQueryClass" icon="el-icon-search" type="primary" @click="hisSearch" :style="{ display: userMod }">
+     			        查看历史版本
+     			    </el-button>
+
         <el-table
             :data="tableData"
             border
@@ -17,6 +21,13 @@
               prop="actReceiver"
               label="接收人"
               width=""
+              align="center">
+            </el-table-column>
+
+            <el-table-column
+              prop="actReceiveTime"
+              label="接收时间"
+              width="180"
               align="center">
             </el-table-column>
 
@@ -155,7 +166,9 @@ export default {
                 }
             })
         },
-
+        hisSearch(){
+            this.$router.push({path: '/actHisDetail',query:{ procInstId:this.procInstId}});
+        },
     },
 
 }

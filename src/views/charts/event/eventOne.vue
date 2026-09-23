@@ -6,30 +6,36 @@
             <img class="icon" src="/image/icon015.png" style="height: 15px;margin-right: 5px;" />
         </div>
         <div class="name" style="position: absolute;top:10px;left: 30px;">AI预警动态数据</div>
-         <div class="part" style="position: absolute;top:10px;left: 990px;">
+         <div class="part" style="position: absolute;top:10px;left: 72%;">
              <el-button  round icon="el-icon-tian" @click="searchByHand('04')" :type="partType"
              style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                    <span>聚集</span>
              </el-button>
          </div>
-        <div class="super" style="position: absolute;top:10px;left: 1045px;">
+        <div class="super" style="position: absolute;top:10px;left: 77%;">
              <el-button  round icon="el-icon-tian" @click="searchByHand('02')" :type="superType"
              style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                    <span>超限</span>
              </el-button>
          </div>
-         <div class="important" style="position: absolute;top:10px;left: 1100px;">
+         <div class="important" style="position: absolute;top:10px;left: 82%;">
               <el-button  round icon="el-icon-tian" @click="searchByHand('03')" :type="importantType"
               style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                     <span>重点</span>
               </el-button>
          </div>
-         <div class="fire" style="position: absolute;top:10px;left: 1155px;">
+         <div class="fire" style="position: absolute;top:10px;left: 87%;">
               <el-button  round icon="el-icon-tian" @click="searchByHand('01')" :type="fireType"
               style="width: 45px;left:0;padding: 2px;text-align:justify;height: 28px;">
                     <span>明火</span>
               </el-button>
          </div>
+         <div class="unusual" style="position: absolute;top:10px;left: 92%;">
+               <el-button  round icon="el-icon-tian" @click="searchByHand('06')" :type="unusualType"
+               style="width: 72px;left:0;padding: 2px;text-align:justify;height: 28px;">
+                     <span>画面异常</span>
+               </el-button>
+          </div>
     </div>
 </template>
 <script>
@@ -43,6 +49,7 @@ import * as echarts from 'echarts'
             superType:"",
             importantType:"",
             fireType:"",
+            unusualType:"",
             partType:"primary",
         };
     },
@@ -60,22 +67,32 @@ import * as echarts from 'echarts'
                 this.importantType="";
                 this.fireType="";
                 this.partType="";
+                this.unusualType = "";
             }else if('03'===type){
                 this.superType="";
                 this.importantType="primary";
                 this.fireType="";
                 this.partType="";
+                this.unusualType = "";
             }else if('01'===type){
                this.superType="";
                this.importantType="";
                this.fireType="primary";
                this.partType="";
+               this.unusualType = "";
            }else if('04'===type){
                this.superType="";
                this.importantType="";
                this.fireType="";
                this.partType="primary";
-           }
+               this.unusualType = "";
+           }else if('06'===type){
+              this.superType="";
+              this.importantType="";
+              this.fireType="";
+              this.partType="";
+              this.unusualType = "primary";
+          }
         },
         //获取
         getZxtDay(eventType) {

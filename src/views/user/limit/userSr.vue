@@ -127,15 +127,10 @@ export default {
                     this.$message({message: ope+'成功', type: 'success'});
                     this.getSrVenues(this.srData);
                 }else{
-                    this.$message({type: "error", message: successResponse.data.message,});
+                    this.$message({type: "error", message: successResponse.data.message});
                     this.$router.replace({path: '/'});
                 }
         })
-    },
-    changeActive_addVe () {
-        this.cActive_addVe = false;
-        this.$alert(this.srData);
-        this.getSrVenues(this.srData);
     },
     handleRewrite () {
         this.cActive_addVe = false;

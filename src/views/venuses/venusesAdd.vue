@@ -82,6 +82,16 @@
            </el-col>
         </el-row>
         <el-row :gutter="24">
+        <el-col :span="7">
+            <el-form-item label="三人驻堂" prop="userSr">
+                <el-input v-model="form.userSr" clearable></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="3">
+            <el-button class="liaClass" icon="el-icon-circle-plus-outline" type="primary" @click="addSrClick" v-show="srShow">新增三人驻堂</el-button>
+        </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-button class="staffClass" icon="el-icon-circle-plus-outline" type="primary" @click="staffClick">选择教职人员</el-button>
               <el-col :span="20">
                 <el-form-item label="教职人员:" prop="venusesStaff">
@@ -142,6 +152,8 @@
         <add-item :dialog-visible-manager-add="isActive" @cActive="changeActive" @cAdd="handleAdd" ref="myaddchild"></add-item>
         <staff-item :dialog-visible-staff="isActive_staff" @cActive_staff="changeActive_staff" @cStaff="handleStaff" ref="myStaffChild">
         </staff-item>
+        <sr-dialog :dialog-venues-sr="isActive_sr" @cActive_sr="changeActive_sr" ref="venuesUserSr"></sr-dialog>
+
     </div>
 </template>
 
@@ -150,12 +162,14 @@ import { RegionSelects } from 'v-region';
 import managerAdd from './managerAdd'
 import staffSelect from './StaffSelect'
 import global from '../global.vue'
+import sr from './dialog/venuesSr'
 
 export default {
   components: {
       RegionSelects,
       'add-item': managerAdd,
       'staff-item': staffSelect,
+      'sr-dialog': sr,
   },
   data () {
     return {
@@ -163,8 +177,10 @@ export default {
       imageUrl: global.httpUrl,
       isActive_staff: false,
       isActive: false,
+      isActive_sr: false,
       fzShow : false,
       liaShow : false,
+      srShow : true,
       groShow : false,
       selectedOptions: [],
       religiousSects:[],
@@ -172,6 +188,7 @@ export default {
       fileUpload:'',
       fileList:[],
       staffIds:'',
+      veUserSr:'',
       region:'',
       regions: {
           province: '330000',
@@ -188,6 +205,7 @@ export default {
         venuesAddres: '',
         responsiblePerson:'',
         liaisonMan : '',
+        userSr : '',
         groupMembers:'',
         briefIntroduction :'',
         picturesPath:'',
@@ -258,7 +276,7 @@ methods: {
       this.region=province + city + area + town;
     },
 
-    handleSubmit () {
+    handleSubmit00 () {
       this.$refs.form.validate(valid => {
         if (valid) {
           //图片校验
@@ -274,8 +292,10 @@ methods: {
       });
     },
     //保存
+    handleSubmit () {
+    this.handleSubmitPost();
+    },
    handleSubmitPost(){
-
      //数据保存
      this.$axios.post('/venues/add', {
           venuesName: this.form.venuesName,
@@ -294,7 +314,8 @@ methods: {
           briefIntroduction: this.form.briefIntroduction,
           venuesStaff:this.staffIds,
           picturesPath: this.form.picturesPath,
-          picturesPathRemove: this.fileRemove
+          picturesPathRemove: this.fileRemove,
+          veUserSr:this.veUserSr
 
         }).then(successResponse => {
            let message=successResponse.data.result;
@@ -440,6 +461,28 @@ methods: {
         //this.ruleForm.userHeaderPicture = res.result;
         this.form.picturesPath=this.form.picturesPath+res.result+',';
         this.fileList1 = fileList;
+    },
+
+    //修改三人驻堂
+    addSrClick(){
+        this.isActive_sr= true;
+        var data=[];
+        data[0]=null;
+        data[1]=null;
+        this.$refs.venuesUserSr.getVenuesSr(data);
+    },
+    changeActive_sr() {
+       this.isActive_sr= false;
+       //三人驻堂
+       let data=this.$refs.venuesUserSr.tableData;
+       if(null!==data){
+           for(var i = 0; i < data.length; i++){
+               let userId=data[i].userId;
+               let userNm=data[i].userNm;
+               this.veUserSr=this.veUserSr+userId + ',';
+               this.form.userSr=this.form.userSr+userNm + ',';
+           }
+       }
     },
   },
 }

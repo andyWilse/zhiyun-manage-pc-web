@@ -12,6 +12,15 @@
             <el-input v-model="searchForm.three" placeholder="负责人" clearable></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="排序:">
+            <el-select v-model="searchForm.five" placeholder="">
+                 <el-option label="三人驻堂（从多到少）" value="01"></el-option>
+                 <el-option label="三人驻堂（从少到多）"" value="02"></el-option>
+                 <el-option label="最新修改时间"" value="03"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         </el-row>
         <el-row>
         <el-col :span="8">
@@ -194,6 +203,7 @@ export default {
         two: null,
         three: null,
         four: null,
+        five: '01',
         value: null,
         key: null,
         time: '',
@@ -283,8 +293,6 @@ export default {
       this.initTableData()
     },
     handleSearch () {
-     //alert(this.$gloMsg.city);
-
         this.page =1;
       //this.searchList = []; // 每次搜索,要将上次的搜索结果searchList清空
       this.initTableData();
@@ -327,6 +335,7 @@ export default {
           responsiblePerson: this.searchForm.three,
           religiousSect: this.searchForm.four,
           venuesPhone: this.searchForm.two,
+          orderBy: this.searchForm.five,
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

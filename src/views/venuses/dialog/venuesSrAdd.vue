@@ -1,6 +1,6 @@
 <template>
   <div>
-      <el-dialog title="场所选择" :visible="dialogSrUserAdd" :before-close="handleClose" width="50%">
+      <el-dialog title="选择用户：" :visible="dialogSrUserAdd" :before-close="handleClose" width="50%">
       <el-form :model="searchForm" label-width="100px" class="searchForm">
           <el-row >
            <el-col :span="12">
@@ -42,9 +42,7 @@
                 align="center">
             </el-table-column>
       </el-table>
-      
 
-          
       <span slot="footer" class="dialog-footer">
           <el-button @click="handleSubmit()" type="primary">保存</el-button>
           <el-button @click="handleCancel" type="warning">取消</el-button>
@@ -79,6 +77,7 @@ export default {
       searchForm: {
           one: null
       },
+      redisSr:[],
     }
   },
 
@@ -147,23 +146,27 @@ export default {
        handleSubmit(){
            let uData= this.veAddData;
            let venuesId=uData[0];
-           let venuesName=uData[1];
-           let selects=this.selectData;
-           this.$axios.post('/user/addSr/',{
-               userList: this.selectData,
-               venuesId: venuesId,
-               venuesName: venuesName,
-               }).then(successResponse => {
-                   if (successResponse.data.code === 200) {
-                       this.$message({message: '三人驻堂成员添加成功！', type: 'success'});
-                       this.$emit('cActive_add');
+           if(null!==venuesId && ''!==venuesId){
+               let venuesName=uData[1];
+               let selects=this.selectData;
+               this.$axios.post('/user/addSr/',{
+                   userList: this.selectData,
+                   venuesId: venuesId,
+                   venuesName: venuesName,
+                   }).then(successResponse => {
+                       if (successResponse.data.code === 200) {
+                           this.$message({message: '三人驻堂成员添加成功！', type: 'success'});
+                           this.$emit('cActive_add');
 
-                   }else{
-                       let mes= successResponse.data.message;
-                       this.$message({type: "error", message: mes,});
-                   }
-           })
-
+                       }else{
+                           let mes= successResponse.data.message;
+                           this.$message({type: "error", message: mes,});
+                       }
+               })
+           }else{
+               this.redisSr=this.selectData;
+               this.$emit('cActive_add');
+           }
        },
 
     }

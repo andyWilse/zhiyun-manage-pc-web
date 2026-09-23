@@ -11,13 +11,21 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="接收时间" prop="actReceiveTime">
-                        <el-date-picker v-model="form.actReceiveTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+                        <el-date-picker v-model="form.actReceiveTime"
+                        @change="actReceiveTmChange"
+                        type="datetime"
+                        placeholder="选择日期时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="处理时间" prop="actHandleTime">
-                        <el-date-picker v-model="form.actHandleTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+                        <el-date-picker v-model="form.actHandleTime"
+                        @change="actHandleTmChange"
+                        type="datetime"
+                        placeholder="选择日期时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -26,17 +34,14 @@
                 <el-col :span="14">
                     <el-form-item label="接收人" prop="actReceiver">
                         <div class="item" style="padding-left:77%;">
-                          <el-button @click.native.prevent="computedTableData()" style="padding:5px;" type="primary" :style="{ display: userDel }">
+                          <el-button @click="assAddClick"  style="padding:5px;" type="primary" :style="{ display: userDel }">
                             增加接收人
                           </el-button>
-                          <ass-dialog :dialog-ass-add="cAss_add" @cAss_add="changeAss_add" ref="assAddChild"> </ass-dialog>
                           </div>
                          <el-table
                             :data="rTableData"
                             border
                             stripe
-                            @cell-mouse-enter="handleCellEnter"
-                            @cell-mouse-leave="handleCellLeave"
                             style="width: 95%">
 
                             <el-table-column
@@ -44,10 +49,6 @@
                                 label="接收人"
                                 align="center"
                                 width="130">
-                                <div class="item" slot-scope="scope">
-                                  <el-input class="item_input" v-model="scope.row.assAssignee" placeholder="请输入内容" clearable></el-input>
-                                  <div class="item_txt" >{{scope.row.assAssignee}}</div>
-                                </div>
                             </el-table-column>
 
                             <el-table-column
@@ -55,10 +56,6 @@
                                 label="电话"
                                 align="center"
                                 width="150">
-                            <div class="item" slot-scope="scope">
-                              <el-input class="item_input" v-model="scope.row.assMobile" placeholder="请输入内容"></el-input>
-                              <div class="item_txt" >{{scope.row.assMobile}}</div>
-                            </div>
                             </el-table-column>
                             <el-table-column
                               align="center"
@@ -73,7 +70,19 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="10">
+        <el-col :span="10">
+        <el-form-item label="处理人：" prop="actHandler">
+            <el-select v-model="form.actHandler" @change="actHandChange" clearable >
+              <el-option
+                  v-for="item in rTableData"
+                  :key="item.assMobile"
+                  :label="item.assAssignee"
+                  :value="item.assMobile"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+           <!--      <el-col :span="10">
                     <el-form-item label="处理人"  prop="actHandNm">
                         <el-table
                             :data="hTableData"
@@ -107,6 +116,7 @@
                          </el-table>
                     </el-form-item>
                 </el-col>
+        -->
             </el-row>
         </el-form>
 
@@ -116,11 +126,14 @@
             <el-button @click="handleCancel" type="warning">取消</el-button>
         </span>
     </el-dialog>
+    <ass-dialog :dialog-ass-add="cAss_add" @cAss_add="changeAss_add" ref="assAddRef"> </ass-dialog>
+
   </div>
 </template>
 
 <script>
 import assDialog from './taskAssAdd'
+
 
 export default {
     props: ['isactive', 'dialogActModify', 'index_from_parent'],
@@ -135,7 +148,13 @@ export default {
             rTableData:[],
             hTableData:[],
             form: {},
+            actReceiveTm:'',
+            actHandleTm:'',
+            addAssignee:[],
+            changeHandler:'',
+
             userDel:'none',
+            actHandNm:'',
             editProp: ['assAssignee', 'assMobile', 'actHandNm', 'actHandler'],
         }
     },
@@ -154,8 +173,10 @@ export default {
                 let result=response.result;
                 if (response.code === 200) {
                     this.rTableData = result.actReceiver;
-                    this.hTableData = result.actHandler;
+                    //this.hTableData = result.actHandler;
                     this.form = result.actDetail;
+                    this.actHandler = result.actHandler;
+                    this.actHandNm=result.actHandNm
                 }else{
                     this.$message({message: message,type: 'warning'});
                 }
@@ -171,36 +192,25 @@ export default {
           this.$emit('cAct_modify');
           done();
         },
-        /** 鼠标移入cell */
-        handleCellEnter (row, column, cell, event) {
-            const property = column.property
-            if (this.editProp.includes(property)) {
-                cell.querySelector('.item_input').style.display = 'block';
-                cell.querySelector('.item_txt').style.display = 'none';
-            }
-        },
-        /** 鼠标移出cell */
-        handleCellLeave (row, column, cell, event) {
-            const property = column.property
-            if (this.editProp.includes(property)) {
-                cell.querySelector('.item_input').style.display = 'none';
-                cell.querySelector('.item_txt').style.display = 'block';
-            }
-        },
         //保存
         handleSubmit () {
             //保存修改
             this.$axios.post('/aiWarnTask/saveAct',
             {
-                actReceiver:this.rTableData,
-                actHandler:this.hTableData,
-                actDetail:this.form
+                actId:this.form.actId,
+                actReceiveTm:this.actReceiveTm,
+                actHandleTm:this.actHandleTm,
+                addAssignee:this.addAssignee,
+                changeHandler:this.changeHandler,
             }
             ).then(successResponse => {
                 let response=successResponse.data;
                 let message=response.message;
                 if (response.code === 200) {
                     this.$message({message: '修改保存成功！', type: 'success'});
+                    this.addAssignee = [];
+                    this.$refs.assAddRef.redisSr = [];
+                    this.$emit('cAct_modify');
                 }else{
                      this.$message({message: message,type: 'warning'});
                      this.showAct(this.actId);
@@ -210,54 +220,82 @@ export default {
 
         //删除
         delReClick(index, rows) {
-            let assId=rows[index].assId;
+            let assId = rows[index].assId;
+            let assMobile = rows[index].assMobile;
+            let assAssignee = rows[index].assAssignee;
             this.$confirm('此操作将删除任务接收人, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.deleteConfirm(assId)
+                this.deleteConfirm(assId,assMobile,assAssignee,index)
             }).catch(() => {
                 this.$message.info('已取消删除');
             });
         },
-        deleteConfirm(assId){
-            this.$axios.post('/aiWarnTask/delAss/'+assId).then(successResponse => {
-                let response=successResponse.data;
-                let message=response.message;
-                if (response.code === 200) {
-                    this.$message({message: message, type: 'success'});
-                    this.showAct(this.actId);
-                }else{
-                    this.$message({message: message,type: 'warning'});
-                }
-            })
+        deleteConfirm(assId,assMobile,assAssignee,index){
+            if(0===assId){
+                this.rTableData.splice(index,1);
+                this.addAssignee.splice(index,1);
+            }else{
+                this.$axios.post('/aiWarnTask/delAss',
+                    {
+                        assId:assId,
+                        actId:this.actId,
+                        assMobile:assMobile,
+                        assAssignee:assAssignee
+                    }
+                ).then(successResponse => {
+                    let response=successResponse.data;
+                    let message=response.message;
+                    if (response.code === 200) {
+                        //this.$message({message: message, type: 'success'});
+                        this.rTableData.splice(index,1);
+                    }else{
+                        this.$message({message: message,type: 'warning'});
+                    }
+                })
+            }
+
         },
         //增加接收人
-        addReClick() {
+        assAddClick() {
             this.cAss_add = true;
-            this.$refs.assAddChild.init(this.actId);
+            this.$refs.assAddRef.getSelect();
         },
+        //接收人返回追加
         changeAss_add() {
             this.cAss_add= false;
-            this.showAct(this.actId);
+            let addAss=this.$refs.assAddRef.redisSr;
+            if(addAss.length>0){
+                this.addAssignee=addAss;
+                for (let i = 0; i < addAss.length; i++) {
+                  const item = addAss[i];
+                  let userMobile=item.userMobile;
+                  let userNm=item.userNm;
+                  let obj = { assAssignee: userNm, assMobile: userMobile };
+                  let newTableData=this.rTableData.concat(obj);
+                  this.rTableData=newTableData;
+                }
+            }
         },
-        //添加一行 1
-        computedTableData() {
-           const newData = this.rTableData; // 克隆原始数据
-           const customRow = { assAssignee: "", assMobile: "" }; // 自定义行内容
-           newData.splice(0, 0, customRow); // 插入到第二行位置
-           return newData;
+        //接收人新增
+        actHandChange(value) {
+           let resultArr = this.rTableData.filter((item)=>{
+              return item.assMobile === value;
+            });
+            let liveUserName = resultArr[0].assAssignee;
+            this.actHandNm = liveUserName;
+            this.actHandler = value;
+            this.changeHandler=value;
         },
-        //添加一行 2
-        handleAddDetails() {
-         if (this.rTableData == undefined) {
-           this.rTableData = new Array();
-         }
-         let obj = {};
-         obj.assAssignee = "1";
-         obj.assMobile = "1";
-         this.rTableData.push(obj);
+        //接收时间
+        actReceiveTmChange(value) {
+            this.actReceiveTm=value;
+        },
+        //处理时间
+        actHandleTmChange(value) {
+            this.actHandleTm=value;
         },
 
     }

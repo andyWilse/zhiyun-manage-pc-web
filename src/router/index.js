@@ -6,6 +6,8 @@ import firstPage from '@/mainpage/dialog/FirstPage';
 import taskDetail from '@/mainpage/dialog/taskDetail';
 import aiTaskDetail from '@/mainpage/dialog/aiTaskDetail';
 
+
+import sus from '@/views/successView';
 import loginView from '@/views/loginView';
 import venuesIndexs from '@/views/venuses/venuesIndex';
 import venusesAdd from '@/views/venuses/venusesAdd';
@@ -17,6 +19,7 @@ import managerModify from '@/views/manager/managerModify';
 import logIndex from '@/views/syspage/LogIndex';
 import eventIndex from '@/views/syspage/EventIndex';
 import aiTaskModify from '@/views/syspage/detail/aiTaskModify';
+import actHisDetail from '@/views/syspage/detail/actHisDetail';
 import monitorIndex from '@/views/monitor/MonitorIndex';
 import monitorNow from '@/views/monitor/MonitorNow';
 import monitorBack from '@/views/monitor/MonitorBack';
@@ -34,8 +37,7 @@ import newDetail from '@/views/news/newDetail';
 import deployTask from '@/views/task/deployTask';
 import finishTask from '@/views/task/finishTask';
 import unFinishTask from '@/views/task/unFinishTask';
-
-import sus from '@/views/successView';
+import threeColorIndex from '@/views/color/threeColorIndex';
 
 Vue.use(VueRouter); //安装插件
 
@@ -79,6 +81,9 @@ export const constantRouterMap = [
             {path:'/deployTask',name:'deployTask',component:deployTask,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/finishTask',name:'finishTask',component:finishTask,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/unFinishTask',name:'unFinishTask',component:unFinishTask,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
+            {path:'/threeColorIndex',name:'threeColorIndex',component:threeColorIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
+            {path:'/actHisDetail',name:'actHisDetail',component:actHisDetail, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
+
         ],meta:{
           		index:1,
           		title: "瓯海宗教智治管理端",
