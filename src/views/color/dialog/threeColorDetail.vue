@@ -6,7 +6,7 @@
                     <el-form-item label="问题描述:" prop="coContent">
                         <el-input v-model="form.coContent"
                           style="width: 80%"
-                          readonly="true"
+                          readonly
                           type="textarea"
                           :autosize="{ minRows: 2, maxRows: 10}">
                         </el-input>
@@ -16,7 +16,7 @@
                     <el-form-item label="进度描述:" prop="coProgress">
                         <el-input v-model="form.coProgress"
                           style="width: 80%"
-                          readonly="true"
+                          readonly
                           type="textarea"
                           :autosize="{ minRows: 2, maxRows: 10}">
                         </el-input>
@@ -26,7 +26,7 @@
                     <el-form-item label="备注说明:" prop="coRemark">
                         <el-input v-model="form.coRemark"
                           style="width: 80%"
-                          readonly="true"
+                          readonly
                           type="textarea"
                           :autosize="{ minRows: 2, maxRows: 10}">
                         </el-input>

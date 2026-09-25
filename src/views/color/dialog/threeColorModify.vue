@@ -5,20 +5,8 @@
 
                 <el-row>
                     <el-col :span="12">
-                       <el-form-item label="场所名称" prop="coVenuesId" label-width="">
-                           <el-select v-model="form.coVenuesId"
-                           @focus="venuesSelect"
-                           @change="coVenuesChange"
-                           ref="venuesRef"
-                           clearable
-                           filterable
-                           allow-create>
-                                <el-option
-                                    v-for="item in venuesList"
-                                    :key="item.venuesId"
-                                    :label="item.venuesName"
-                                    :value="item.venuesId"/>
-                           </el-select>
+                       <el-form-item label="场所名称" prop="coVenuesNm" label-width="">
+                       <el-input v-model="form.coVenuesNm" readonly></el-input>
                        </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -150,7 +138,6 @@ export default {
     data () {
         return {
             message: '来自子组件的消息',
-            venuesList:[],
             colorData:[],
             typeData:[],
             StateData:[],
@@ -159,6 +146,7 @@ export default {
             form: {
                 coId: '',
                 coVenuesId: '',
+                coVenuesNm:'',
                 coType:'',
                 coColor:'',
                 coOccurTm:null,
@@ -187,13 +175,6 @@ export default {
 
      },
     methods: {
-        getHandleTm(coState){
-            if('01'===coState){
-                this.showCoHandleTm=true;
-            }else{
-                this.showCoHandleTm=false;
-            }
-        },
         //保存
         handleSave () {
             if('01'===this.form.coState){
@@ -219,7 +200,7 @@ export default {
         handleSubmitPost(){
               this.$axios.post('/color/update', {
                     coId: this.form.coId,
-                    coVenuesId: this.coVenuesId,
+                    coVenuesId: this.form.coVenuesId,
                     coType:this.coType,
                     coColor:this.coColor,
                     coOccurTm: new Date(this.coOccurTm),
@@ -250,26 +231,6 @@ export default {
             this.clearData();
             this.$emit('three_modify');
             done();
-        },
-        //获取场所
-        venuesSelect(e) {
-             let value = e.target.value;
-              this.getVenuesList(value);
-        },
-        //查询
-        getVenuesList(query) {
-            this.$axios.get('/venues/getStaffVenues', {
-                params: {
-                    search: query
-                }
-              }).then(successResponse => {
-                if (successResponse.data.code === 200) {
-                  this.venuesList=successResponse.data.result;
-                }else{
-                    let message=successResponse.data.message;
-                    this.$message({message: message,type: 'warning'});
-              }
-            });
         },
         //获取颜色
         getColorList(){
@@ -314,10 +275,10 @@ export default {
              })
         },
         //更新场所
-        coVenuesChange(value) {
-            this.coVenuesId=value;
-            this.checkData(this.coVenuesId);
-        },
+        //coVenuesChange(value) {
+           // this.coVenuesId=value;
+           // this.checkData(this.coVenuesId);
+        //},
         //更新类型
         coTypeChange(value) {
             this.coType=value;

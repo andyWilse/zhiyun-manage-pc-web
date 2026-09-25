@@ -73,12 +73,14 @@ import MyDialog from "./mdialog.vue"
      			});
      			// 切换宗教
      			bus.$on("selectChurch", (val) => {
-     				console.log('切换宗教-selectChurch' , val);
+     				//console.log('切换宗教-selectChurch' , val);
      				let arr=val.list;
      				let religiousSect='';
 
      				for (var i = 0; i < arr.length; i++) {
                         var item = arr[i].id;
+                             				console.log('切换宗教-item' , item);
+
                         religiousSect=religiousSect+item+',';
 
                     }
@@ -196,7 +198,7 @@ import MyDialog from "./mdialog.vue"
 
 					churchList.forEach((item) => {
 						let position = [item.longitude , item.Latitude];
-						let icon = this.$utils.getReligionLog(item.religiousSectCn , 2);
+						let icon = this.$utils.getReligionLog(item.religiousSect,item.colorIcon,this.type);
 
 						let marker = new AMap.ElasticMarker({
 							position: position, // 基点位置

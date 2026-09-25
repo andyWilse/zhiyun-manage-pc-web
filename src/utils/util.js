@@ -295,31 +295,60 @@ export function openLocation(myPosition, toLng, toLat, endpoint = '') {
  * @param {Object} name
  * @param {Object} type
  */
-export function getReligionLog(name , type = 1) {
-	switch (name) {
-		case "佛教":
-			return type == 1 ? "/region/foJiao.png" : "/region/foJiao.png";
-		case "100100000001":
-			return type == 1 ? "/region/foJiao.png" : "/region/foJiao.png";
-		case "道教":
-			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
-		case "100100000002":
-			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
-		case "基督教":
-			return type == 1 ? "/region/jiDu.png" : "/region/jiDu.png";
-		case "100100000003":
-			return type == 1 ? "/region/jiDu.png" : "/region/jiDu.png";
-		case "天主教":
-			return type == 1 ? "/region/tianZhu.png" : "/region/tianZhu.png";
-		case "100100000004":
-			return type == 1 ? "/region/tianZhu.png" : "/region/tianZhu.png";
-		case "伊斯兰教":
-			return type == 1 ? "/region/yiSiLan.png" : "/region/yiSiLan.png";
-		case "100100000005":
-			return type == 1 ? "/region/yiSiLan.png" : "/region/yiSiLan.png";
-		default:
-			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
-	}
+export function getReligionLog(religiousSect,colorIcon,type) {
+    if("01"==type || "02"==type){
+        switch (religiousSect) {
+    		case "100100000001":
+    			return "/region/foJiao.png";
+    		case "100100000002":
+    			return "/region/daoJiao.png";
+    		case "100100000003":
+    			return "/region/jiDu.png" ;
+    		case "100100000004":
+    			return "/region/tianZhu.png";
+    		case "100100000005":
+    			return "/region/yiSiLan.png";
+    		default:
+    			return type == 1 ? "/region/daoJiao.png" : "/region/daoJiao.png";
+    	}
+
+    }else if("03"==type || "04"==type){
+        switch (colorIcon) {
+            case "f-red":
+                return "/region/fojiao/"+colorIcon+".png";
+            case "f-green":
+                return "/region/fojiao/"+colorIcon+".png";
+            case "f-yellow":
+                return "/region/fojiao/"+colorIcon+".png";
+            case "d-red":
+                return "/region/daojiao/"+colorIcon+".png";
+            case "d-green":
+                return "/region/daojiao/"+colorIcon+".png";
+            case "d-yellow":
+                return "/region/daojiao/"+colorIcon+".png";
+            case "j-red":
+                return "/region/jidu/"+colorIcon+".png";
+            case "j-green":
+                return "/region/jidu/"+colorIcon+".png";
+            case "j-yellow":
+                return "/region/jidu/"+colorIcon+".png";
+            case "t-red":
+                return "/region/tianzhu/"+colorIcon+".png";
+            case "t-green":
+                return "/region/tianzhu/"+colorIcon+".png";
+            case "t-yellow":
+                return "/region/tianzhu/"+colorIcon+".png";
+            case "y-red":
+                return "/region/yisilan/"+colorIcon+".png";
+            case "y-green":
+                return "/region/yisilan/"+colorIcon+".png";
+            case "y-yellow":
+                return "/region/yisilan/"+colorIcon+".png";
+            default:
+                return "/region/daojiao/d-green.png";
+        }
+    }
+
 }
 
 /**
