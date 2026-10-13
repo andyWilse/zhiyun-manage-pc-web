@@ -50,7 +50,7 @@
                     </el-button>
                 </el-col>
                 <el-col :span="2">
-                   <el-button class="sclass" icon="el-icon-upload2" type="success" @click="excelClick" :style="{ display: excelImport }">
+                   <el-button class="sclass" icon="el-icon-upload2" type="primary" @click="excelClick" :style="{ display: excelImport }">
                         三人驻堂excel导入
                    </el-button>
                 </el-col>

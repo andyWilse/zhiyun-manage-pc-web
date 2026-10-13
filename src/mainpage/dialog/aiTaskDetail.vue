@@ -49,10 +49,18 @@
                <el-step  v-for="(item , index) in data.taskComment" :id="index" class="stepClass">
                     <template slot="description" >
 	                    <div class="contentClass" :style="{color: data.handleResults == '1' ? '#282828' : ''}">
-                            <h3 :class="uiStyle + '_fontSize14'" v-if="" class="oneClass">{{item.actNode}}：{{item.actReceiver}}</h3>
-                            <p :class="uiStyle + '_fontSize12'" v-if="item.actCode===20010003 || item.actCode===20010006">
-                              {{ item.actHandleTime }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   处置人：{{item.actHandNm}}
-                            </span></p>
+                            <h3 :class="uiStyle + '_fontSize14'" v-if="" class="oneClass">
+                            <span v-if=""> {{item.actNode}} </span>
+                             <span v-if="item.actReceiver!=='' && item.actReceiver!==null"> ：{{item.actReceiver}} </span>
+                            </h3>
+                            <p :class="uiStyle + '_fontSize12'" >
+                             <span v-if="item.actHandleTime!=='' && item.actHandleTime!==null && item.actCode!==20010007">
+                                 {{ item.actHandleTime }}
+                             </span>
+                             <span v-if="item.actCode!==20010001 && item.actCode!==20010007 && item.actHandNm!=='' && item.actHandNm!==null ">
+                                处置人：{{item.actHandNm}}
+                             </span>
+                            </p>
                             <p :class="uiStyle + '_fontSize12'" v-if="item.hasOwnProperty('actComment') && item.actComment">
                             反馈：{{ item.actComment }}
                             </p>

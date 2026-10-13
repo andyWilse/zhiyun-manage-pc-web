@@ -16,7 +16,8 @@
                 <el-form-item label="导入文件:" prop="file">
                    <el-upload
                        accept=".pdf, .doc, .docx, .xls, .xlsx"
-                       action="http://localhost:7081/api/user/import"
+                       ref="uploadRef"
+                       :http-request="excelUpload"
                        :limit="1"
                        :before-upload="beforeUpload"
                        :on-success="upSuccess"
@@ -28,9 +29,8 @@
                     <div >
                          <span class="spa-class">
                             注意事项：<br/>
-                            1.职务：请选择”组员“或”组长“;<br/>
-                            2.驻堂场所编号：请前往场所信息管理查看;<br/>
-                            3.上传文件只能是xls、xlsx格式;<br/>
+                            1.请下载模板后填写;<br/>
+                            2.编辑表格时，请“启用宏”;<br/>
                          </span>
                     </div>
                 </el-form-item>
@@ -38,8 +38,8 @@
            </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button @click="handleSubmit">保存</el-button>
+        <el-button @click="handleSubmit" type="primary">保存</el-button>
+        <el-button @click="handleCancel" type="warning">取消</el-button>
         </span>
     </el-dialog>
   </div>
@@ -97,22 +97,53 @@ export default {
         },
         // 上传失败
         upError(e) {
+            this.$refs.uploadRef.clearFiles();
             this.$alert("上传失败", "error");
         },
         handleClose (done) {
+          this.$refs.uploadRef.clearFiles();
           this.$emit('cActive_excel') // 如果确认,就取消弹窗,
           done()
         },
         handleCancel () {
           // 对应事件cActive
+          this.$refs.uploadRef.clearFiles();
           this.$emit('cActive_excel');
-          this.clearTag ();
+        },
+
+        //上传文件
+        excelUpload(param) {
+            let reader = new FileReader();
+            reader.readAsDataURL(param.file);
+            let baseFile ='';
+            reader.onload = e => {
+                baseFile = e.target.result;
+                // 此处可对该base64进行获取赋值传入后端
+                this.$axios.post('/user/import',{
+                    fileContent:baseFile,
+                    fileName:param.file.name
+                }).then(successResponse => {
+                    let data=successResponse.data;
+                    if (data.code === 200) {
+                        this.userList=data.result;
+                        this.$message({message: '文件上传成功，请保存！', type: 'success'});
+                    }else{
+                        this.$alert(data.message, "问题：", {
+                            confirmButtonText: '确定',
+                            dangerouslyUseHTMLString:true,
+                            showClose: false,
+                            customClass:'my-alert-box'
+                        });
+                        this.$refs.uploadRef.clearFiles();
+                    }
+                })
+           }
         },
         //上传成功，保存数据
         handleSubmit () {
             //数据保存
             const array = this.userList;
-            this.$axios.post('/user/import/add',array
+            this.$axios.post('/user/import/add',{sysUserList:this.userList,}
             ).then(successResponse => {
             if (successResponse.data.code === 200) {
               this.$message({message: '三人驻堂excel导入数据保存成功！',type: 'success'});
