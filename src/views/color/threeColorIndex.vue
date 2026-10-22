@@ -43,7 +43,7 @@
            </el-form-item>
         </el-col>
         <el-col :span="5">
-            <el-button class="refCLass" icon="el-icon-search" type="primary" @click="getThreeColorList" :style="{ display: veQue }">查询</el-button>
+            <el-button class="veQueryClass" icon="el-icon-search" type="primary" @click="getThreeColorList" :style="{ display: veQue }">查询</el-button>
         </el-col>
     </el-row>
     <el-row>

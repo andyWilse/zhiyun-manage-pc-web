@@ -411,6 +411,9 @@ export default {
         imgSuccess(res, file, fileList) {
             this.imageUrl = URL.createObjectURL(file.raw);
             //重点  得到上传图片的名字
+            if(this.form.userPhotoUrl===undefined){
+                this.form.userPhotoUrl='';
+            }
             this.form.userPhotoUrl=this.form.userPhotoUrl+res.result+',';
             this.fileList=fileList;
         },

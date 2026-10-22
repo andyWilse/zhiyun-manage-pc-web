@@ -242,6 +242,9 @@ export default {
         this.imageUrl = URL.createObjectURL(file.raw);
         //重点  得到上传图片的名字
         //this.ruleForm.userHeaderPicture = res.result;
+        if(this.form.newsPicturesPath===undefined){
+            this.form.newsPicturesPath='';
+        }
         this.form.newsPicturesPath=this.form.newsPicturesPath+res.result+',';
     },
     handleExceed(){

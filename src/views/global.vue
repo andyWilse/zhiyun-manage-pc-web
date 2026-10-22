@@ -7,6 +7,7 @@
   //const baseUrl ='https://zszjadmin.860577.net:8088/api';
   const baseUrl ='http://183.246.59.33:7081/api';
 //const baseUrl ='http://localhost:7081/api';
+//const baseUrl ='http://47.98.212.215:7081/api';
 
   const httpUrl =baseUrl+ '/file/images/upload';
   const httpVideoUrl = baseUrl+'/file/uploadVideo';

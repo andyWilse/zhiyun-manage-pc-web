@@ -1,16 +1,21 @@
 <template>
   <div>
-    <el-dialog title="流程信息" :visible="dialogActModify" :before-close="handleClose" width="70%">
-
+    <el-dialog title="流程信息" :visible="dialogActModify" :before-close="handleClose" width="70%" height="220%">
         <el-form ref="form" :model="form" label-width="100px">
+            <div style="display: flex; justify-content: flex-end;margin-right:100px;margin-bottom:12px;">
+                <slot name=”header”>
+                    <el-button @click="handleCancel" type="warning">取消</el-button>
+                    <el-button @click="handleSubmit" type="primary">保存</el-button>
+                </slot>
+            </div>
             <el-row :gutter="24">
-                <el-col :span="8">
-                    <el-form-item label="岗位"  prop="actNode">
+                <el-col :span="7">
+                    <el-form-item label="岗位："  prop="actNode">
                         <el-input v-model="form.actNode" :readonly="true" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="接收时间" prop="actReceiveTime">
+                <el-col :span="7">
+                    <el-form-item label="推送时间:" prop="actReceiveTime">
                         <el-date-picker v-model="form.actReceiveTime"
                         @change="actReceiveTmChange"
                         type="datetime"
@@ -19,8 +24,8 @@
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="处理时间" prop="actHandleTime">
+                <el-col :span="7">
+                    <el-form-item label="处理时间:" prop="actHandleTime">
                         <el-date-picker v-model="form.actHandleTime"
                         @change="actHandleTmChange"
                         type="datetime"
@@ -30,12 +35,38 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
             <el-row :gutter="24">
-                <el-col :span="14">
-                    <el-form-item label="接收人" prop="actReceiver">
+                <el-col :span="7">
+                    <el-form-item label="处理人：" prop="actHandler">
+                        <el-select v-model="form.actHandler" @change="actHandChange" clearable >
+                          <el-option
+                              v-for="item in rTableData"
+                              :key="item.assMobile"
+                              :label="item.assAssignee"
+                              :value="item.assMobile"
+                          />
+                        </el-select>
+                    </el-form-item>
+                 </el-col>
+                <el-col :span="15">
+                    <el-form-item label="反馈:" prop="actComment">
+                        <el-input v-model="form.actComment"
+                            @change="actCommentChange"
+                          placeholder=""
+                          type="textarea"
+                          :autosize="{ minRows: 2, maxRows: 10}">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="0">
+                <el-col :span="12" class="actClass">
+                    <el-form-item label="推送人:" prop="actReceiver">
                         <div class="item" style="padding-left:77%;">
                           <el-button @click="assAddClick"  style="padding:5px;" type="primary" :style="{ display: userDel }">
-                            增加接收人
+                            增加推送人
                           </el-button>
                           </div>
                          <el-table
@@ -70,18 +101,22 @@
                     </el-form-item>
                 </el-col>
 
-        <el-col :span="10">
-        <el-form-item label="处理人：" prop="actHandler">
-            <el-select v-model="form.actHandler" @change="actHandChange" clearable >
-              <el-option
-                  v-for="item in rTableData"
-                  :key="item.assMobile"
-                  :label="item.assAssignee"
-                  :value="item.assMobile"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+                <el-col :span="12">
+                 <el-form-item label="照片" v-show="false">
+                        <el-input v-model="form.actPicture"></el-input>
+                  </el-form-item>
+                   <el-upload ref="elUpload"
+                      action="http://localhost:7081/api/file/images/upload"
+                      list-type="picture-card"
+                      :on-preview="handlePictureCardPreview"
+                      :on-success="imgSuccess"
+                      :on-error="imgError"
+                      :on-remove="imgRemove"
+                      :file-list="actPictureList">
+                      <i class="el-icon-plus"></i>
+                   </el-upload>
+                </el-col>
+
            <!--      <el-col :span="10">
                     <el-form-item label="处理人"  prop="actHandNm">
                         <el-table
@@ -119,12 +154,6 @@
         -->
             </el-row>
         </el-form>
-
-
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="handleSubmit" type="primary">保存</el-button>
-            <el-button @click="handleCancel" type="warning">取消</el-button>
-        </span>
     </el-dialog>
     <ass-dialog :dialog-ass-add="cAss_add" @cAss_add="changeAss_add" ref="assAddRef"> </ass-dialog>
 
@@ -152,7 +181,10 @@ export default {
             actHandleTm:'',
             addAssignee:[],
             changeHandler:'',
-
+            actPictureList:[],
+            actPicture:'',
+            fileRemove:'',
+            actComment:'',
             userDel:'none',
             actHandNm:'',
             editProp: ['assAssignee', 'assMobile', 'actHandNm', 'actHandler'],
@@ -176,7 +208,8 @@ export default {
                     //this.hTableData = result.actHandler;
                     this.form = result.actDetail;
                     this.actHandler = result.actHandler;
-                    this.actHandNm=result.actHandNm
+                    this.actHandNm=result.actHandNm;
+                    this.actPictureList=result.actPictureList
                 }else{
                     this.$message({message: message,type: 'warning'});
                 }
@@ -202,6 +235,9 @@ export default {
                 actHandleTm:this.actHandleTm,
                 addAssignee:this.addAssignee,
                 changeHandler:this.changeHandler,
+                actComment:this.actComment,
+                actPicture:this.form.actPicture,
+                fileRemove:this.fileRemove,
             }
             ).then(successResponse => {
                 let response=successResponse.data;
@@ -297,6 +333,40 @@ export default {
         actHandleTmChange(value) {
             this.actHandleTm=value;
         },
+        //反馈
+        actCommentChange(value) {
+            this.actComment=value;
+        },
+
+        // 上传成功
+        imgSuccess(res, file, fileList) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+            //重点  得到上传图片的名字
+            if(this.form.actPicture===undefined){
+                this.form.actPicture='';
+            }
+            this.form.actPicture=this.form.actPicture+res.result+',';
+        },
+        // 上传失败
+        imgError(res) {
+            this.$message({type: "error", message: "图片上传失败",});
+        },
+        // 删除图片
+        imgRemove(file, fileList) {
+                let url=file.url;
+                let remove='';
+                if(url.includes('blob:http:')){
+                    remove=file.response.result;
+                }else{
+                    remove=file.fileId;
+                }
+            this.fileRemove=this.fileRemove+remove+',';
+            this.form.actPicture=this.form.actPicture.replace(remove+",", '');
+        },
+        //图片处理
+        handlePictureCardPreview(file) {
+            console.log(file);
+        },
 
     }
 }
@@ -324,5 +394,17 @@ export default {
       line-height: 24px;
       padding: 0 9px;
     }
+  }
+
+  .actClass{
+  	    #border: 1px solid #9b2e25;
+  	    #margin-left: 30px;
+
+  }
+
+  .slotClass{
+      margin-right: 0px;
+      #float:right;
+
   }
 </style>

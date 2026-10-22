@@ -459,6 +459,9 @@ methods: {
         this.imageUrl = URL.createObjectURL(file.raw);
         //重点  得到上传图片的名字
         //this.ruleForm.userHeaderPicture = res.result;
+        if(this.form.picturesPath===undefined){
+            this.form.picturesPath='';
+        }
         this.form.picturesPath=this.form.picturesPath+res.result+',';
         this.fileList1 = fileList;
     },

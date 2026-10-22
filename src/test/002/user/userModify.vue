@@ -278,6 +278,9 @@ export default {
     imgSuccess(res, file, fileList) {
         this.imageUrl = URL.createObjectURL(file.raw);
         //重点  得到上传图片的名字
+        if(this.form.managerPhotoPath===undefined){
+            this.form.managerPhotoPath='';
+        }
         this.form.managerPhotoPath=this.form.managerPhotoPath+res.result+',';
     },
     //根据角色显示

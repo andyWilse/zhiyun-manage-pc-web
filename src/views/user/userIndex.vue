@@ -1,26 +1,33 @@
 <template>
   <div>
-    <el-form :inline="true" :model="searchForm" label-width="60px" class="searchForm">
+    <el-form :inline="true" :model="searchForm" label-width="100px" class="searchForm">
       <el-row>
-        <el-col :span="5.5">
-          <el-form-item label="中文名:">
-            <el-input v-model="searchForm.one" placeholder="中文名" clearable></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5.5">
-          <el-form-item label="角色：">
-            <el-select v-model="searchForm.two"  clearable>
-              <el-option
-                  v-for="item in roleslist"
-                  :key="item.roleId"
-                  :label="item.roleNm"
-                  :value="item.roleId"
-                  ref="ad"/>
-            </el-select>
-          </el-form-item>
-        </el-col>
-            <el-col :span="5.5">
-                <el-form-item label="场所:">
+            <el-col :span="8">
+              <el-form-item label="中文名称:">
+                <el-input v-model="searchForm.one" placeholder="中文名称" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="手机号码:">
+                <el-input v-model="searchForm.four" placeholder="手机号码" clearable></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="角色：">
+                <el-select v-model="searchForm.two"  clearable>
+                  <el-option
+                      v-for="item in roleslist"
+                      :key="item.roleId"
+                      :label="item.roleNm"
+                      :value="item.roleId"
+                      ref="ad"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="场所名称:">
                     <el-select
                        v-model="searchForm.three"
                        clearable
@@ -28,34 +35,32 @@
                        placeholder="请输入关键词"
                        class="product-input"
                        @blur="productSelect"
-                       allow-create
-                    >
+                       allow-create>
+
                        <el-option
                            v-for="item in venuesList"
                            :key="item.venuesId"
                            :label="item.venuesName"
-                           :value="item.venuesId"
-                       />
+                           :value="item.venuesId"/>
                     </el-select>
                 </el-form-item>
-                </el-col>
-                <el-col :span="2">
-                    <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: userQue }">
-                        查询
-                    </el-button>
-                </el-col>
-                <el-col :span="2">
-                    <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: userAdd }">
-                        新增
-                    </el-button>
-                </el-col>
-                <el-col :span="2">
-                   <el-button class="sclass" icon="el-icon-upload2" type="primary" @click="excelClick" :style="{ display: excelImport }">
-                        三人驻堂excel导入
-                   </el-button>
-                </el-col>
-
-      </el-row>
+            </el-col>
+            <el-col :span="2">
+                <el-button class="qclass" icon="el-icon-search" type="primary" @click="handleSearch" :style="{ display: userQue }">
+                    查询
+                </el-button>
+            </el-col>
+            <el-col :span="2">
+                <el-button class="aclass" icon="el-icon-circle-plus-outline" type="primary" @click="addClick" :style="{ display: userAdd }">
+                    新增
+                </el-button>
+            </el-col>
+            <el-col :span="2">
+               <el-button class="sclass" icon="el-icon-upload2" type="primary" @click="excelClick" :style="{ display: excelImport }">
+                    三人驻堂excel导入
+               </el-button>
+            </el-col>
+        </el-row>
     </el-form>
 
     <el-table
@@ -303,7 +308,8 @@ export default {
           size: this.size,
           userNm:this.searchForm.one,
           identity: this.searchForm.two,
-          venue: this.searchForm.three
+          venue: this.searchForm.three,
+          userMobile: this.searchForm.four
         }
       }).then(successResponse => {
         if (successResponse.data.code === 200) {

@@ -325,7 +325,7 @@ created(){
       //this.isActive=true;
       let procInstId=this.tableData[index].procInstId;
       let warnTime=this.tableData[index].warnTime;
-      if(warnTime<'2026-07-29'){
+      if(warnTime<'2026-10-22'){
             this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
       }else{
             this.$router.push({path: '/aiTaskDetail',query:{ procInstId:procInstId}});

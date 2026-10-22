@@ -185,7 +185,7 @@ export default {
         //this.isActive=true;
         let procInstId=this.tableData[index].procInstId;
         let taskTime=this.tableData[index].taskTime;
-        if(taskTime<'2026-08-29'){
+        if(taskTime<'2026-10-22'){
             this.$router.push({path: '/taskDetail',query:{ procInstId:procInstId}});
         }else{
             this.$router.push({path: '/aiTaskDetail',query:{ procInstId:procInstId}});

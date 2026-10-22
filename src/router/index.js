@@ -20,6 +20,8 @@ import logIndex from '@/views/syspage/LogIndex';
 import eventIndex from '@/views/syspage/EventIndex';
 import aiTaskModify from '@/views/syspage/detail/aiTaskModify';
 import actHisDetail from '@/views/syspage/detail/actHisDetail';
+import actModify from '@/views/syspage/detail/actModify';
+
 import monitorIndex from '@/views/monitor/MonitorIndex';
 import monitorNow from '@/views/monitor/MonitorNow';
 import monitorBack from '@/views/monitor/MonitorBack';
@@ -83,6 +85,7 @@ export const constantRouterMap = [
             {path:'/unFinishTask',name:'unFinishTask',component:unFinishTask,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/threeColorIndex',name:'threeColorIndex',component:threeColorIndex,meta:{title: "瓯海宗教智治管理端",requireAuth:true}},
             {path:'/actHisDetail',name:'actHisDetail',component:actHisDetail, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
+            {path:'/actModify',name:'actModify',component:actModify, meta: {title: "瓯海宗教智治管理端",show: true,requireAuth:true}},
 
         ],meta:{
           		index:1,
