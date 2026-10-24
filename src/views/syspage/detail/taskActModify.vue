@@ -209,7 +209,7 @@ export default {
                     this.form = result.actDetail;
                     this.actHandler = result.actHandler;
                     this.actHandNm=result.actHandNm;
-                    this.actPictureList=result.actPictureList
+                    this.actPictureList=result.cutPictureList
                 }else{
                     this.$message({message: message,type: 'warning'});
                 }
